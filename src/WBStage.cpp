@@ -1,6 +1,7 @@
 #include "WBStage.h"
 #include "Cpu.h"
 #include "RegisterFile.h"
+#include "Instruction.h"
 #include "Stage.h"
 
 namespace mips {
@@ -23,7 +24,15 @@ void WBStage::execute() {
     // Get input data
     const PipelineData& data = m_inputRegister->getData();
     
-    // Write back to register file if needed
+    // For simplicity in this implementation, let's execute the instruction directly
+    // This bridges our single-cycle instruction model with the pipeline architecture
+    if (data.instruction && m_cpu) {
+        // Execute the instruction directly
+        data.instruction->execute(*m_cpu);
+    }
+    
+    // Legacy register file write-back logic (commented out for now)
+    /*
     if (data.regWrite) {
         uint32_t writeData;
         uint32_t writeRegister;
@@ -45,6 +54,7 @@ void WBStage::execute() {
         // Write to register file
         m_cpu->getRegisterFile().write(writeRegister, writeData);
     }
+    */
 }
 
 void WBStage::reset() {

@@ -11,6 +11,12 @@ namespace mips {
 class RegisterFile;
 class Memory;
 class Instruction;
+class IFStage;
+class IDStage;
+class EXStage;
+class MEMStage;
+class WBStage;
+class PipelineRegister;
 
 /**
  * @brief Main CPU class implementing 5-stage MIPS pipeline
@@ -135,7 +141,7 @@ private:
     
     int m_cycleCount;
     uint32_t m_pc; // Program counter
-    bool m_pipelineMode; // Pipeline vs single-cycle mode (for future)
+    bool m_pipelineMode; // Pipeline vs single-cycle mode
     bool m_terminated; // Program termination flag
     
     // Console I/O for syscall support
@@ -146,7 +152,25 @@ private:
     // Label to instruction address mapping
     std::map<std::string, uint32_t> m_labelMap;
 
-    // Pipeline components will be added later
+    // Pipeline components
+    std::unique_ptr<class IFStage> m_ifStage;
+    std::unique_ptr<class IDStage> m_idStage;
+    std::unique_ptr<class EXStage> m_exStage;
+    std::unique_ptr<class MEMStage> m_memStage;
+    std::unique_ptr<class WBStage> m_wbStage;
+    
+    // Pipeline registers
+    std::unique_ptr<class PipelineRegister> m_ifidRegister;
+    std::unique_ptr<class PipelineRegister> m_idexRegister;
+    std::unique_ptr<class PipelineRegister> m_exmemRegister;
+    std::unique_ptr<class PipelineRegister> m_memwbRegister;
+    
+    // Pipeline execution methods
+    void tickPipeline();
+    void tickSingleCycle();
+    void updatePipelineRegisters();
+    void initializePipeline();
+
     // For now, maintain single-cycle compatibility
 };
 

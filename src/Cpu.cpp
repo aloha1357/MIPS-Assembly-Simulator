@@ -3,6 +3,12 @@
 #include "Memory.h"
 #include "Assembler.h"
 #include "Instruction.h"
+#include "IFStage.h"
+#include "IDStage.h"
+#include "EXStage.h"
+#include "MEMStage.h"
+#include "WBStage.h"
+#include "Stage.h"
 #include <string>
 #include <cctype>
 
@@ -17,6 +23,7 @@ Cpu::Cpu()
     , m_terminated(false)
     , m_inputPosition(0)
 {
+    initializePipeline();
 }
 
 Cpu::~Cpu() = default;
@@ -27,8 +34,17 @@ void Cpu::tick() {
         return;
     }
     
-    // For now, only single-cycle execution
-    // Pipeline support will be added later
+    if (m_pipelineMode) {
+        tickPipeline();
+    } else {
+        tickSingleCycle();
+    }
+    
+    m_cycleCount++;
+}
+
+void Cpu::tickSingleCycle() {
+    // Original single-cycle execution logic
     if (m_pc < m_instructions.size()) {
         uint32_t oldPc = m_pc;
         m_instructions[m_pc]->execute(*this);
@@ -38,7 +54,31 @@ void Cpu::tick() {
             m_pc++;
         }
     }
-    m_cycleCount++;
+}
+
+void Cpu::tickPipeline() {
+    // Execute pipeline stages in reverse order (WB -> MEM -> EX -> ID -> IF)
+    // This ensures data flows correctly through the pipeline
+    
+    // Execute stages if they exist
+    if (m_wbStage) m_wbStage->execute();
+    if (m_memStage) m_memStage->execute();
+    if (m_exStage) m_exStage->execute();
+    if (m_idStage) m_idStage->execute();
+    if (m_ifStage) m_ifStage->execute();
+    
+    // Update PC if IF stage allows it and we're not terminated
+    if (m_ifStage && m_ifStage->canUpdatePC() && !m_terminated) {
+        if (m_pc < m_instructions.size()) {
+            m_pc++;
+        } else {
+            // No more instructions, terminate
+            m_terminated = true;
+        }
+    }
+    
+    // Update pipeline registers on clock edge
+    updatePipelineRegisters();
 }
 
 void Cpu::loadProgramFromString(const std::string& assembly) {
@@ -153,6 +193,44 @@ const std::string& Cpu::getConsoleOutput() const {
 void Cpu::setConsoleInput(const std::string& input) {
     m_consoleInput = input;
     m_inputPosition = 0;
+}
+
+void Cpu::initializePipeline() {
+    // Initialize pipeline stages
+    m_ifStage = std::make_unique<IFStage>(this);
+    m_idStage = std::make_unique<IDStage>(this);
+    m_exStage = std::make_unique<EXStage>(this);
+    m_memStage = std::make_unique<MEMStage>(this);
+    m_wbStage = std::make_unique<WBStage>(this);
+    
+    // Initialize pipeline registers
+    m_ifidRegister = std::make_unique<PipelineRegister>();
+    m_idexRegister = std::make_unique<PipelineRegister>();
+    m_exmemRegister = std::make_unique<PipelineRegister>();
+    m_memwbRegister = std::make_unique<PipelineRegister>();
+    
+    // Connect stages to their output registers
+    m_ifStage->setOutputRegister(m_ifidRegister.get());
+    m_ifStage->setInstructions(&m_instructions);
+    
+    m_idStage->setInputRegister(m_ifidRegister.get());
+    m_idStage->setOutputRegister(m_idexRegister.get());
+    
+    m_exStage->setInputRegister(m_idexRegister.get());
+    m_exStage->setOutputRegister(m_exmemRegister.get());
+    
+    m_memStage->setInputRegister(m_exmemRegister.get());
+    m_memStage->setOutputRegister(m_memwbRegister.get());
+    
+    m_wbStage->setInputRegister(m_memwbRegister.get());
+}
+
+void Cpu::updatePipelineRegisters() {
+    // Update all pipeline registers on clock edge
+    if (m_ifidRegister) m_ifidRegister->clockUpdate();
+    if (m_idexRegister) m_idexRegister->clockUpdate();
+    if (m_exmemRegister) m_exmemRegister->clockUpdate();
+    if (m_memwbRegister) m_memwbRegister->clockUpdate();
 }
 
 } // namespace mips
