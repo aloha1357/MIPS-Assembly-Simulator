@@ -291,10 +291,6 @@ bool MipsSimulatorGUI::isPCRegisterVisible() const {
     return true;
 }
 
-uint32_t MipsSimulatorGUI::getPCValue() const {
-    return m_cpu->getProgramCounter();
-}
-
 void MipsSimulatorGUI::updateHighlights() {
     // Simulate highlight fade-out
     for (size_t i = 0; i < m_impl->m_registerHighlights.size(); ++i) {
@@ -580,6 +576,29 @@ int MipsSimulatorGUI::getCurrentExecutionLine() const {
 
 bool MipsSimulatorGUI::isExecutionPaused() const {
     return m_impl->m_executionPaused;
+}
+
+std::vector<PipelineStageInfo> MipsSimulatorGUI::getPipelineStageInfo() const {
+    return m_impl->m_pipelineStages;
+}
+
+uint8_t MipsSimulatorGUI::getMemoryByte(uint32_t address) const {
+    if (m_cpu && &m_cpu->getMemory()) {
+        // Get word and extract byte
+        uint32_t wordAddr = address & ~0x3;  // Align to word boundary
+        uint32_t wordData = m_cpu->getMemory().readWord(wordAddr);
+        int byteOffset = address & 0x3;
+        return (wordData >> (byteOffset * 8)) & 0xFF;
+    }
+    return 0;
+}
+
+uint32_t MipsSimulatorGUI::getPCValue() const {
+    return m_cpu ? m_cpu->getProgramCounter() : 0;
+}
+
+std::string MipsSimulatorGUI::getConsoleText() const {
+    return m_impl->m_consoleOutput;
 }
 
 // ────────────────────────────────────────────────

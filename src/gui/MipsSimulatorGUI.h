@@ -394,6 +394,24 @@ public:
      */
     bool isExecutionPaused() const;
 
+    /**
+     * @brief Get pipeline stage information for visualization
+     */
+    std::vector<PipelineStageInfo> getPipelineStageInfo() const;
+
+    /**
+     * @brief Get single byte from memory
+     * @param address Memory address
+     * @return Byte value
+     */
+    uint8_t getMemoryByte(uint32_t address) const;
+
+    /**
+     * @brief Get console text content
+     * @return Console text
+     */
+    std::string getConsoleText() const;
+
     // ────────────────────────────────────────────────
     // Event Callbacks
     // ────────────────────────────────────────────────
@@ -412,6 +430,10 @@ public:
      * @brief Set callback for when execution state changes
      */
     void setOnExecutionStateChangedCallback(std::function<void(bool)> callback);
+
+protected:
+    // Protected access for derived classes
+    bool isHeadless() const { return m_headless; }
 
 private:
     // Implementation details hidden in private section
