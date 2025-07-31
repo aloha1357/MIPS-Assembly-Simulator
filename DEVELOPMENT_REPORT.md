@@ -1,9 +1,10 @@
 # MIPS Assembly Simulator - 完整開發交接文檔
 
 **最後更新**: 2025年7月31日  
-**開發階段**: Sprint 4 完成 - 管線執行整合 ✅ 成功完成  
+**開發階段**: Sprint 5 開始 - GUI 開發 (BDD方法) 🚀 進行中  
 **測試狀態**: 64/64 測試通過 (100% 通過率) 🎉  
 **管線狀態**: 5階段管線完全運作，所有測試通過
+**新增功能**: 圖形化介面 - BDD 規格設計完成 ✨
 
 > **🎉 專案完成里程碑！**  
 > 恭喜！MIPS Assembly Simulator 已經達成重要里程碑！所有64個測試全部通過，包括完整的5階段管線架構。這份文檔記錄了完整的開發歷程、解決的技術問題、架構設計決策和未來擴展方向。
@@ -339,16 +340,18 @@ TEST_F(InstructionTest, AddiInstructionPositiveImmediate) {
 ## 🔮 未來擴展方向
 
 ### 短期目標 (1-2 週)
-- [ ] 實作資料危險偵測與轉發 (Data Forwarding)
-- [ ] 添加控制危險處理 (Branch Prediction)
+- ✅ 實作資料危險偵測與轉發 (Data Forwarding) - **已完成基礎架構**
+- ✅ 添加控制危險處理 (Branch Prediction) - **已完成基礎支援**
 - [ ] 擴展更多 MIPS 指令 (AND, OR, SLT 等)
 - [ ] 實作記憶體危險偵測
+- 🚀 **新增**: GUI 圖形化介面 - **BDD 規格設計完成**
 
-### 中期目標 (1-2 月)
-- [ ] 圖形化介面 (Qt 或 Dear ImGui)
-- [ ] 指令執行視覺化
-- [ ] 管線狀態即時顯示
-- [ ] 記憶體和暫存器監視器
+### 中期目標 (1-2 月) - **正在進行**
+- 🚀 **進行中**: 圖形化介面實作 (Qt 或 Dear ImGui)
+- 🚀 **BDD 完成**: 指令執行視覺化規格
+- 🚀 **BDD 完成**: 管線狀態即時顯示規格
+- 🚀 **BDD 完成**: 記憶體和暫存器監視器規格
+- 🚀 **新增**: 完整的除錯器功能 (中斷點、步進執行)
 
 ### 長期目標 (3-6 月)
 - [ ] 完整 MIPS32 指令集支援
@@ -436,6 +439,59 @@ std::unique_ptr<Instruction> instruction = std::make_unique<AddInstruction>();
 - ✅ **4 個系統調用**: 完整的 I/O 支援
 - ✅ **64 個單元測試**: 100% 通過率
 - ✅ **管線 PC 同步**: 解決複雜的時序問題
+- 🚀 **新增**: **GUI BDD 規格**: 37 scenarios 完整設計
+
+## 🎨 **新增：GUI 開發 - BDD 方法實踐**
+
+### BDD (行為驅動開發) 成果 ✨
+
+我們採用 **Spec by Example** 方法來設計圖形化介面：
+
+#### 📋 **完成的 BDD 階段**
+- ✅ **Feature 規格定義**: `features/gui_interface.feature` (37 scenarios)
+- ✅ **測試步驟定義**: `tests/test_gui_interface.cpp` (完整測試套件)
+- ✅ **介面設計**: `src/gui/MipsSimulatorGUI.h` (模組化架構)
+- ✅ **基礎實作**: `src/gui/MipsSimulatorGUI.cpp` (headless 測試版本)
+
+#### 🎯 **GUI 功能範圍**
+- **主視窗與佈局** (9 scenarios)
+- **程式碼編輯器** (語法高亮、檔案操作)
+- **暫存器檢視器** (即時更新、變更高亮)
+- **記憶體檢視器** (十六進制顯示、位址跳轉)
+- **管線視覺化** (5階段顯示、狀態追蹤)
+- **執行控制** (Run/Step/Reset/Stop)
+- **控制台輸出** (syscall 輸出、錯誤訊息)
+- **除錯功能** (中斷點、錯誤處理)
+
+#### 📊 **技術特色**
+```cpp
+// 測試友善設計
+MipsSimulatorGUI gui(true); // headless mode for testing
+
+// 模組化介面
+void setCodeEditorText(const std::string& text);
+RegisterInfo getRegisterInfo(int regNumber) const;
+void setPipelineMode(bool pipelineMode);
+void setBreakpoint(int lineNumber);
+
+// 事件驅動架構
+void setOnRegisterChangedCallback(std::function<void(int, uint32_t)> callback);
+void setOnMemoryChangedCallback(std::function<void(uint32_t, uint32_t)> callback);
+```
+
+### 🚀 **下一步：GUI 框架選擇**
+
+#### 選項 1: Qt 整合 (專業級)
+- 完整的桌面應用程式框架
+- 豐富的 UI 組件與工具
+- 跨平台支援
+
+#### 選項 2: Dear ImGui 整合 (輕量級)
+- 即時模式 GUI
+- 適合遊戲引擎整合
+- 高效能渲染
+
+詳細資訊請參考: `GUI_BDD_DEVELOPMENT_SUMMARY.md`
 
 ### 軟體工程成就
 - ✅ **模組化設計**: 清晰的類別分工

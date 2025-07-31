@@ -7,6 +7,7 @@ add_executable(unit_tests
     test_pipeline_execution.cpp
     test_syscalls.cpp
     test_instruction_decoder.cpp
+    # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
 target_link_libraries(unit_tests

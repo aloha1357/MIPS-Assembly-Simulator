@@ -12,6 +12,7 @@ add_library(mips-simulator
     EXStage.cpp
     MEMStage.cpp
     WBStage.cpp
+    # gui/MipsSimulatorGUI.cpp  # Temporarily commented out due to encoding issues
 )
 
 target_include_directories(mips-simulator
@@ -26,3 +27,12 @@ add_executable(mips-sim
 target_link_libraries(mips-sim
     PRIVATE mips-simulator
 )
+
+# GUI executable (temporarily commented out due to encoding issues)
+# add_executable(mips-sim-gui
+#     gui_main.cpp
+# )
+
+# target_link_libraries(mips-sim-gui
+#     PRIVATE mips-simulator
+# )
