@@ -1,0 +1,94 @@
+# Build directories
+build/
+out/
+bin/
+lib/
+*.build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+install_manifest.txt
+compile_commands.json
+
+# Visual Studio files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# Object files and binaries
+*.o
+*.obj
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+*.dylib
+*.pdb
+*.ilk
+*.exp
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Temporary files
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Dependencies
+_deps/
+
+# Testing
+Testing/
+test_detail.xml
+*.gcov
+*.gcda
+*.gcno
+
+# IDE files
+.idea/
+*.cbp
+*.workspace
+*.depend
+*.layout
+
+# Package managers
+conan.lock
+vcpkg_installed/
+
+# Logs
+*.log
+
+# Coverage reports
+coverage/
+*.coverage
+htmlcov/
+
+# System files
+.directory
+*.lnk
+
+# Windows specific
+$RECYCLE.BIN/
+Desktop.ini
+ehthumbs.db
