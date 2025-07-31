@@ -208,13 +208,21 @@ void ImGuiMipsSimulatorGUI::renderMainMenuBar() {
             if (ImGui::MenuItem("New", "Ctrl+N")) {
                 // New file action
                 memset(m_codeBuffer, 0, sizeof(m_codeBuffer));
+                appendConsoleOutput("New file created.\n");
             }
+            if (ImGui::MenuItem("Load Demo Program")) {
+                loadDemoProgram();
+            }
+            ImGui::Separator();
             if (ImGui::MenuItem("Open", "Ctrl+O")) {
                 // Open file action - would implement file dialog
+                appendConsoleOutput("File open dialog not yet implemented.\n");
             }
             if (ImGui::MenuItem("Save", "Ctrl+S")) {
                 // Save file action
+                appendConsoleOutput("File save dialog not yet implemented.\n");
             }
+            ImGui::Separator();
             if (ImGui::MenuItem("Exit", "Alt+F4")) {
                 m_shouldQuit = true;
             }
@@ -403,14 +411,96 @@ void ImGuiMipsSimulatorGUI::executeCode() {
         return;
     }
     
-    appendConsoleOutput("Code execution not yet implemented\n");
+    // Get code from the editor buffer
+    std::string code(m_codeBuffer);
+    if (code.empty()) {
+        appendConsoleOutput("Error: No code to execute\n");
+        return;
+    }
     
-    // Note: This is a simplified implementation
-    // The actual implementation would need to match the existing CPU API
+    try {
+        appendConsoleOutput("Assembling and executing code...\n");
+        
+        // Reset CPU state before execution
+        m_cpu->reset();
+        
+        // Load and execute the program
+        m_cpu->loadProgramFromString(code);
+        
+        // Run until program terminates or max cycles reached
+        int maxCycles = 1000; // Prevent infinite loops
+        int cycles = 0;
+        
+        while (!m_cpu->shouldTerminate() && cycles < maxCycles) {
+            m_cpu->tick();
+            cycles++;
+        }
+        
+        // Get any console output from syscalls
+        std::string cpuOutput = m_cpu->getConsoleOutput();
+        if (!cpuOutput.empty()) {
+            appendConsoleOutput("Program output:\n" + cpuOutput);
+        }
+        
+        if (cycles >= maxCycles) {
+            appendConsoleOutput("Warning: Program terminated after reaching maximum cycles\n");
+        } else {
+            appendConsoleOutput("Program executed successfully in " + std::to_string(cycles) + " cycles\n");
+        }
+        
+    } catch (const std::exception& e) {
+        appendConsoleOutput("Error: " + std::string(e.what()) + "\n");
+    }
 }
 
 void ImGuiMipsSimulatorGUI::stepExecution() {
-    appendConsoleOutput("Step execution not yet implemented\n");
+    if (!m_cpu) {
+        appendConsoleOutput("Error: CPU not initialized\n");
+        return;
+    }
+    
+    try {
+        // Check if we need to load code first
+        std::string code(m_codeBuffer);
+        if (m_cpu->getCycleCount() == 0 && !code.empty()) {
+            // First step - load the program
+            m_cpu->reset();
+            m_cpu->loadProgramFromString(code);
+            appendConsoleOutput("Program loaded. Ready to execute.\n");
+        }
+        
+        if (m_cpu->shouldTerminate()) {
+            appendConsoleOutput("Program has already terminated.\n");
+            return;
+        }
+        
+        // Execute one cycle
+        uint32_t pcBefore = m_cpu->getProgramCounter();
+        m_cpu->tick();
+        uint32_t pcAfter = m_cpu->getProgramCounter();
+        
+        // Show step information
+        appendConsoleOutput("Step " + std::to_string(m_cpu->getCycleCount()) + 
+                          ": PC " + std::to_string(pcBefore) + " -> " + std::to_string(pcAfter) + "\n");
+        
+        // Check for console output from syscalls
+        std::string cpuOutput = m_cpu->getConsoleOutput();
+        static std::string lastOutput = "";
+        if (cpuOutput != lastOutput) {
+            std::string newOutput = cpuOutput.substr(lastOutput.length());
+            if (!newOutput.empty()) {
+                appendConsoleOutput("Output: " + newOutput);
+                lastOutput = cpuOutput;
+            }
+        }
+        
+        if (m_cpu->shouldTerminate()) {
+            appendConsoleOutput("Program terminated.\n");
+        }
+        
+    } catch (const std::exception& e) {
+        appendConsoleOutput("Error during execution: " + std::string(e.what()) + "\n");
+    }
 }
 
 void ImGuiMipsSimulatorGUI::resetSimulator() {
@@ -418,6 +508,37 @@ void ImGuiMipsSimulatorGUI::resetSimulator() {
         m_cpu->reset();
     }
     appendConsoleOutput("Simulator reset.\n");
+}
+
+void ImGuiMipsSimulatorGUI::loadDemoProgram() {
+    // Simple demo program that demonstrates basic MIPS instructions
+    const char* demoCode = 
+        "# MIPS Assembly Demo Program\n"
+        "# This program demonstrates basic arithmetic and system calls\n"
+        "\n"
+        "# Load two numbers\n"
+        "addi $t0, $zero, 5      # Load 5 into $t0\n"
+        "addi $t1, $zero, 10     # Load 10 into $t1\n"
+        "\n"
+        "# Arithmetic operations\n"
+        "add $t2, $t0, $t1       # $t2 = $t0 + $t1 = 15\n"
+        "sub $t3, $t1, $t0       # $t3 = $t1 - $t0 = 5\n"
+        "\n"
+        "# Print the result of addition\n"
+        "addi $v0, $zero, 1      # syscall 1: print_int\n"
+        "add $a0, $zero, $t2     # Move result to $a0\n"
+        "syscall                 # Print 15\n"
+        "\n"
+        "# Exit program\n"
+        "addi $v0, $zero, 10     # syscall 10: exit\n"
+        "syscall\n";
+    
+    // Copy demo code to buffer
+    strncpy(m_codeBuffer, demoCode, sizeof(m_codeBuffer) - 1);
+    m_codeBuffer[sizeof(m_codeBuffer) - 1] = '\0';
+    
+    appendConsoleOutput("Demo program loaded into editor.\n");
+    appendConsoleOutput("Click 'Execute' to run the program or 'Step' to execute line by line.\n");
 }
 
 void ImGuiMipsSimulatorGUI::appendConsoleOutput(const std::string& text) {

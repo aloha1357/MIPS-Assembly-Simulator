@@ -100,6 +100,7 @@ private:
     void executeCode();
     void stepExecution();
     void resetSimulator();
+    void loadDemoProgram();
     void appendConsoleOutput(const std::string& text);
     std::string getRegisterName(int regNum);
 };
