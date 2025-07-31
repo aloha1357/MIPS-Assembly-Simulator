@@ -49,6 +49,46 @@ std::vector<std::unique_ptr<Instruction>> Assembler::assemble(const std::string&
     return instructions;
 }
 
+std::vector<std::unique_ptr<Instruction>> Assembler::assembleWithLabels(const std::string& assembly, 
+                                                                       std::map<std::string, uint32_t>& labelMap) {
+    std::vector<std::unique_ptr<Instruction>> instructions;
+    std::vector<std::string> lines;
+    std::istringstream stream(assembly);
+    std::string line;
+    
+    // First pass: collect all lines and identify labels
+    uint32_t instructionAddress = 0;
+    while (std::getline(stream, line)) {
+        line = trim(line);
+        
+        // Skip empty lines and comments
+        if (line.empty() || line[0] == '#') {
+            continue;
+        }
+        
+        // Check if this line is a label (ends with ':')
+        if (line.back() == ':') {
+            std::string labelName = line.substr(0, line.length() - 1);
+            labelMap[labelName] = instructionAddress;
+            continue;
+        }
+        
+        // This is an instruction line
+        lines.push_back(line);
+        instructionAddress++;
+    }
+    
+    // Second pass: parse instructions
+    for (const auto& instrLine : lines) {
+        auto instruction = parseInstruction(instrLine);
+        if (instruction) {
+            instructions.push_back(std::move(instruction));
+        }
+    }
+    
+    return instructions;
+}
+
 std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line) {
     // Remove comments
     std::string cleanLine = line;
@@ -215,6 +255,33 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                 }
             }
         }
+    }
+    else if (opcode == "beq" && tokens.size() >= 4) {
+        // Parse: beq $rs, $rt, label
+        std::string rsStr = tokens[1];
+        std::string rtStr = tokens[2];
+        std::string labelStr = tokens[3];
+        
+        // Remove commas
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (labelStr.back() == ',') labelStr.pop_back();
+        
+        int rs = getRegisterNumber(rsStr);
+        int rt = getRegisterNumber(rtStr);
+        
+        if (rs >= 0 && rt >= 0) {
+            return std::make_unique<BeqInstruction>(rs, rt, labelStr);
+        }
+    }
+    else if (opcode == "j" && tokens.size() >= 2) {
+        // Parse: j label
+        std::string labelStr = tokens[1];
+        
+        // Remove comma if present
+        if (labelStr.back() == ',') labelStr.pop_back();
+        
+        return std::make_unique<JInstruction>(labelStr);
     }
     
     return nullptr;

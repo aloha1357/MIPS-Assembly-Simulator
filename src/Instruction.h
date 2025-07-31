@@ -110,4 +110,42 @@ public:
     std::string getName() const override;
 };
 
+/**
+ * @brief Base class for branch instructions
+ */
+class BranchInstruction : public Instruction {
+public:
+    BranchInstruction(int rs, int rt, const std::string& label);
+    
+protected:
+    int m_rs;              // Source register 1
+    int m_rt;              // Source register 2  
+    std::string m_label;   // Branch target label
+};
+
+/**
+ * @brief Branch on equal instruction
+ */
+class BeqInstruction : public BranchInstruction {
+public:
+    BeqInstruction(int rs, int rt, const std::string& label);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief Jump instruction
+ */
+class JInstruction : public Instruction {
+public:
+    JInstruction(const std::string& label);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+    
+private:
+    std::string m_label;   // Jump target label
+};
+
 } // namespace mips

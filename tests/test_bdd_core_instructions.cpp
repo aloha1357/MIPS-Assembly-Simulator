@@ -197,3 +197,41 @@ TEST_F(CoreInstructionsBDD, Sw_stores_register_value_into_memory) {
     // Then data memory address 0x2000 should equal 0xCAFEBABE
     then_memory_address_should_equal(0x2000, 0xCAFEBABE);
 }
+
+// Control flow instruction BDD tests
+// Simplified version - delay slot handling will be implemented later
+TEST_F(CoreInstructionsBDD, Beq_taken_branch_basic) {
+    // Given register $t0 contains 1
+    given_register_contains("$t0", 1);
+    // And register $t1 contains 1  
+    given_register_contains("$t1", 1);
+    
+    // When the program with branch is executed
+    std::string program = R"(
+        beq $t0, $t1, target
+        addi $v0, $zero, 0
+        target:
+        addi $v0, $zero, 42
+    )";
+    when_program_executed_for_cycles(program, 6);
+    
+    // Then register $v0 should equal 42
+    then_register_should_equal("$v0", 42);
+}
+
+TEST_F(CoreInstructionsBDD, J_unconditional_jump_basic) {
+    // Given register $v0 contains 0 (initial state)
+    given_register_contains("$v0", 0);
+    
+    // When the program with jump is executed
+    std::string program = R"(
+        j target
+        addi $v0, $zero, 0
+        target:
+        addi $v0, $zero, 7
+    )";
+    when_program_executed_for_cycles(program, 6);
+    
+    // Then register $v0 should equal 7
+    then_register_should_equal("$v0", 7);
+}

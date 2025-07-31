@@ -215,3 +215,66 @@ TEST(InstructionTest, LwSwWithOffset) {
     // Check result: $t1 should contain 0x12345678
     EXPECT_EQ(cpu.getRegisterFile().read(9), 0x12345678) << "$t1 should contain the stored and loaded value";
 }
+
+// Control flow instruction tests
+TEST(InstructionTest, BeqInstructionTaken) {
+    mips::Cpu cpu;
+    
+    // Set up registers: $t0 = $t1 = 5 (equal values)
+    cpu.getRegisterFile().write(8, 5);  // $t0
+    cpu.getRegisterFile().write(9, 5);  // $t1
+    
+    // Execute program with branch taken
+    std::string program = R"(
+        beq $t0, $t1, target
+        addi $v0, $zero, 1
+        target:
+        addi $v0, $zero, 42
+    )";
+    
+    cpu.loadProgramFromString(program);
+    cpu.run(10);  // Run enough cycles to complete
+    
+    // Check result: $v0 should be 42 (branch was taken)
+    EXPECT_EQ(cpu.getRegisterFile().read(2), 42) << "$v0 should be 42 (branch taken)";
+}
+
+TEST(InstructionTest, BeqInstructionNotTaken) {
+    mips::Cpu cpu;
+    
+    // Set up registers: $t0 = 5, $t1 = 3 (not equal)
+    cpu.getRegisterFile().write(8, 5);  // $t0
+    cpu.getRegisterFile().write(9, 3);  // $t1
+    
+    // Execute program with branch not taken
+    std::string program = R"(
+        beq $t0, $t1, target
+        addi $v0, $zero, 1
+        target:
+        addi $v0, $zero, 42
+    )";
+    
+    cpu.loadProgramFromString(program);
+    cpu.run(10);  // Run enough cycles to complete
+    
+    // Check result: $v0 should be 42 (both instructions executed)
+    EXPECT_EQ(cpu.getRegisterFile().read(2), 42) << "$v0 should be 42 (both instructions executed)";
+}
+
+TEST(InstructionTest, JInstructionUnconditional) {
+    mips::Cpu cpu;
+    
+    // Execute program with unconditional jump
+    std::string program = R"(
+        j target
+        addi $v0, $zero, 1
+        target:
+        addi $v0, $zero, 7
+    )";
+    
+    cpu.loadProgramFromString(program);
+    cpu.run(10);  // Run enough cycles to complete
+    
+    // Check result: $v0 should be 7 (jump was taken, middle instruction skipped)
+    EXPECT_EQ(cpu.getRegisterFile().read(2), 7) << "$v0 should be 7 (jump taken)";
+}

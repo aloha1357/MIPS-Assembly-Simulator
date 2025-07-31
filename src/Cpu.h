@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <map>
 
 #include "Stage.h"
 
@@ -67,6 +68,21 @@ public:
      */
     void reset();
 
+    /**
+     * @brief Set program counter (for branch/jump instructions)
+     */
+    void setProgramCounter(uint32_t pc);
+
+    /**
+     * @brief Get program counter
+     */
+    uint32_t getProgramCounter() const;
+
+    /**
+     * @brief Get label address by name
+     */
+    uint32_t getLabelAddress(const std::string& label) const;
+
 private:
     std::unique_ptr<RegisterFile> m_registerFile;
     std::unique_ptr<Memory> m_memory;
@@ -89,6 +105,9 @@ private:
     
     int m_cycleCount;
     uint32_t m_pc; // Program counter
+    
+    // Label to instruction address mapping
+    std::map<std::string, uint32_t> m_labelMap;
 };
 
 } // namespace mips

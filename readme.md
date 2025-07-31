@@ -5,9 +5,9 @@
 ## 🎯 Current Status (July 31, 2025)
 
 **Sprint 1 Progress**: Core ISA Implementation  
-**Tests Passing**: ✅ 27/27 (100%)  
-**Implemented Instructions**: ADD, SUB, ADDI, LW, SW  
-**Next Target**: BEQ/J (Control flow instructions)
+**Tests Passing**: ✅ 32/32 (100%)  
+**Implemented Instructions**: ADD, SUB, ADDI, LW, SW, BEQ, J  
+**Next Target**: Pipeline implementation and hazard handling
 
 ### 📊 Feature Completion
 - ✅ **Walking Skeleton** - CMake + Google Test framework
@@ -16,10 +16,12 @@
 - ✅ **ADDI Instruction** - I-type immediate arithmetic with sign extension
 - ✅ **LW Instruction** - Load word from memory with offset addressing
 - ✅ **SW Instruction** - Store word to memory with offset addressing
-- ✅ **Basic Assembler** - R-type, I-type, and memory instruction parsing
+- ✅ **BEQ Instruction** - Conditional branch with label support
+- ✅ **J Instruction** - Unconditional jump with label support
+- ✅ **Advanced Assembler** - Full instruction parsing with label support
 - 🔄 **Pipeline Infrastructure** - Skeleton ready
 - ❌ **Hazard Handling** - Not started
-- ❌ **Control Flow Instructions** - Not started
+- ❌ **Branch Delay Slots** - Not started
 
 ### 🚀 Quick Start
 ```powershell

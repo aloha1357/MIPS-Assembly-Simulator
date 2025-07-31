@@ -20,15 +20,20 @@ Cpu::~Cpu() = default;
 void Cpu::tick() {
     // Simple single-cycle execution for now
     if (m_pc < m_instructions.size()) {
+        uint32_t oldPc = m_pc;
         m_instructions[m_pc]->execute(*this);
-        m_pc++;
+        
+        // Only increment PC if instruction didn't change it (for non-branch instructions)
+        if (m_pc == oldPc) {
+            m_pc++;
+        }
     }
     m_cycleCount++;
 }
 
 void Cpu::loadProgramFromString(const std::string& assembly) {
     Assembler assembler;
-    m_instructions = assembler.assemble(assembly);
+    m_instructions = assembler.assembleWithLabels(assembly, m_labelMap);
     m_pc = 0;
 }
 
@@ -59,8 +64,25 @@ void Cpu::reset() {
     m_cycleCount = 0;
     m_pc = 0;
     m_instructions.clear();
+    m_labelMap.clear();
     m_registerFile->reset();
     m_memory->reset();
+}
+
+void Cpu::setProgramCounter(uint32_t pc) {
+    m_pc = pc;
+}
+
+uint32_t Cpu::getProgramCounter() const {
+    return m_pc;
+}
+
+uint32_t Cpu::getLabelAddress(const std::string& label) const {
+    auto it = m_labelMap.find(label);
+    if (it != m_labelMap.end()) {
+        return it->second;
+    }
+    return 0; // Default to address 0 if label not found
 }
 
 } // namespace mips

@@ -19,6 +19,7 @@ void AddInstruction::execute(Cpu& cpu) {
     uint32_t result = rsValue + rtValue;
     
     cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 
 std::string AddInstruction::getName() const {
@@ -35,6 +36,7 @@ void SubInstruction::execute(Cpu& cpu) {
     uint32_t result = rsValue - rtValue;
     
     cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 
 std::string SubInstruction::getName() const {
@@ -59,6 +61,7 @@ void AddiInstruction::execute(Cpu& cpu) {
     uint32_t result = rsValue + immValue;
     
     cpu.getRegisterFile().write(m_rt, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 
 std::string AddiInstruction::getName() const {
@@ -76,6 +79,7 @@ void LwInstruction::execute(Cpu& cpu) {
     
     uint32_t value = cpu.getMemory().readWord(address);
     cpu.getRegisterFile().write(m_rt, value);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 
 std::string LwInstruction::getName() const {
@@ -93,10 +97,51 @@ void SwInstruction::execute(Cpu& cpu) {
     
     uint32_t value = cpu.getRegisterFile().read(m_rt);
     cpu.getMemory().writeWord(address, value);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 
 std::string SwInstruction::getName() const {
     return "sw";
+}
+
+BranchInstruction::BranchInstruction(int rs, int rt, const std::string& label)
+    : m_rs(rs), m_rt(rt), m_label(label) {
+}
+
+BeqInstruction::BeqInstruction(int rs, int rt, const std::string& label)
+    : BranchInstruction(rs, rt, label) {
+}
+
+void BeqInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    if (rsValue == rtValue) {
+        // Branch taken - jump to label
+        uint32_t targetAddress = cpu.getLabelAddress(m_label);
+        cpu.setProgramCounter(targetAddress);
+    } else {
+        // Branch not taken - continue with next instruction
+        cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+    }
+}
+
+std::string BeqInstruction::getName() const {
+    return "beq";
+}
+
+JInstruction::JInstruction(const std::string& label)
+    : m_label(label) {
+}
+
+void JInstruction::execute(Cpu& cpu) {
+    // Unconditional jump to label
+    uint32_t targetAddress = cpu.getLabelAddress(m_label);
+    cpu.setProgramCounter(targetAddress);
+}
+
+std::string JInstruction::getName() const {
+    return "j";
 }
 
 } // namespace mips

@@ -23,6 +23,15 @@ public:
      */
     std::vector<std::unique_ptr<Instruction>> assemble(const std::string& assembly);
     
+    /**
+     * @brief Parse assembly code with label support and return instructions + label map
+     * @param assembly Assembly code as string
+     * @param[out] labelMap Map of label names to instruction addresses
+     * @return Vector of parsed instructions
+     */
+    std::vector<std::unique_ptr<Instruction>> assembleWithLabels(const std::string& assembly, 
+                                                                std::map<std::string, uint32_t>& labelMap);
+    
 private:
     std::map<std::string, int> m_registerMap;
     
