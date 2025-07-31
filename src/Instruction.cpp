@@ -144,4 +144,82 @@ std::string JInstruction::getName() const {
     return "j";
 }
 
+SyscallInstruction::SyscallInstruction() {
+}
+
+void SyscallInstruction::execute(Cpu& cpu) {
+    // System call number is in $v0 (register 2)
+    uint32_t syscallNumber = cpu.getRegisterFile().read(2); // $v0
+    
+    switch (syscallNumber) {
+        case 1:
+            handlePrintInt(cpu);
+            break;
+        case 4:
+            handlePrintString(cpu);
+            break;
+        case 5:
+            handleReadInt(cpu);
+            break;
+        case 10:
+            handleExit(cpu);
+            break;
+        default:
+            // Unknown system call - just continue execution
+            break;
+    }
+    
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+void SyscallInstruction::handlePrintInt(Cpu& cpu) {
+    // Integer to print is in $a0 (register 4)
+    uint32_t value = cpu.getRegisterFile().read(4); // $a0
+    cpu.printInt(value);
+}
+
+void SyscallInstruction::handlePrintString(Cpu& cpu) {
+    // String address is in $a0 (register 4)
+    uint32_t stringAddress = cpu.getRegisterFile().read(4); // $a0
+    
+    // Read string from memory character by character until null terminator
+    std::string str;
+    uint32_t currentAddr = stringAddress;
+    
+    try {
+        while (true) {
+            uint32_t word = cpu.getMemory().readWord(currentAddr);
+            
+            // Extract bytes from word (little-endian)
+            for (int i = 0; i < 4; i++) {
+                char c = (word >> (i * 8)) & 0xFF;
+                if (c == '\0') {
+                    cpu.printString(str);
+                    return;
+                }
+                str += c;
+            }
+            currentAddr += 4;
+        }
+    } catch (...) {
+        // Memory access failed, just print what we have
+        cpu.printString(str);
+    }
+}
+
+void SyscallInstruction::handleReadInt(Cpu& cpu) {
+    // Read integer from input and store in $v0
+    uint32_t value = cpu.readInt();
+    cpu.getRegisterFile().write(2, value); // $v0
+}
+
+void SyscallInstruction::handleExit(Cpu& cpu) {
+    // Set termination flag in CPU
+    cpu.terminate();
+}
+
+std::string SyscallInstruction::getName() const {
+    return "syscall";
+}
+
 } // namespace mips

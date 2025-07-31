@@ -6,6 +6,12 @@ add_library(mips-simulator
     Stage.cpp
     Instruction.cpp
     Assembler.cpp
+    InstructionDecoder.cpp
+    IFStage.cpp
+    IDStage.cpp
+    EXStage.cpp
+    MEMStage.cpp
+    WBStage.cpp
 )
 
 target_include_directories(mips-simulator

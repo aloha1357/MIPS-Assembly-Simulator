@@ -2,6 +2,10 @@
 add_executable(unit_tests
     test_cpu.cpp
     test_bdd_core_instructions.cpp
+    test_pipeline.cpp
+    test_pipeline_integration.cpp
+    test_syscalls.cpp
+    test_instruction_decoder.cpp
 )
 
 target_link_libraries(unit_tests

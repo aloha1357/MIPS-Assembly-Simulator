@@ -283,6 +283,10 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         
         return std::make_unique<JInstruction>(labelStr);
     }
+    else if (opcode == "syscall") {
+        // Parse: syscall (no arguments)
+        return std::make_unique<SyscallInstruction>();
+    }
     
     return nullptr;
 }

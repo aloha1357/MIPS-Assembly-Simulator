@@ -148,4 +148,21 @@ private:
     std::string m_label;   // Jump target label
 };
 
+/**
+ * @brief System call instruction
+ */
+class SyscallInstruction : public Instruction {
+public:
+    SyscallInstruction();
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+    
+private:
+    void handlePrintInt(Cpu& cpu);
+    void handlePrintString(Cpu& cpu);
+    void handleReadInt(Cpu& cpu);
+    void handleExit(Cpu& cpu);
+};
+
 } // namespace mips

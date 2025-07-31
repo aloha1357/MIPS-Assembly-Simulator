@@ -27,7 +27,6 @@ Feature: Core arithmetic and memory instructions
       | $s0| $s1| $s2|  -1    |   1    |    0     |
       | $a0| $a1| $v0|   0    |   0    |    0     |
 
-  @ignore
   Scenario Outline: sub subtracts rt from rs and writes into rd
     Given register <rs> contains <rs_val>
     And   register <rt> contains <rt_val>
@@ -47,7 +46,6 @@ Feature: Core arithmetic and memory instructions
   # I‑type immediate arithmetic
   # ────────────────────────────────────────────────
 
-  @ignore
   Scenario Outline: addi adds sign‑extended immediate to rs
     Given register <rs> contains <rs_val>
     When  the program
@@ -66,7 +64,6 @@ Feature: Core arithmetic and memory instructions
   # Memory access
   # ────────────────────────────────────────────────
 
-  @ignore
   Scenario: lw loads word from memory into register
     Given data memory address 0x1000 contains value 0xDEADBEEF
     When  the program
@@ -76,7 +73,6 @@ Feature: Core arithmetic and memory instructions
     is executed for 2 cycles
     Then  register $t0 should equal 0xDEADBEEF
 
-  @ignore
   Scenario: sw stores register value into memory
     Given register $t1 contains 0xCAFEBABE
     When  the program
@@ -90,7 +86,6 @@ Feature: Core arithmetic and memory instructions
   # Control transfer
   # ────────────────────────────────────────────────
 
-  @ignore
   Scenario: beq taken branch flushes delay slot and updates PC
     Given register $t0 contains 1
     And   register $t1 contains 1
@@ -104,7 +99,6 @@ Feature: Core arithmetic and memory instructions
     is executed for 6 cycles
     Then  register $v0 should equal 42
 
-  @ignore
   Scenario: j unconditional jump sets PC to target address
     Given register $v0 contains 0
     When  the program
