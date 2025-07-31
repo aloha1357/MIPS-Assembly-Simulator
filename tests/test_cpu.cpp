@@ -121,3 +121,97 @@ TEST(InstructionTest, AddInstructionZeros) {
     // Check result: $v0 should be 0
     EXPECT_EQ(cpu.getRegisterFile().read(2), 0) << "$v0 should contain 0 + 0 = 0";
 }
+
+// ADDI instruction tests
+TEST(InstructionTest, AddiInstructionPositiveImmediate) {
+    mips::Cpu cpu;
+    
+    // Set up register: $t0 = 5
+    cpu.getRegisterFile().write(8, 5);  // $t0
+    
+    // Execute: addi $t1, $t0, 10
+    cpu.loadProgramFromString("addi $t1, $t0, 10");
+    cpu.run(1);
+    
+    // Check result: $t1 should be 15
+    EXPECT_EQ(cpu.getRegisterFile().read(9), 15) << "$t1 should contain 5 + 10 = 15";
+}
+
+TEST(InstructionTest, AddiInstructionNegativeImmediate) {
+    mips::Cpu cpu;
+    
+    // Set up register: $s0 = 3
+    cpu.getRegisterFile().write(16, 3);  // $s0
+    
+    // Execute: addi $s1, $s0, -4
+    cpu.loadProgramFromString("addi $s1, $s0, -4");
+    cpu.run(1);
+    
+    // Check result: $s1 should be -1 (0xFFFFFFFF in unsigned representation)
+    EXPECT_EQ(cpu.getRegisterFile().read(17), static_cast<uint32_t>(-1)) 
+        << "$s1 should contain 3 + (-4) = -1";
+}
+
+TEST(InstructionTest, AddiInstructionZeroImmediate) {
+    mips::Cpu cpu;
+    
+    // Set up register: $t2 = 42
+    cpu.getRegisterFile().write(10, 42);  // $t2
+    
+    // Execute: addi $t3, $t2, 0
+    cpu.loadProgramFromString("addi $t3, $t2, 0");
+    cpu.run(1);
+    
+    // Check result: $t3 should be 42
+    EXPECT_EQ(cpu.getRegisterFile().read(11), 42) << "$t3 should contain 42 + 0 = 42";
+}
+
+// Memory instruction tests
+TEST(InstructionTest, LwInstructionBasic) {
+    mips::Cpu cpu;
+    
+    // Set up memory: address 0x1000 contains 0xDEADBEEF
+    cpu.getMemory().writeWord(0x1000, 0xDEADBEEF);
+    
+    // Execute: lw $t0, 0x1000($zero)
+    cpu.loadProgramFromString("lw $t0, 0x1000($zero)");
+    cpu.run(1);
+    
+    // Check result: $t0 should contain 0xDEADBEEF
+    EXPECT_EQ(cpu.getRegisterFile().read(8), 0xDEADBEEF) << "$t0 should contain loaded value";
+}
+
+TEST(InstructionTest, SwInstructionBasic) {
+    mips::Cpu cpu;
+    
+    // Set up register: $t1 = 0xCAFEBABE
+    cpu.getRegisterFile().write(9, 0xCAFEBABE);  // $t1
+    
+    // Execute: sw $t1, 0x2000($zero)
+    cpu.loadProgramFromString("sw $t1, 0x2000($zero)");
+    cpu.run(1);
+    
+    // Check result: memory at 0x2000 should contain 0xCAFEBABE
+    EXPECT_EQ(cpu.getMemory().readWord(0x2000), 0xCAFEBABE) << "Memory should contain stored value";
+}
+
+TEST(InstructionTest, LwSwWithOffset) {
+    mips::Cpu cpu;
+    
+    // Set up base register: $s0 = 0x1000
+    cpu.getRegisterFile().write(16, 0x1000);  // $s0
+    
+    // Set up register: $t0 = 0x12345678
+    cpu.getRegisterFile().write(8, 0x12345678);  // $t0
+    
+    // Execute: sw $t0, 4($s0)  (store at 0x1004)
+    cpu.loadProgramFromString("sw $t0, 4($s0)");
+    cpu.run(1);
+    
+    // Execute: lw $t1, 4($s0)  (load from 0x1004)
+    cpu.loadProgramFromString("lw $t1, 4($s0)");
+    cpu.run(1);
+    
+    // Check result: $t1 should contain 0x12345678
+    EXPECT_EQ(cpu.getRegisterFile().read(9), 0x12345678) << "$t1 should contain the stored and loaded value";
+}

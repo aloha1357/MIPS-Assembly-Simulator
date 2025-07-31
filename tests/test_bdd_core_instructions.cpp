@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "Cpu.h"
 #include "RegisterFile.h"
+#include "Memory.h"
 #include <map>
 #include <string>
 
@@ -42,6 +43,18 @@ protected:
         EXPECT_EQ(actual, static_cast<uint32_t>(expected))
             << "Register " << regName << " (reg " << regNum << ") should equal " 
             << expected << " but was " << actual;
+    }
+
+    void given_memory_address_contains(uint32_t address, uint32_t value) {
+        cpu->getMemory().writeWord(address, value);
+    }
+
+    void then_memory_address_should_equal(uint32_t address, uint32_t expected) {
+        uint32_t actual = cpu->getMemory().readWord(address);
+        EXPECT_EQ(actual, expected)
+            << "Memory address 0x" << std::hex << address << std::dec 
+            << " should contain 0x" << std::hex << expected 
+            << " but was 0x" << std::hex << actual;
     }
 
 private:
@@ -135,4 +148,52 @@ TEST_F(CoreInstructionsBDD, Sub_s0_s1_to_s2_1_minus_1_equals_0) {
     
     // Then register $s2 should equal 0
     then_register_should_equal("$s2", 0);
+}
+
+// Scenario Outline: addi adds sign-extended immediate to rs
+// Examples from the feature file
+TEST_F(CoreInstructionsBDD, Addi_t0_plus_10_to_t1_5_plus_10_equals_15) {
+    // Given register $t0 contains 5
+    given_register_contains("$t0", 5);
+    
+    // When the program "addi $t1, $t0, 10" is executed for 1 cycle
+    when_program_executed_for_cycles("addi $t1, $t0, 10", 1);
+    
+    // Then register $t1 should equal 15
+    then_register_should_equal("$t1", 15);
+}
+
+TEST_F(CoreInstructionsBDD, Addi_s0_minus_4_to_s1_3_minus_4_equals_negative1) {
+    // Given register $s0 contains 3
+    given_register_contains("$s0", 3);
+    
+    // When the program "addi $s1, $s0, -4" is executed for 1 cycle
+    when_program_executed_for_cycles("addi $s1, $s0, -4", 1);
+    
+    // Then register $s1 should equal -1
+    then_register_should_equal("$s1", -1);
+}
+
+// Scenario: lw loads word from memory into register
+TEST_F(CoreInstructionsBDD, Lw_loads_word_from_memory_into_register) {
+    // Given data memory address 0x1000 contains value 0xDEADBEEF
+    given_memory_address_contains(0x1000, 0xDEADBEEF);
+    
+    // When the program "lw $t0, 0x1000($zero)" is executed for 2 cycles
+    when_program_executed_for_cycles("lw $t0, 0x1000($zero)", 2);
+    
+    // Then register $t0 should equal 0xDEADBEEF
+    then_register_should_equal("$t0", static_cast<int>(0xDEADBEEF));
+}
+
+// Scenario: sw stores register value into memory
+TEST_F(CoreInstructionsBDD, Sw_stores_register_value_into_memory) {
+    // Given register $t1 contains 0xCAFEBABE
+    given_register_contains("$t1", static_cast<int>(0xCAFEBABE));
+    
+    // When the program "sw $t1, 0x2000($zero)" is executed for 2 cycles
+    when_program_executed_for_cycles("sw $t1, 0x2000($zero)", 2);
+    
+    // Then data memory address 0x2000 should equal 0xCAFEBABE
+    then_memory_address_should_equal(0x2000, 0xCAFEBABE);
 }

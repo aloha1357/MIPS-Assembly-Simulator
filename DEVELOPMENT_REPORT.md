@@ -2,7 +2,7 @@
 
 **日期**: 2025年7月31日  
 **開發階段**: Sprint 1 - 核心 ISA 實現  
-**狀態**: ✅ 完成 ADD/SUB 指令，進行中
+**狀態**: ✅ 完成 ADD/SUB/ADDI/LW/SW 指令，進行中
 
 ---
 
@@ -12,20 +12,23 @@
 - ✅ **Walking Skeleton 完成** - CMake + Google Test 建置系統正常運作
 - ✅ **ADD 指令完整實現** - 包含解析、執行、測試
 - ✅ **SUB 指令完整實現** - 包含解析、執行、測試
+- ✅ **ADDI 指令完整實現** - I-type 立即值算術，包含符號擴展
+- ✅ **LW 指令完整實現** - 記憶體載入，支援偏移尋址
+- ✅ **SW 指令完整實現** - 記憶體儲存，支援偏移尋址
 - ✅ **BDD 測試框架建立** - 模擬 Cucumber 場景的 Google Test 實現
-- ✅ **測試覆蓋率**: 100% (17/17 測試通過)
+- ✅ **測試覆蓋率**: 100% (27/27 測試通過)
 
 ### 架構完成度
 ```
 ✅ CPU 核心架構           (基礎完成)
 ✅ RegisterFile          (完成)
 ✅ Memory                (完成)
-✅ Instruction 系統      (R-type 完成)
-✅ Assembler             (ADD/SUB 支援)
+✅ Instruction 系統      (R-type + I-type 完成)
+✅ Assembler             (ADD/SUB/ADDI/LW/SW 支援)
 🔄 Pipeline 架構         (骨架完成，待實現)
 ❌ Hazard 處理           (未開始)
 ❌ 分支指令              (未開始)
-❌ 記憶體指令            (未開始)
+❌ 跳躍指令              (未開始)
 ```
 
 ---
@@ -87,10 +90,34 @@ classDiagram
         +readWord(uint32_t)
         +writeWord(uint32_t, uint32_t)
     }
+    class ITypeInstruction {
+        #m_rt, m_rs, m_imm
+        +signExtend16()
+    }
+    
+    class AddInstruction
+    class SubInstruction
+    class AddiInstruction
+    class LwInstruction
+    class SwInstruction
+    
+    class RegisterFile {
+        +read(int)
+        +write(int, uint32_t)
+    }
+    
+    class Memory {
+        +readWord(uint32_t)
+        +writeWord(uint32_t, uint32_t)
+    }
     
     Instruction <|-- RTypeInstruction
+    Instruction <|-- ITypeInstruction
     RTypeInstruction <|-- AddInstruction
     RTypeInstruction <|-- SubInstruction
+    ITypeInstruction <|-- AddiInstruction
+    ITypeInstruction <|-- LwInstruction
+    ITypeInstruction <|-- SwInstruction
     Cpu --> RegisterFile
     Cpu --> Memory
     Cpu --> Instruction

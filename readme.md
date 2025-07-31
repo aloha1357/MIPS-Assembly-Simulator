@@ -5,18 +5,21 @@
 ## 🎯 Current Status (July 31, 2025)
 
 **Sprint 1 Progress**: Core ISA Implementation  
-**Tests Passing**: ✅ 17/17 (100%)  
-**Implemented Instructions**: ADD, SUB  
-**Next Target**: ADDI (I-type immediate arithmetic)
+**Tests Passing**: ✅ 27/27 (100%)  
+**Implemented Instructions**: ADD, SUB, ADDI, LW, SW  
+**Next Target**: BEQ/J (Control flow instructions)
 
 ### 📊 Feature Completion
 - ✅ **Walking Skeleton** - CMake + Google Test framework
 - ✅ **ADD Instruction** - Complete with BDD tests
 - ✅ **SUB Instruction** - Complete with BDD tests  
-- ✅ **Basic Assembler** - R-type instruction parsing
+- ✅ **ADDI Instruction** - I-type immediate arithmetic with sign extension
+- ✅ **LW Instruction** - Load word from memory with offset addressing
+- ✅ **SW Instruction** - Store word to memory with offset addressing
+- ✅ **Basic Assembler** - R-type, I-type, and memory instruction parsing
 - 🔄 **Pipeline Infrastructure** - Skeleton ready
 - ❌ **Hazard Handling** - Not started
-- ❌ **Memory Instructions** - Not started
+- ❌ **Control Flow Instructions** - Not started
 
 ### 🚀 Quick Start
 ```powershell

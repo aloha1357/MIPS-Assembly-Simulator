@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
+#include <stdexcept>
 
 namespace mips {
 
@@ -111,6 +112,108 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         
         if (rd >= 0 && rs >= 0 && rt >= 0) {
             return std::make_unique<SubInstruction>(rd, rs, rt);
+        }
+    }
+    else if (opcode == "addi" && tokens.size() >= 4) {
+        // Parse: addi $rt, $rs, imm
+        std::string rtStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string immStr = tokens[3];
+        
+        // Remove commas
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (immStr.back() == ',') immStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rt >= 0 && rs >= 0) {
+            // Parse immediate value (support decimal and hex)
+            int16_t imm = 0;
+            try {
+                if (immStr.substr(0, 2) == "0x" || immStr.substr(0, 2) == "0X") {
+                    imm = static_cast<int16_t>(std::stoi(immStr, nullptr, 16));
+                } else {
+                    imm = static_cast<int16_t>(std::stoi(immStr));
+                }
+                return std::make_unique<AddiInstruction>(rt, rs, imm);
+            } catch (const std::exception&) {
+                // Invalid immediate value
+                return nullptr;
+            }
+        }
+    }
+    else if (opcode == "lw" && tokens.size() >= 3) {
+        // Parse: lw $rt, offset($rs)
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr = tokens[2];
+        
+        // Remove comma from rt
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        if (rt >= 0) {
+            // Parse offset($rs) format
+            size_t parenPos = offsetRegStr.find('(');
+            if (parenPos != std::string::npos) {
+                std::string offsetStr = offsetRegStr.substr(0, parenPos);
+                std::string rsStr = offsetRegStr.substr(parenPos + 1);
+                if (rsStr.back() == ')') rsStr.pop_back();
+                
+                int rs = getRegisterNumber(rsStr);
+                if (rs >= 0) {
+                    try {
+                        int16_t offset = 0;
+                        if (!offsetStr.empty()) {
+                            if (offsetStr.substr(0, 2) == "0x" || offsetStr.substr(0, 2) == "0X") {
+                                offset = static_cast<int16_t>(std::stoi(offsetStr, nullptr, 16));
+                            } else {
+                                offset = static_cast<int16_t>(std::stoi(offsetStr));
+                            }
+                        }
+                        return std::make_unique<LwInstruction>(rt, rs, offset);
+                    } catch (const std::exception&) {
+                        return nullptr;
+                    }
+                }
+            }
+        }
+    }
+    else if (opcode == "sw" && tokens.size() >= 3) {
+        // Parse: sw $rt, offset($rs)
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr = tokens[2];
+        
+        // Remove comma from rt
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        if (rt >= 0) {
+            // Parse offset($rs) format
+            size_t parenPos = offsetRegStr.find('(');
+            if (parenPos != std::string::npos) {
+                std::string offsetStr = offsetRegStr.substr(0, parenPos);
+                std::string rsStr = offsetRegStr.substr(parenPos + 1);
+                if (rsStr.back() == ')') rsStr.pop_back();
+                
+                int rs = getRegisterNumber(rsStr);
+                if (rs >= 0) {
+                    try {
+                        int16_t offset = 0;
+                        if (!offsetStr.empty()) {
+                            if (offsetStr.substr(0, 2) == "0x" || offsetStr.substr(0, 2) == "0X") {
+                                offset = static_cast<int16_t>(std::stoi(offsetStr, nullptr, 16));
+                            } else {
+                                offset = static_cast<int16_t>(std::stoi(offsetStr));
+                            }
+                        }
+                        return std::make_unique<SwInstruction>(rt, rs, offset);
+                    } catch (const std::exception&) {
+                        return nullptr;
+                    }
+                }
+            }
         }
     }
     

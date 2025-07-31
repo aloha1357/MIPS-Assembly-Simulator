@@ -1,6 +1,7 @@
 #include "Instruction.h"
 #include "Cpu.h"
 #include "RegisterFile.h"
+#include "Memory.h"
 
 namespace mips {
 
@@ -38,6 +39,64 @@ void SubInstruction::execute(Cpu& cpu) {
 
 std::string SubInstruction::getName() const {
     return "sub";
+}
+
+ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
+    : m_rt(rt), m_rs(rs), m_imm(imm) {
+}
+
+uint32_t ITypeInstruction::signExtend16(int16_t value) {
+    return static_cast<uint32_t>(static_cast<int32_t>(value));
+}
+
+AddiInstruction::AddiInstruction(int rt, int rs, int16_t imm)
+    : ITypeInstruction(rt, rs, imm) {
+}
+
+void AddiInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t immValue = signExtend16(m_imm);
+    uint32_t result = rsValue + immValue;
+    
+    cpu.getRegisterFile().write(m_rt, result);
+}
+
+std::string AddiInstruction::getName() const {
+    return "addi";
+}
+
+LwInstruction::LwInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void LwInstruction::execute(Cpu& cpu) {
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    uint32_t offset = signExtend16(m_imm);
+    uint32_t address = baseAddress + offset;
+    
+    uint32_t value = cpu.getMemory().readWord(address);
+    cpu.getRegisterFile().write(m_rt, value);
+}
+
+std::string LwInstruction::getName() const {
+    return "lw";
+}
+
+SwInstruction::SwInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void SwInstruction::execute(Cpu& cpu) {
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    uint32_t offset = signExtend16(m_imm);
+    uint32_t address = baseAddress + offset;
+    
+    uint32_t value = cpu.getRegisterFile().read(m_rt);
+    cpu.getMemory().writeWord(address, value);
+}
+
+std::string SwInstruction::getName() const {
+    return "sw";
 }
 
 } // namespace mips
