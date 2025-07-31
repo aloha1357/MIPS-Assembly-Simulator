@@ -11,6 +11,7 @@ add_executable(unit_tests
     test_enhanced_gui_console.cpp  # Enhanced console testing
     test_syscall_debug.cpp         # Debug syscall issues
     test_assembler_debug.cpp       # Debug assembler issues
+    test_hello_mips.cpp            # Hello MIPS test files
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
