@@ -29,9 +29,10 @@ GUI Development: 80% 🚀 IN PROGRESS
 ```
 
 ### 📚 **Essential Documentation for Developers**
-- **📄 `DEVELOPMENT_HANDOVER_REPORT.md`** - **START HERE!** Complete developer handover guide
-- **📄 `GUI_BDD_DEVELOPMENT_SUMMARY.md`** - GUI BDD development methodology & results  
-- **📄 `DEVELOPMENT_REPORT.md`** - Detailed technical development history
+- **📄 `docs/README_DOCS.md`** - **START HERE!** Complete documentation index and navigation guide
+- **📄 `docs/CURRENT_PROJECT_STATUS_2025.md`** - Current project status overview and achievements
+- **📄 `docs/user-guides/GUI_USER_MANUAL.md`** - Complete GUI user manual and learning guide
+- **📄 `docs/development-reports/DEVELOPMENT_HANDOVER_REPORT.md`** - Developer handover guide
 - **📄 `QUICK_REFERENCE.md`** - Quick command reference for daily development
 
 ### 🚀 Quick Start
@@ -45,7 +46,7 @@ ctest --test-dir build
 .\build\src\Debug\mips-sim.exe
 ```
 
-📖 **For detailed development guide**: See [DEVELOPMENT_REPORT.md](DEVELOPMENT_REPORT.md)
+📖 **For detailed development guide**: See [docs/README_DOCS.md](docs/README_DOCS.md)
 
 ---
 
