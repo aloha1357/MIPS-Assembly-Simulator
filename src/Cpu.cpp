@@ -70,11 +70,11 @@ void Cpu::tickPipeline() {
     // Update PC if IF stage allows it and we're not terminated
     if (m_ifStage && m_ifStage->canUpdatePC() && !m_terminated) {
         if (m_pc < m_instructions.size()) {
+            // Only increment PC if we're still within instruction range
             m_pc++;
-        } else {
-            // No more instructions, terminate
-            m_terminated = true;
         }
+        // Don't terminate here - let the pipeline empty naturally
+        // Termination will be handled by syscall instruction in WB stage
     }
     
     // Update pipeline registers on clock edge
@@ -85,6 +85,19 @@ void Cpu::loadProgramFromString(const std::string& assembly) {
     Assembler assembler;
     m_instructions = assembler.assembleWithLabels(assembly, m_labelMap);
     m_pc = 0;
+    m_terminated = false; // Reset termination flag
+    
+    // Reset pipeline state when loading new program
+    if (m_ifidRegister) m_ifidRegister->reset();
+    if (m_idexRegister) m_idexRegister->reset();
+    if (m_exmemRegister) m_exmemRegister->reset();
+    if (m_memwbRegister) m_memwbRegister->reset();
+    
+    // Update IF stage with new instructions for pipeline mode
+    if (m_ifStage) {
+        m_ifStage->setInstructions(&m_instructions);
+        m_ifStage->reset();
+    }
 }
 
 void Cpu::loadProgram(const std::string& path) {
@@ -121,6 +134,19 @@ void Cpu::reset() {
     m_consoleOutput.clear();
     m_consoleInput.clear();
     m_inputPosition = 0;
+    
+    // Reset pipeline registers
+    if (m_ifidRegister) m_ifidRegister->reset();
+    if (m_idexRegister) m_idexRegister->reset();
+    if (m_exmemRegister) m_exmemRegister->reset();
+    if (m_memwbRegister) m_memwbRegister->reset();
+    
+    // Reset pipeline stages
+    if (m_ifStage) m_ifStage->reset();
+    if (m_idStage) m_idStage->reset();
+    if (m_exStage) m_exStage->reset();
+    if (m_memStage) m_memStage->reset();
+    if (m_wbStage) m_wbStage->reset();
 }
 
 void Cpu::setProgramCounter(uint32_t pc) {

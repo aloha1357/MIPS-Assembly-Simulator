@@ -2,6 +2,7 @@
 #include "Cpu.h"
 #include "Instruction.h"
 #include "Stage.h"
+#include <iostream>
 
 namespace mips {
 
@@ -14,6 +15,8 @@ IFStage::IFStage(Cpu* cpu)
 }
 
 void IFStage::execute() {
+    // std::cout << "IF: execute() called with PC=" << m_cpu->getProgramCounter() << std::endl;
+    
     if (m_flushed) {
         // Insert bubble if flushed
         if (m_outputRegister) {
@@ -36,6 +39,7 @@ void IFStage::execute() {
     
     // Check if PC is within instruction memory bounds
     if (pc >= m_instructions->size()) {
+        // std::cout << "IF: PC=" << pc << " >= size=" << m_instructions->size() << ", inserting bubble" << std::endl;
         m_outputRegister->setBubble();
         return;
     }
@@ -51,6 +55,9 @@ void IFStage::execute() {
     PipelineData data;
     data.instruction = instruction.get(); // Get raw pointer from unique_ptr
     data.pc = pc;
+    
+    // Debug output
+    // std::cout << "IF: Fetching instruction at PC=" << pc << " name=" << instruction->getName() << std::endl;
     
     // Set data to output register
     m_outputRegister->setData(data);

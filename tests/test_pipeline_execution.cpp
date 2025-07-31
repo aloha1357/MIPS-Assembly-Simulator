@@ -21,6 +21,7 @@ TEST_F(PipelineExecutionTest, BasicPipelineExecution) {
         addi $t0, $zero, 10
         addi $t1, $zero, 20
         add $t2, $t0, $t1
+        addi $v0, $zero, 10
         syscall
     )";
     
@@ -54,6 +55,7 @@ TEST_F(PipelineExecutionTest, PipelineVsSingleCycleComparison) {
         addi $t1, $zero, 3
         add $t2, $t0, $t1
         sub $t3, $t0, $t1
+        addi $v0, $zero, 10
         syscall
     )";
     
@@ -110,6 +112,7 @@ TEST_F(PipelineExecutionTest, PipelineModeWithMemoryOperations) {
         sw $t0, 0($zero)
         lw $t1, 0($zero)
         addi $t2, $t1, 50
+        addi $v0, $zero, 10
         syscall
     )";
     
@@ -160,6 +163,7 @@ TEST_F(PipelineExecutionTest, PipelineStageReset) {
 TEST_F(PipelineExecutionTest, PipelineModeToggling) {
     std::string program = R"(
         addi $t0, $zero, 1
+        addi $v0, $zero, 10
         syscall
     )";
     

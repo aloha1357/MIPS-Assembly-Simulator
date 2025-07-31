@@ -3,6 +3,7 @@
 #include "RegisterFile.h"
 #include "Instruction.h"
 #include "Stage.h"
+#include <iostream>
 
 namespace mips {
 
@@ -27,8 +28,22 @@ void WBStage::execute() {
     // For simplicity in this implementation, let's execute the instruction directly
     // This bridges our single-cycle instruction model with the pipeline architecture
     if (data.instruction && m_cpu) {
+        // Debug output
+        // std::cout << "WB: Executing " << data.instruction->getName() << std::endl;
+        
+        // In pipeline mode, we need to prevent most instructions from updating PC
+        // Save current PC, execute instruction, then conditionally restore PC
+        uint32_t savedPC = m_cpu->getProgramCounter();
+        
         // Execute the instruction directly
         data.instruction->execute(*m_cpu);
+        
+        // For non-control flow instructions, restore PC (pipeline manages PC updates)
+        // Control flow instructions (branch, jump) are allowed to update PC
+        const std::string& name = data.instruction->getName();
+        if (name != "beq" && name != "j" && name != "syscall") {
+            m_cpu->setProgramCounter(savedPC);
+        }
     }
     
     // Legacy register file write-back logic (commented out for now)
