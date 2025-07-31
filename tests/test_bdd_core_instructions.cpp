@@ -109,3 +109,30 @@ TEST_F(CoreInstructionsBDD, Add_a0_a1_to_v0_0_plus_0_equals_0) {
     // Then register $v0 should equal 0
     then_register_should_equal("$v0", 0);
 }
+
+// Next scenario: sub subtracts rt from rs and writes into rd
+TEST_F(CoreInstructionsBDD, Sub_t0_t1_to_t2_5_minus_3_equals_2) {
+    // Given register $t0 contains 5
+    given_register_contains("$t0", 5);
+    // And register $t1 contains 3
+    given_register_contains("$t1", 3);
+    
+    // When the program "sub $t2, $t0, $t1" is executed for 1 cycle
+    when_program_executed_for_cycles("sub $t2, $t0, $t1", 1);
+    
+    // Then register $t2 should equal 2
+    then_register_should_equal("$t2", 2);
+}
+
+TEST_F(CoreInstructionsBDD, Sub_s0_s1_to_s2_1_minus_1_equals_0) {
+    // Given register $s0 contains 1
+    given_register_contains("$s0", 1);
+    // And register $s1 contains 1
+    given_register_contains("$s1", 1);
+    
+    // When the program "sub $s2, $s0, $s1" is executed for 1 cycle
+    when_program_executed_for_cycles("sub $s2, $s0, $s1", 1);
+    
+    // Then register $s2 should equal 0
+    then_register_should_equal("$s2", 0);
+}

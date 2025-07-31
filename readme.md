@@ -1,6 +1,39 @@
 # MIPS Assembly Simulator – Project Overview
 
-## 1  Purpose
+# MIPS Assembly Simulator – Project Overview
+
+## 🎯 Current Status (July 31, 2025)
+
+**Sprint 1 Progress**: Core ISA Implementation  
+**Tests Passing**: ✅ 17/17 (100%)  
+**Implemented Instructions**: ADD, SUB  
+**Next Target**: ADDI (I-type immediate arithmetic)
+
+### 📊 Feature Completion
+- ✅ **Walking Skeleton** - CMake + Google Test framework
+- ✅ **ADD Instruction** - Complete with BDD tests
+- ✅ **SUB Instruction** - Complete with BDD tests  
+- ✅ **Basic Assembler** - R-type instruction parsing
+- 🔄 **Pipeline Infrastructure** - Skeleton ready
+- ❌ **Hazard Handling** - Not started
+- ❌ **Memory Instructions** - Not started
+
+### 🚀 Quick Start
+```powershell
+# Build and test
+cmake -B build -G "Visual Studio 17 2022"
+cmake --build build --config Debug
+ctest --test-dir build
+
+# Run CLI simulator
+.\build\src\Debug\mips-sim.exe
+```
+
+📖 **For detailed development guide**: See [DEVELOPMENT_REPORT.md](DEVELOPMENT_REPORT.md)
+
+---
+
+## 1  Purpose
 
 A cycle‑accurate educational simulator that models the classic 5‑stage MIPS pipeline (IF → ID → EX → MEM → WB).  Students can assemble a small program, execute it step‑by‑step, and inspect registers, memory, and intermediate pipeline registers at each cycle.
 
