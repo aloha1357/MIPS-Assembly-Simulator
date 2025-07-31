@@ -142,3 +142,88 @@ THEN("^exactly (\\d+) bubble should appear in (.+) during cycle (\\d+)$") {
     // TODO: Implement bubble counting
     PENDING("Bubble counting not yet implemented");
 }
+
+// ================================
+// GUI Console Output Scenarios
+// ================================
+
+#include "gui/ImGuiMipsSimulatorGUI.h"
+
+struct GuiContext {
+    std::unique_ptr<mips::ImGuiMipsSimulatorGUI> gui;
+    std::string loadedProgram;
+    std::string consoleOutput;
+};
+
+GIVEN("^I have the GUI simulator initialized in headless mode$") {
+    ScenarioScope<GuiContext> context;
+    
+    // Create GUI in headless mode
+    context->gui = std::make_unique<mips::ImGuiMipsSimulatorGUI>(true);
+    
+    // Initialize the GUI
+    bool initialized = context->gui->initialize();
+    EXPECT_TRUE(initialized) << "GUI initialization should succeed";
+}
+
+GIVEN("^I load a program that prints a string \"([^\"]+)\"$") {
+    REGEX_PARAM(std::string, expectedString);
+    ScenarioScope<GuiContext> context;
+    
+    // Create MIPS program that prints the specified string
+    // For "Test", we need to set up memory and use syscall 4
+    std::string program = R"(
+# Setup string in memory at address 0x1000
+addi $t0, $zero, 0x54       # 'T' (ASCII 84)
+addi $t1, $zero, 0x65       # 'e' (ASCII 101)  
+addi $t2, $zero, 0x73       # 's' (ASCII 115)
+addi $t3, $zero, 0x74       # 't' (ASCII 116)
+
+# Combine into word: 'T' + 'e'<<8 + 's'<<16 + 't'<<24
+sll $t1, $t1, 8            # shift 'e' to position 8-15
+sll $t2, $t2, 16           # shift 's' to position 16-23  
+sll $t3, $t3, 24           # shift 't' to position 24-31
+add $t0, $t0, $t1          # combine T + e
+add $t0, $t0, $t2          # combine T + e + s
+add $t0, $t0, $t3          # combine T + e + s + t
+sw $t0, 0x1000($zero)      # store "Test" at address 0x1000
+
+# Store null terminator
+sw $zero, 0x1004($zero)    # store "\0\0\0\0" at address 0x1004
+
+# Print the string using syscall 4
+addi $v0, $zero, 4         # syscall 4: print_string
+addi $a0, $zero, 0x1000    # load string address into $a0
+syscall                    # Should print "Test" to console
+
+# Exit program properly
+addi $v0, $zero, 10        # syscall 10: exit
+syscall
+)";
+    
+    context->loadedProgram = program;
+    
+    // Load program into GUI - this method needs to be implemented
+    bool loaded = context->gui->loadProgram(program);
+    EXPECT_TRUE(loaded) << "Program should load successfully";
+}
+
+WHEN("^I execute the program$") {
+    ScenarioScope<GuiContext> context;
+    
+    // Execute the loaded program - this method needs to be implemented
+    context->gui->executeCode();
+    
+    // Get console output after execution
+    context->consoleOutput = context->gui->getConsoleOutput();
+}
+
+THEN("^the GUI console should contain \"([^\"]+)\"$") {
+    REGEX_PARAM(std::string, expectedOutput);
+    ScenarioScope<GuiContext> context;
+    
+    // Check if the console output contains the expected string
+    EXPECT_TRUE(context->consoleOutput.find(expectedOutput) != std::string::npos) 
+        << "Console output should contain '" << expectedOutput 
+        << "' but was: '" << context->consoleOutput << "'";
+}

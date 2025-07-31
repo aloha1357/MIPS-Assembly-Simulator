@@ -7,6 +7,10 @@ add_executable(unit_tests
     test_pipeline_execution.cpp
     test_syscalls.cpp
     test_instruction_decoder.cpp
+    test_gui_console_output.cpp
+    test_enhanced_gui_console.cpp  # Enhanced console testing
+    test_syscall_debug.cpp         # Debug syscall issues
+    test_assembler_debug.cpp       # Debug assembler issues
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
@@ -16,6 +20,9 @@ target_link_libraries(unit_tests
     gtest_main
     gtest
 )
+
+# Note: GUI console test uses base GUI class, not ImGui-specific class
+# This avoids SDL2 linking issues in unit tests
 
 # Register test with CTest
 include(GoogleTest)

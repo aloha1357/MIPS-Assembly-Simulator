@@ -478,9 +478,37 @@ addi $t3, $zero, 77     # $t3 應該是 77
 
 #### ✅ 系統調用功能驗證
 - [ ] Print Integer (syscall 1)
-- [ ] Print String (syscall 4)  
-- [ ] Read Integer (syscall 5)
+- [ ] Print String (syscall 4) - **需要先在記憶體中準備字串數據**
+- [ ] Read Integer (syscall 5)  
 - [ ] Exit Program (syscall 10)
+
+#### 📝 字串列印特別說明
+在 MIPS 中列印字串需要兩個步驟：
+
+1. **準備字串數據**: 將字串以 null-terminated 格式存入記憶體
+```mips
+# 存儲 "Hi!" 字串的範例
+addi $t0, $zero, 0x48       # 'H' (ASCII 72)
+addi $t1, $zero, 0x69       # 'i' (ASCII 105) 
+addi $t2, $zero, 0x21       # '!' (ASCII 33)
+sll $t1, $t1, 8            # 將 'i' 移到第二個位元組
+sll $t2, $t2, 16           # 將 '!' 移到第三個位元組
+add $t0, $t0, $t1          # 組合 H + i
+add $t0, $t0, $t2          # 組合 H + i + !
+sw $t0, 0x1000($zero)      # 儲存到記憶體位址 0x1000
+```
+
+2. **調用列印系統調用**:
+```mips
+addi $v0, $zero, 4      # syscall 4: print_string
+addi $a0, $zero, 0x1000 # 字串位址
+syscall                 # 執行列印
+```
+
+**記憶體中的字串格式**:
+- 字串必須以 null 字元 (\0) 結尾
+- 每個字元占用一個位元組
+- MIPS 使用 little-endian 位元組順序
 
 #### ✅ GUI 功能驗證
 - [ ] 程式碼編輯器正常運作

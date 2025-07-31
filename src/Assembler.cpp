@@ -283,6 +283,40 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         
         return std::make_unique<JInstruction>(labelStr);
     }
+    else if (opcode == "sll" && tokens.size() >= 4) {
+        // Parse: sll $rd, $rt, shamt
+        std::string rdStr = tokens[1];
+        std::string rtStr = tokens[2];
+        std::string shamtStr = tokens[3];
+        
+        // Remove commas
+        if (rdStr.back() == ',') rdStr.pop_back();
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (shamtStr.back() == ',') shamtStr.pop_back();
+        
+        int rd = getRegisterNumber(rdStr);
+        int rt = getRegisterNumber(rtStr);
+        
+        if (rd >= 0 && rt >= 0) {
+            // Parse shift amount (0-31)
+            try {
+                uint32_t shamt = 0;
+                if (shamtStr.substr(0, 2) == "0x" || shamtStr.substr(0, 2) == "0X") {
+                    shamt = static_cast<uint32_t>(std::stoi(shamtStr, nullptr, 16));
+                } else {
+                    shamt = static_cast<uint32_t>(std::stoi(shamtStr));
+                }
+                
+                // Validate shift amount (0-31)
+                if (shamt <= 31) {
+                    return std::make_unique<SllInstruction>(rd, rt, shamt);
+                }
+            } catch (const std::exception&) {
+                // Invalid shift amount
+                return nullptr;
+            }
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();

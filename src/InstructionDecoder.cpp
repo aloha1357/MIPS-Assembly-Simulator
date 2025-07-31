@@ -58,9 +58,12 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
     uint32_t rs = extractRs(word);
     uint32_t rt = extractRt(word);
     uint32_t rd = extractRd(word);
+    uint32_t shamt = extractShamt(word);
     uint32_t function = extractFunction(word);
     
     switch (function) {
+        case 0x00:  // SLL instruction
+            return std::make_unique<SllInstruction>(rd, rt, shamt);
         case 0x20:  // ADD instruction
             return std::make_unique<AddInstruction>(rd, rs, rt);
         case 0x22:  // SUB instruction

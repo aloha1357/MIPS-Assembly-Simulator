@@ -383,8 +383,18 @@ void MipsSimulatorGUI::stepExecution() {
         oldRegValues[i] = m_cpu->getRegisterFile().read(i);
     }
     
+    // Store previous console output to detect new output from syscalls
+    std::string previousConsoleOutput = m_cpu->getConsoleOutput();
+    
     // Execute one step
     m_cpu->tick();
+    
+    // Check for new syscall output and add it to GUI console
+    std::string currentConsoleOutput = m_cpu->getConsoleOutput();
+    if (currentConsoleOutput.length() > previousConsoleOutput.length()) {
+        std::string newOutput = currentConsoleOutput.substr(previousConsoleOutput.length());
+        addConsoleText(newOutput, "blue");  // Add syscall output in blue color
+    }
     
     // Update highlights for changed registers
     for (int i = 0; i < 32; ++i) {

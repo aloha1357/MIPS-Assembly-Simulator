@@ -26,7 +26,7 @@ else()
     set(IMGUI_AVAILABLE FALSE)
 endif()
 
-# Source library
+# Source library (without GUI dependencies)
 add_library(mips-simulator
     Cpu.cpp
     RegisterFile.cpp
@@ -42,6 +42,23 @@ add_library(mips-simulator
     WBStage.cpp
     gui/MipsSimulatorGUI.cpp          # Base class implementation
 )
+
+# Create separate GUI library if ImGui is available
+if(IMGUI_AVAILABLE AND TARGET SDL2)
+    add_library(mips-simulator-gui
+        gui/ImGuiMipsSimulatorGUI.cpp    # ImGui implementation
+    )
+    
+    target_link_libraries(mips-simulator-gui PUBLIC
+        mips-simulator
+        imgui_backend
+        OpenGL::GL
+    )
+    
+    target_include_directories(mips-simulator-gui
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endif()
 
 target_include_directories(mips-simulator
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
@@ -60,14 +77,11 @@ target_link_libraries(mips-sim
 if(IMGUI_AVAILABLE AND TARGET SDL2)
     add_executable(mips-sim-gui
         imgui_main.cpp
-        gui/ImGuiMipsSimulatorGUI.cpp    # Include the implementation
     )
 
     target_link_libraries(mips-sim-gui
         PRIVATE 
-        mips-simulator
-        imgui_backend
-        OpenGL::GL
+        mips-simulator-gui
         SDL2main
         SDL2
     )

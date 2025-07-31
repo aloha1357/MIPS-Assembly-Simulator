@@ -149,6 +149,22 @@ private:
 };
 
 /**
+ * @brief Shift left logical instruction
+ */
+class SllInstruction : public Instruction {
+public:
+    SllInstruction(uint32_t rd, uint32_t rt, uint32_t shamt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+    
+private:
+    uint32_t m_rd;     // Destination register
+    uint32_t m_rt;     // Source register
+    uint32_t m_shamt;  // Shift amount
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {

@@ -72,7 +72,8 @@ ctest --test-dir build
 | File | Purpose | Instructions Tested | Expected Output |
 |------|---------|-------------------|-----------------|
 | `gui_demo_test.asm` | GUI demonstration | ADD, SUB, ADDI, LW, SW, SYSCALL | Prints: 40, 10 |
-| `demo_syscalls.asm` | System call examples | SYSCALL (all 4 types) | Interactive I/O demo |
+| `demo_syscalls.asm` | System call examples | SYSCALL (all 4 types) | Prints: "Hi!", 42, then interactive I/O |
+| `test_string_simple.asm` | String printing test | SW, SYSCALL | Prints: "OK", 123 |
 | `test_addi.asm` | Immediate arithmetic | ADDI | Register value testing |
 | `test_control.asm` | Control flow | BEQ, J | Branch/jump behavior |
 | `test_memory.asm` | Memory operations | LW, SW | Memory load/store |
@@ -105,6 +106,21 @@ syscall
 
 **2. System Call Demo (`demo_syscalls.asm`)**
 ```mips
+# Store string "Hi!" in memory first
+addi $t0, $zero, 0x48       # 'H' 
+addi $t1, $zero, 0x69       # 'i'
+addi $t2, $zero, 0x21       # '!'
+sll $t1, $t1, 8            # shift 'i' to byte position 1
+sll $t2, $t2, 16           # shift '!' to byte position 2
+add $t0, $t0, $t1          # combine H + i
+add $t0, $t0, $t2          # combine H + i + !
+sw $t0, 0x1000($zero)      # store "Hi!\0" at memory address
+
+# Print the string
+addi $v0, $zero, 4      # syscall 4: print_string
+addi $a0, $zero, 0x1000 # string address
+syscall                 # Outputs: "Hi!"
+
 # Print integer 42
 addi $v0, $zero, 1      # syscall 1: print_int
 addi $a0, $zero, 42     
@@ -120,10 +136,13 @@ addi $v0, $zero, 10     # syscall 10: exit
 syscall
 ```
 **Expected Results**:
+- Prints "Hi!" to console
 - Prints "42" to console
 - Prompts for integer input
 - Stores input value in $t0
 - Program exits cleanly
+
+**Important Note**: For string printing (syscall 4), you must first store the string data in memory before calling the syscall. The address in $a0 must point to a null-terminated string.
 
 **3. Control Flow Testing (`test_control.asm`)**
 ```mips
