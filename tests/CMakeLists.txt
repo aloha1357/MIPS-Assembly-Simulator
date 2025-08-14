@@ -9,6 +9,7 @@ add_executable(unit_tests
     test_instruction_decoder.cpp
     test_gui_console_output.cpp
     test_enhanced_gui_console.cpp  # Enhanced console testing
+    test_mips_core_console.cpp     # MIPS core requirements console testing
     test_syscall_debug.cpp         # Debug syscall issues
     test_assembler_debug.cpp       # Debug assembler issues
     test_hello_mips.cpp            # Hello MIPS test files
