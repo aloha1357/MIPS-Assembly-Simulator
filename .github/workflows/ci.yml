@@ -21,13 +21,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake ninja-build
+        # Note: Not installing OpenGL/SDL2 for headless CI builds
         
     - name: Configure CMake
       run: |
         cmake -B build -G Ninja \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
           -DCMAKE_CXX_COMPILER=g++ \
-          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+          -DBUILD_HEADLESS=ON
           
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
@@ -43,7 +45,8 @@ jobs:
         cmake -B build-sanitized -G Ninja \
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
-          -DCMAKE_CXX_COMPILER=g++
+          -DCMAKE_CXX_COMPILER=g++ \
+          -DBUILD_HEADLESS=ON
         cmake --build build-sanitized
         cd build-sanitized
         ctest --output-on-failure

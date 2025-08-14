@@ -1,5 +1,5 @@
-# Create ImGui library
-if(imgui_SOURCE_DIR)
+# Create ImGui library (only if not in headless mode)
+if(imgui_SOURCE_DIR AND NOT BUILD_HEADLESS AND OpenGL_FOUND)
     add_library(imgui_backend
         ${imgui_SOURCE_DIR}/imgui.cpp
         ${imgui_SOURCE_DIR}/imgui_demo.cpp
@@ -22,8 +22,10 @@ if(imgui_SOURCE_DIR)
     )
     
     set(IMGUI_AVAILABLE TRUE)
+    message(STATUS "ImGui backend available")
 else()
     set(IMGUI_AVAILABLE FALSE)
+    message(STATUS "ImGui backend not available (headless mode or missing dependencies)")
 endif()
 
 # Source library (without GUI dependencies)
