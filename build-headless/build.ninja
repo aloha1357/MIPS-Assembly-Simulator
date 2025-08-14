@@ -214,8 +214,6 @@ build _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.ob
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googlemock/include -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googlemock -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock.dir
   OBJECT_FILE_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock.dir\src
-  TARGET_COMPILE_PDB = lib\libgmock.pdb
-  TARGET_PDB = bin\libgmock.pdb
 
 
 # =============================================================================
@@ -229,9 +227,8 @@ build lib/libgmock.a: CXX_STATIC_LIBRARY_LINKER__gmock_ _deps/googletest-build/g
   OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = lib\libgmock.pdb
   TARGET_FILE = lib\libgmock.a
-  TARGET_PDB = bin\libgmock.pdb
+  TARGET_PDB = gmock.a.dbg
 
 # =============================================================================
 # Object build statements for STATIC_LIBRARY target gmock_main
@@ -248,8 +245,6 @@ build _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main
   INCLUDES = -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googlemock/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googlemock -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock_main.dir
   OBJECT_FILE_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock_main.dir\src
-  TARGET_COMPILE_PDB = lib\libgmock_main.pdb
-  TARGET_PDB = bin\libgmock_main.pdb
 
 
 # =============================================================================
@@ -263,9 +258,8 @@ build lib/libgmock_main.a: CXX_STATIC_LIBRARY_LINKER__gmock_main_ _deps/googlete
   OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock_main.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = lib\libgmock_main.pdb
   TARGET_FILE = lib\libgmock_main.a
-  TARGET_PDB = bin\libgmock_main.pdb
+  TARGET_PDB = gmock_main.a.dbg
 
 
 #############################################
@@ -364,8 +358,6 @@ build _deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.ob
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest.dir
   OBJECT_FILE_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest.dir\src
-  TARGET_COMPILE_PDB = lib\libgtest.pdb
-  TARGET_PDB = bin\libgtest.pdb
 
 
 # =============================================================================
@@ -379,9 +371,8 @@ build lib/libgtest.a: CXX_STATIC_LIBRARY_LINKER__gtest_ _deps/googletest-build/g
   OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = lib\libgtest.pdb
   TARGET_FILE = lib\libgtest.a
-  TARGET_PDB = bin\libgtest.pdb
+  TARGET_PDB = gtest.a.dbg
 
 # =============================================================================
 # Object build statements for STATIC_LIBRARY target gtest_main
@@ -398,8 +389,6 @@ build _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main
   INCLUDES = -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest_main.dir
   OBJECT_FILE_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest_main.dir\src
-  TARGET_COMPILE_PDB = lib\libgtest_main.pdb
-  TARGET_PDB = bin\libgtest_main.pdb
 
 
 # =============================================================================
@@ -413,9 +402,8 @@ build lib/libgtest_main.a: CXX_STATIC_LIBRARY_LINKER__gtest_main_ _deps/googlete
   OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest_main.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = lib\libgtest_main.pdb
   TARGET_FILE = lib\libgtest_main.a
-  TARGET_PDB = bin\libgtest_main.pdb
+  TARGET_PDB = gtest_main.a.dbg
 
 
 #############################################
@@ -514,8 +502,6 @@ build src/CMakeFiles/mips-simulator.dir/Cpu.cpp.obj: CXX_COMPILER__mips-simulato
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/RegisterFile.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/RegisterFile.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\RegisterFile.cpp.obj.d
@@ -523,8 +509,6 @@ build src/CMakeFiles/mips-simulator.dir/RegisterFile.cpp.obj: CXX_COMPILER__mips
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/Memory.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/Memory.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\Memory.cpp.obj.d
@@ -532,8 +516,6 @@ build src/CMakeFiles/mips-simulator.dir/Memory.cpp.obj: CXX_COMPILER__mips-simul
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/Stage.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/Stage.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\Stage.cpp.obj.d
@@ -541,8 +523,6 @@ build src/CMakeFiles/mips-simulator.dir/Stage.cpp.obj: CXX_COMPILER__mips-simula
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/Instruction.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/Instruction.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\Instruction.cpp.obj.d
@@ -550,8 +530,6 @@ build src/CMakeFiles/mips-simulator.dir/Instruction.cpp.obj: CXX_COMPILER__mips-
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/Assembler.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/Assembler.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\Assembler.cpp.obj.d
@@ -559,8 +537,6 @@ build src/CMakeFiles/mips-simulator.dir/Assembler.cpp.obj: CXX_COMPILER__mips-si
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/InstructionDecoder.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/InstructionDecoder.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\InstructionDecoder.cpp.obj.d
@@ -568,8 +544,6 @@ build src/CMakeFiles/mips-simulator.dir/InstructionDecoder.cpp.obj: CXX_COMPILER
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/IFStage.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/IFStage.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\IFStage.cpp.obj.d
@@ -577,8 +551,6 @@ build src/CMakeFiles/mips-simulator.dir/IFStage.cpp.obj: CXX_COMPILER__mips-simu
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/IDStage.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/IDStage.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\IDStage.cpp.obj.d
@@ -586,8 +558,6 @@ build src/CMakeFiles/mips-simulator.dir/IDStage.cpp.obj: CXX_COMPILER__mips-simu
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/EXStage.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/EXStage.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\EXStage.cpp.obj.d
@@ -595,8 +565,6 @@ build src/CMakeFiles/mips-simulator.dir/EXStage.cpp.obj: CXX_COMPILER__mips-simu
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/MEMStage.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/MEMStage.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\MEMStage.cpp.obj.d
@@ -604,8 +572,6 @@ build src/CMakeFiles/mips-simulator.dir/MEMStage.cpp.obj: CXX_COMPILER__mips-sim
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/WBStage.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/WBStage.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\WBStage.cpp.obj.d
@@ -613,8 +579,6 @@ build src/CMakeFiles/mips-simulator.dir/WBStage.cpp.obj: CXX_COMPILER__mips-simu
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 build src/CMakeFiles/mips-simulator.dir/gui/MipsSimulatorGUI.cpp.obj: CXX_COMPILER__mips-simulator_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/gui/MipsSimulatorGUI.cpp || cmake_object_order_depends_target_mips-simulator
   DEP_FILE = src\CMakeFiles\mips-simulator.dir\gui\MipsSimulatorGUI.cpp.obj.d
@@ -622,8 +586,6 @@ build src/CMakeFiles/mips-simulator.dir/gui/MipsSimulatorGUI.cpp.obj: CXX_COMPIL
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-simulator.dir\gui
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
-  TARGET_PDB = src\libmips-simulator.pdb
 
 
 # =============================================================================
@@ -637,9 +599,8 @@ build src/libmips-simulator.a: CXX_STATIC_LIBRARY_LINKER__mips-simulator_ src/CM
   OBJECT_DIR = src\CMakeFiles\mips-simulator.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-simulator.dir\mips-simulator.pdb
   TARGET_FILE = src\libmips-simulator.a
-  TARGET_PDB = src\libmips-simulator.pdb
+  TARGET_PDB = mips-simulator.a.dbg
 
 # =============================================================================
 # Object build statements for EXECUTABLE target mips-sim
@@ -656,8 +617,6 @@ build src/CMakeFiles/mips-sim.dir/main.cpp.obj: CXX_COMPILER__mips-sim_unscanned
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-sim.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-sim.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-sim.dir\
-  TARGET_PDB = src\mips-sim.pdb
 
 
 # =============================================================================
@@ -672,10 +631,9 @@ build src/mips-sim.exe: CXX_EXECUTABLE_LINKER__mips-sim_ src/CMakeFiles/mips-sim
   OBJECT_DIR = src\CMakeFiles\mips-sim.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-sim.dir\
   TARGET_FILE = src\mips-sim.exe
   TARGET_IMPLIB = src\libmips-sim.dll.a
-  TARGET_PDB = src\mips-sim.pdb
+  TARGET_PDB = mips-sim.exe.dbg
 
 # =============================================================================
 # Object build statements for EXECUTABLE target mips-sim-gui-legacy
@@ -692,8 +650,6 @@ build src/CMakeFiles/mips-sim-gui-legacy.dir/gui_main.cpp.obj: CXX_COMPILER__mip
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src
   OBJECT_DIR = src\CMakeFiles\mips-sim-gui-legacy.dir
   OBJECT_FILE_DIR = src\CMakeFiles\mips-sim-gui-legacy.dir
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-sim-gui-legacy.dir\
-  TARGET_PDB = src\mips-sim-gui-legacy.pdb
 
 
 # =============================================================================
@@ -708,10 +664,9 @@ build src/mips-sim-gui-legacy.exe: CXX_EXECUTABLE_LINKER__mips-sim-gui-legacy_ s
   OBJECT_DIR = src\CMakeFiles\mips-sim-gui-legacy.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = src\CMakeFiles\mips-sim-gui-legacy.dir\
   TARGET_FILE = src\mips-sim-gui-legacy.exe
   TARGET_IMPLIB = src\libmips-sim-gui-legacy.dll.a
-  TARGET_PDB = src\mips-sim-gui-legacy.pdb
+  TARGET_PDB = mips-sim-gui-legacy.exe.dbg
 
 
 #############################################
@@ -810,8 +765,6 @@ build tests/CMakeFiles/unit_tests.dir/test_cpu.cpp.obj: CXX_COMPILER__unit_tests
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_bdd_core_instructions.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_bdd_core_instructions.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_bdd_core_instructions.cpp.obj.d
@@ -819,8 +772,6 @@ build tests/CMakeFiles/unit_tests.dir/test_bdd_core_instructions.cpp.obj: CXX_CO
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_pipeline.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_pipeline.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_pipeline.cpp.obj.d
@@ -828,8 +779,6 @@ build tests/CMakeFiles/unit_tests.dir/test_pipeline.cpp.obj: CXX_COMPILER__unit_
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_pipeline_integration.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_pipeline_integration.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_pipeline_integration.cpp.obj.d
@@ -837,8 +786,6 @@ build tests/CMakeFiles/unit_tests.dir/test_pipeline_integration.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_pipeline_execution.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_pipeline_execution.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_pipeline_execution.cpp.obj.d
@@ -846,8 +793,6 @@ build tests/CMakeFiles/unit_tests.dir/test_pipeline_execution.cpp.obj: CXX_COMPI
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_syscalls.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_syscalls.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_syscalls.cpp.obj.d
@@ -855,8 +800,6 @@ build tests/CMakeFiles/unit_tests.dir/test_syscalls.cpp.obj: CXX_COMPILER__unit_
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_instruction_decoder.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_instruction_decoder.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_instruction_decoder.cpp.obj.d
@@ -864,8 +807,6 @@ build tests/CMakeFiles/unit_tests.dir/test_instruction_decoder.cpp.obj: CXX_COMP
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_gui_console_output.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_gui_console_output.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_gui_console_output.cpp.obj.d
@@ -873,8 +814,6 @@ build tests/CMakeFiles/unit_tests.dir/test_gui_console_output.cpp.obj: CXX_COMPI
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_enhanced_gui_console.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_enhanced_gui_console.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_enhanced_gui_console.cpp.obj.d
@@ -882,8 +821,6 @@ build tests/CMakeFiles/unit_tests.dir/test_enhanced_gui_console.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_mips_core_console.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_mips_core_console.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_mips_core_console.cpp.obj.d
@@ -891,8 +828,6 @@ build tests/CMakeFiles/unit_tests.dir/test_mips_core_console.cpp.obj: CXX_COMPIL
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_syscall_debug.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_syscall_debug.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_syscall_debug.cpp.obj.d
@@ -900,8 +835,6 @@ build tests/CMakeFiles/unit_tests.dir/test_syscall_debug.cpp.obj: CXX_COMPILER__
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_assembler_debug.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_assembler_debug.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_assembler_debug.cpp.obj.d
@@ -909,8 +842,6 @@ build tests/CMakeFiles/unit_tests.dir/test_assembler_debug.cpp.obj: CXX_COMPILER
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 build tests/CMakeFiles/unit_tests.dir/test_hello_mips.cpp.obj: CXX_COMPILER__unit_tests_unscanned_ C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/test_hello_mips.cpp || cmake_object_order_depends_target_unit_tests
   DEP_FILE = tests\CMakeFiles\unit_tests.dir\test_hello_mips.cpp.obj.d
@@ -918,8 +849,6 @@ build tests/CMakeFiles/unit_tests.dir/test_hello_mips.cpp.obj: CXX_COMPILER__uni
   INCLUDES = -IC:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest/include -isystem C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/_deps/googletest-src/googletest
   OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
-  TARGET_PDB = tests\unit_tests.pdb
 
 
 # =============================================================================
@@ -935,10 +864,9 @@ build tests/unit_tests.exe tests/unit_tests[1]_tests.cmake | ${cmake_ninja_workd
   POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\aloha\Documents\GitHub\MIPS-Assembly-Simulator\build-headless\tests && C:\Strawberry\c\bin\cmake.exe -D TEST_TARGET=unit_tests -D TEST_EXECUTABLE=C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/tests/unit_tests.exe -D TEST_EXECUTOR= -D TEST_WORKING_DIR=C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/tests -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=unit_tests_TESTS -D CTEST_FILE=C:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/build-headless/tests/unit_tests[1]_tests.cmake -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P C:/Strawberry/c/share/cmake-3.29/Modules/GoogleTestAddTests.cmake"
   PRE_LINK = cd .
   RESTAT = 1
-  TARGET_COMPILE_PDB = tests\CMakeFiles\unit_tests.dir\
   TARGET_FILE = tests\unit_tests.exe
   TARGET_IMPLIB = tests\libunit_tests.dll.a
-  TARGET_PDB = tests\unit_tests.pdb
+  TARGET_PDB = unit_tests.exe.dbg
 
 
 #############################################
@@ -1104,14 +1032,14 @@ build tests/all: phony tests/unit_tests.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:/Strawberry/c/share/cmake-3.29/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCCompilerABI.c C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompilerABI.cpp C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCompilerIdDetection.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDependentOption.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompileFeatures.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeFindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeNinjaFindMake.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakePackageConfigHelpers.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseLibraryArchitecture.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystem.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCompilerCommon.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CrayClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/LCC-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OrangeC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TIClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Tasking-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/ExternalProject/shared_internal_commands.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent/CMakeLists.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/FindGit.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindOpenGL.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageMessage.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython3.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython/Support.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GNUInstallDirs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GoogleTest.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/CMakeDetermineLinkerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/FeatureTesting.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Determine-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCCompiler.cmake CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake _deps/googletest-src/CMakeLists.txt _deps/googletest-src/googlemock/CMakeLists.txt _deps/googletest-src/googlemock/cmake/gmock.pc.in _deps/googletest-src/googlemock/cmake/gmock_main.pc.in _deps/googletest-src/googletest/CMakeLists.txt _deps/googletest-src/googletest/cmake/Config.cmake.in _deps/googletest-src/googletest/cmake/gtest.pc.in _deps/googletest-src/googletest/cmake/gtest_main.pc.in _deps/googletest-src/googletest/cmake/internal_utils.cmake
+build build.ninja: RERUN_CMAKE | C$:/Strawberry/c/share/cmake-3.29/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDependentOption.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakePackageConfigHelpers.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/ExternalProject/shared_internal_commands.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent/CMakeLists.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/FindGit.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindOpenGL.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageMessage.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython3.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython/Support.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GNUInstallDirs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GoogleTest.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCCompiler.cmake CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake _deps/googletest-src/CMakeLists.txt _deps/googletest-src/googlemock/CMakeLists.txt _deps/googletest-src/googlemock/cmake/gmock.pc.in _deps/googletest-src/googlemock/cmake/gmock_main.pc.in _deps/googletest-src/googletest/CMakeLists.txt _deps/googletest-src/googletest/cmake/Config.cmake.in _deps/googletest-src/googletest/cmake/gtest.pc.in _deps/googletest-src/googletest/cmake/gtest_main.pc.in _deps/googletest-src/googletest/cmake/internal_utils.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Strawberry/c/share/cmake-3.29/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCCompilerABI.c C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompilerABI.cpp C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCompilerIdDetection.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDependentOption.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompileFeatures.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeFindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeNinjaFindMake.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakePackageConfigHelpers.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseLibraryArchitecture.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystem.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCompilerCommon.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CrayClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/LCC-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OrangeC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TIClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Tasking-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/ExternalProject/shared_internal_commands.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent/CMakeLists.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/FindGit.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindOpenGL.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageMessage.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython3.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython/Support.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GNUInstallDirs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GoogleTest.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/CMakeDetermineLinkerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/FeatureTesting.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Determine-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCCompiler.cmake CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake _deps/googletest-src/CMakeLists.txt _deps/googletest-src/googlemock/CMakeLists.txt _deps/googletest-src/googlemock/cmake/gmock.pc.in _deps/googletest-src/googlemock/cmake/gmock_main.pc.in _deps/googletest-src/googletest/CMakeLists.txt _deps/googletest-src/googletest/cmake/Config.cmake.in _deps/googletest-src/googletest/cmake/gtest.pc.in _deps/googletest-src/googletest/cmake/gtest_main.pc.in _deps/googletest-src/googletest/cmake/internal_utils.cmake: phony
+build C$:/Strawberry/c/share/cmake-3.29/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDependentOption.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakePackageConfigHelpers.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/ExternalProject/shared_internal_commands.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FetchContent/CMakeLists.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/FindGit.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindOpenGL.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPackageMessage.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython3.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/FindPython/Support.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GNUInstallDirs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/GoogleTest.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-C.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/src/CMakeLists.txt C$:/Users/aloha/Documents/GitHub/MIPS-Assembly-Simulator/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCCompiler.cmake CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake _deps/googletest-src/CMakeLists.txt _deps/googletest-src/googlemock/CMakeLists.txt _deps/googletest-src/googlemock/cmake/gmock.pc.in _deps/googletest-src/googlemock/cmake/gmock_main.pc.in _deps/googletest-src/googletest/CMakeLists.txt _deps/googletest-src/googletest/cmake/Config.cmake.in _deps/googletest-src/googletest/cmake/gtest.pc.in _deps/googletest-src/googletest/cmake/gtest_main.pc.in _deps/googletest-src/googletest/cmake/internal_utils.cmake: phony
 
 
 #############################################
