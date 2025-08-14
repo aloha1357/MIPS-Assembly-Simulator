@@ -35,7 +35,7 @@ public:
         m_panelVisibility["console_output"] = true;
         
         // Initialize register highlights
-        m_registerHighlights.resize(32, false);
+        m_registerHighlights.assign(32, false);
         
         // Initialize pipeline stages
         m_pipelineStages.resize(5);
@@ -60,7 +60,7 @@ public:
     std::map<std::string, bool> m_panelVisibility;
     
     // Register and memory state
-    std::vector<bool> m_registerHighlights;
+    std::vector<char> m_registerHighlights;
     std::set<uint32_t> m_highlightedMemoryAddresses;
     
     // Pipeline visualization

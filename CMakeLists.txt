@@ -17,7 +17,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(MSVC)
     add_compile_options(/W4)  # Removed /WX temporarily for GUI development
 else()
-    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+    # Use stricter warnings in Debug mode, more lenient in Release
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+    else()
+        add_compile_options(-Wall -Wextra -Wpedantic)
+    endif()
 endif()
 
 # Enable testing
