@@ -49,6 +49,7 @@
 ```
 docs/
 ├── CURRENT_PROJECT_STATUS_2025.md   # 📊 主要專案狀態報告
+├── CI_CD_RELEASE_MODE_FIX_REPORT.md # 🔧 CI/CD Release模式修復報告 ⭐ 最新
 ├── GUI_CONSOLE_TESTING_ANALYSIS.md  # 🔍 GUI測試問題分析
 ├── README_DOCS.md                   # 📚 文件導覽說明
 ├── development-reports/              # 📋 開發報告資料夾
