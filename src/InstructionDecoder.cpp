@@ -81,6 +81,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
             return std::make_unique<NorInstruction>(rd, rs, rt);
         case 0x2A:  // SLT instruction
             return std::make_unique<SltInstruction>(rd, rs, rt);
+        case 0x2B:  // SLTU instruction
+            return std::make_unique<SltuInstruction>(rd, rs, rt);
         case 0x0C:  // SYSCALL instruction
             return std::make_unique<SyscallInstruction>();
         default:

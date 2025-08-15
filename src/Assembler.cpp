@@ -154,6 +154,25 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<SubInstruction>(rd, rs, rt);
         }
     }
+    else if (opcode == "sltu" && tokens.size() >= 4) {
+        // Parse: sltu $rd, $rs, $rt
+        std::string rdStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string rtStr = tokens[3];
+        
+        // Remove commas
+        if (rdStr.back() == ',') rdStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rd = getRegisterNumber(rdStr);
+        int rs = getRegisterNumber(rsStr);
+        int rt = getRegisterNumber(rtStr);
+        
+        if (rd >= 0 && rs >= 0 && rt >= 0) {
+            return std::make_unique<SltuInstruction>(rd, rs, rt);
+        }
+    }
     else if (opcode == "addi" && tokens.size() >= 4) {
         // Parse: addi $rt, $rs, imm
         std::string rtStr = tokens[1];
@@ -178,6 +197,36 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                     imm = static_cast<int16_t>(std::stoi(immStr));
                 }
                 return std::make_unique<AddiInstruction>(rt, rs, imm);
+            } catch (const std::exception&) {
+                // Invalid immediate value
+                return nullptr;
+            }
+        }
+    }
+    else if (opcode == "sltiu" && tokens.size() >= 4) {
+        // Parse: sltiu $rt, $rs, imm
+        std::string rtStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string immStr = tokens[3];
+        
+        // Remove commas
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (immStr.back() == ',') immStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rt >= 0 && rs >= 0) {
+            // Parse immediate value (support decimal and hex)
+            int16_t imm = 0;
+            try {
+                if (immStr.substr(0, 2) == "0x" || immStr.substr(0, 2) == "0X") {
+                    imm = static_cast<int16_t>(std::stoi(immStr, nullptr, 16));
+                } else {
+                    imm = static_cast<int16_t>(std::stoi(immStr));
+                }
+                return std::make_unique<SltiuInstruction>(rt, rs, imm);
             } catch (const std::exception&) {
                 // Invalid immediate value
                 return nullptr;

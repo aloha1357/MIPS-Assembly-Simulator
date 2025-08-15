@@ -15,6 +15,7 @@
 #include "../src/RegisterFile.h"
 #include "../src/Instruction.h"
 #include "../src/InstructionDecoder.h"
+#include "../src/Assembler.h"
 #include <memory>
 
 /**
@@ -200,10 +201,23 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_DecoderIntegration_ShouldDecodeCor
 
 /**
  * @brief Integration Test: SLTIU 指令與彙編器集成  
- * 期望失敗：彙編器還沒支援 SLTIU 指令文字解析
+ * 測試彙編器能正確解析 SLTIU 指令的彙編語法
  */
-TEST_F(SltiuInstructionTest, DISABLED_SltiuInstruction_AssemblerIntegration_ShouldParseCorrectly) {
-    // 這個測試將在 Phase B 實作彙編器支援後啟用
-    // TODO: 在 Assembler 中添加 SLTIU 指令解析後移除 DISABLED_ 前綴
-    // 應該解析 "sltiu $t1, $t0, 100" 這樣的字串
+TEST_F(SltiuInstructionTest, SltiuInstruction_AssemblerIntegration_ShouldParseCorrectly) {
+    // Arrange: 建立彙編器
+    mips::Assembler assembler;
+    
+    // SLTIU 彙編語法: "sltiu $t1, $t0, 100"
+    std::string assembly = "sltiu $t1, $t0, 100";
+    
+    // Act: 解析指令
+    auto instructions = assembler.assemble(assembly);
+    
+    // Assert: 驗證解析結果
+    ASSERT_EQ(instructions.size(), 1) << "應該解析出一個指令";
+    ASSERT_NE(instructions[0], nullptr) << "彙編器應該能夠解析 SLTIU 指令";
+    EXPECT_EQ(instructions[0]->getName(), "sltiu") << "指令名稱應該是 'sltiu'";
+    
+    // 驗證指令可以執行而不會崩潰
+    // 注意：不測試執行結果，只測試彙編器能正確解析語法
 }

@@ -10,6 +10,8 @@
 #include "../src/Cpu.h"
 #include "../src/RegisterFile.h"
 #include "../src/Instruction.h"
+#include "../src/InstructionDecoder.h"
+#include "../src/Assembler.h"
 #include <memory>
 
 /**
@@ -156,18 +158,43 @@ TEST_F(SltuInstructionTest, SltuInstruction_ProgramCounter_ShouldIncrement) {
 
 /**
  * @brief Integration Test: SLTU 指令與解碼器集成
- * 期望失敗：解碼器還沒支援 SLTU 指令
+ * 測試解碼器能正確解碼 SLTU 指令的機器碼
  */
-TEST_F(SltuInstructionTest, DISABLED_SltuInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
-    // 這個測試將在 Phase B 實作解碼器支援後啟用
-    // TODO: 在 InstructionDecoder 中添加 SLTU 支援後移除 DISABLED_ 前綴
+TEST_F(SltuInstructionTest, SltuInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
+    // Arrange: 建立解碼器
+    mips::InstructionDecoder decoder;
+    
+    // SLTU $t2, $t0, $t1 的機器碼
+    // opcode=0x00 (R-type), rs=$t0(8), rt=$t1(9), rd=$t2(10), shamt=0, funct=0x2B
+    // 格式: [opcode:6][rs:5][rt:5][rd:5][shamt:5][funct:6]
+    uint32_t machineCode = (0x00 << 26) | (8 << 21) | (9 << 16) | (10 << 11) | (0 << 6) | 0x2B;
+    
+    // Act: 解碼指令
+    auto instruction = decoder.decode(machineCode);
+    
+    // Assert: 驗證解碼結果
+    ASSERT_NE(instruction, nullptr) << "解碼器應該能夠解碼 SLTU 指令";
+    EXPECT_EQ(instruction->getName(), "sltu") << "指令名稱應該是 'sltu'";
+    
+    // 驗證指令可以執行而不會崩潰
+    // 注意：不測試執行結果，只測試解碼器能正確識別指令類型
 }
 
 /**
  * @brief Integration Test: SLTU 指令與彙編器集成  
  * 期望失敗：彙編器還沒支援 SLTU 指令文字解析
  */
-TEST_F(SltuInstructionTest, DISABLED_SltuInstruction_AssemblerIntegration_ShouldParseCorrectly) {
-    // 這個測試將在 Phase B 實作彙編器支援後啟用
-    // TODO: 在 Assembler 中添加 SLTU 指令解析後移除 DISABLED_ 前綴
+TEST_F(SltuInstructionTest, SltuInstruction_AssemblerIntegration_ShouldParseCorrectly) {
+    // Phase A: 測試彙編器是否能正確解析 SLTU 指令
+    mips::Assembler assembler;
+    
+    std::string asmCode = "sltu $t0, $t1, $t2";
+    auto instructions = assembler.assemble(asmCode);
+    
+    ASSERT_EQ(instructions.size(), 1);
+    auto instruction = dynamic_cast<mips::SltuInstruction*>(instructions[0].get());
+    ASSERT_NE(instruction, nullptr) << "無法解析 SLTU 指令";
+    
+    // 驗證指令名稱
+    EXPECT_EQ(instruction->getName(), "sltu") << "指令名稱應該是 'sltu'";
 }
