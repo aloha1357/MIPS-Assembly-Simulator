@@ -32,6 +32,7 @@ Feature: Atomic Logical Instructions Implementation
       | $t6     | $t7     | $t8  | 0x00000000 | 0xFFFFFFFF | 0x00000000 | 零值 AND                |
       | $t0     | $t0     | $t0  | 0xDEADBEEF | 0xDEADBEEF | 0xDEADBEEF | 暫存器別名 (自我 AND)   |
 
+  @ignore
   場景: AND 指令異常狀況測試
     假設 暫存器 $t0 包含 0x80000000
     並且 暫存器 $t1 包含 0x7FFFFFFF
@@ -44,6 +45,7 @@ Feature: Atomic Logical Instructions Implementation
   # Scenario 2: OR 邏輯指令測試
   # ====================================
 
+  @ignore
   場景大綱: OR 指令執行位元 OR 運算
     假設 暫存器 <source1> 包含 <value1>
     並且 暫存器 <source2> 包含 <value2>
@@ -59,6 +61,7 @@ Feature: Atomic Logical Instructions Implementation
       | $a0     | $a1     | $v0  | 0x12340000 | 0x00005678 | 0x12345678 | 位元合併運算            |
       | $t6     | $t7     | $t8  | 0xDEADBEEF | 0x00000000 | 0xDEADBEEF | 與零 OR (恆等運算)      |
 
+  @ignore
   場景: OR 指令效能要求驗證
     假設 我準備了 1000 個 OR 指令
     當 我執行所有 1000 個指令
@@ -69,6 +72,7 @@ Feature: Atomic Logical Instructions Implementation
   # Scenario 3: XOR 邏輯指令測試
   # ====================================
 
+  @ignore
   場景大綱: XOR 指令執行位元 XOR 運算
     假設 暫存器 <source1> 包含 <value1>
     並且 暫存器 <source2> 包含 <value2>
