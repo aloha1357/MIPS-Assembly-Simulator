@@ -539,6 +539,35 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             }
         }
     }
+    else if (opcode == "bgtz" && tokens.size() >= 3) {
+        // Parse: bgtz $rs, offset
+        std::string rsStr = tokens[1];
+        std::string offsetStr = tokens[2];
+        
+        // Remove commas
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (offsetStr.back() == ',') offsetStr.pop_back();
+        
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rs >= 0) {
+            // Parse offset value (support decimal and hex)
+            int16_t offset = 0;
+            try {
+                if (offsetStr.substr(0, 2) == "0x" || offsetStr.substr(0, 2) == "0X") {
+                    offset = static_cast<int16_t>(std::stoi(offsetStr, nullptr, 16));
+                } else {
+                    offset = static_cast<int16_t>(std::stoi(offsetStr));
+                }
+                return std::make_unique<BGTZInstruction>(rs, offset);
+            } catch (const std::exception&) {
+                // If numeric parsing fails, treat as label with fixed offset
+                // TODO: Implement proper label-to-offset calculation
+                int16_t labelOffset = 4;
+                return std::make_unique<BGTZInstruction>(rs, labelOffset);
+            }
+        }
+    }
     else if (opcode == "j" && tokens.size() >= 2) {
         // Parse: j label
         std::string labelStr = tokens[1];

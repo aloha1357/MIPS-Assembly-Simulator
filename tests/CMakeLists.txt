@@ -42,6 +42,7 @@ add_executable(unit_tests
     test_logical_xori_bdd_minimal.cpp      # XORI instruction BDD tests (Phase A: Red Light)
     test_xori_instruction_integration.cpp  # XORI instruction Integration tests
     test_blez_instruction_bdd_minimal.cpp  # BLEZ instruction BDD tests (Phase 3.1: Red Light)
+    test_bgtz_instruction_bdd_minimal.cpp  # BGTZ instruction BDD tests (Phase 3.4: Red Light)
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

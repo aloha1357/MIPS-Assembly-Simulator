@@ -421,6 +421,39 @@ std::string BLEZInstruction::getName() const {
     return "blez";
 }
 
+BGTZInstruction::BGTZInstruction(int rs, int16_t offset)
+    : ITypeInstruction(0, rs, offset) {
+    // BGTZ 指令的格式是 bgtz $rs, offset
+    // rt 總是 0 (未使用)，只檢查 rs 暫存器
+}
+
+void BGTZInstruction::execute(Cpu& cpu) {
+    // 讀取源暫存器的值
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    
+    // 將無符號值轉換為有符號值以進行比較
+    int32_t signedRsValue = static_cast<int32_t>(rsValue);
+    
+    if (signedRsValue > 0) {
+        // 分支條件成立：rs > 0
+        // 計算分支目標地址
+        // PC = PC + 4 + (sign_extend(offset) << 2)
+        uint32_t currentPC = cpu.getProgramCounter();
+        int32_t signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
+        uint32_t targetPC = currentPC + 4 + (signExtendedOffset << 2);
+        
+        cpu.setProgramCounter(targetPC);
+    } else {
+        // 分支條件不成立：rs <= 0
+        // 正常遞增 PC
+        cpu.setProgramCounter(cpu.getProgramCounter() + 4);
+    }
+}
+
+std::string BGTZInstruction::getName() const {
+    return "bgtz";
+}
+
 JInstruction::JInstruction(const std::string& label)
     : m_label(label) {
 }
