@@ -28,6 +28,7 @@ add_executable(unit_tests
     test_and_instruction.cpp               # AND instruction Integration tests
     test_or_instruction.cpp                # OR instruction Integration tests
     test_xor_instruction.cpp               # XOR instruction Integration tests
+    test_nor_instruction.cpp               # NOR instruction Integration tests
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
