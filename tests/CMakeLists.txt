@@ -19,6 +19,8 @@ add_executable(unit_tests
     test_sltiu_instruction.cpp             # SLTIU instruction TDD tests (Phase A: Red Light)
     test_bne_instruction.cpp               # BNE instruction TDD tests (Phase A: Red Light)
     test_ori_instruction.cpp               # ORI instruction TDD tests (Phase A: Red Light)
+    test_andi_instruction.cpp              # ANDI instruction TDD tests (Phase A: Red Light)
+    test_xori_instruction.cpp              # XORI instruction TDD tests (Phase A: Red Light)
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

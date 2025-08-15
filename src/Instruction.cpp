@@ -220,6 +220,53 @@ std::string OriInstruction::getName() const {
     return "ori";
 }
 
+AndiInstruction::AndiInstruction(int rt, int rs, int16_t imm)
+    : ITypeInstruction(rt, rs, imm) {
+}
+
+void AndiInstruction::execute(Cpu& cpu) {
+    // Read source register value
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    
+    // Zero-extend 16-bit immediate to 32-bit for AND operation
+    // ANDI instruction uses zero extension, not sign extension
+    uint32_t immValue = static_cast<uint32_t>(static_cast<uint16_t>(m_imm));
+    
+    // Perform bitwise AND operation
+    uint32_t result = rsValue & immValue;
+    
+    // Write result to target register
+    cpu.getRegisterFile().write(m_rt, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string AndiInstruction::getName() const {
+    return "andi";
+}
+
+XoriInstruction::XoriInstruction(int rt, int rs, int16_t imm)
+    : ITypeInstruction(rt, rs, imm) {
+}
+
+void XoriInstruction::execute(Cpu& cpu) {
+    // 讀取源暫存器值
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    
+    // 零擴展16位立即值到32位 (XORI使用零擴展，非符號擴展)
+    uint32_t immValue = static_cast<uint32_t>(static_cast<uint16_t>(m_imm));
+    
+    // 執行位元XOR運算
+    uint32_t result = rsValue ^ immValue;
+    
+    // 寫入目標暫存器
+    cpu.getRegisterFile().write(m_rt, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string XoriInstruction::getName() const {
+    return "xori";
+}
+
 ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
     : m_rt(rt), m_rs(rs), m_imm(imm) {
 }

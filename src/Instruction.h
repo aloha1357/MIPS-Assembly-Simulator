@@ -188,6 +188,28 @@ public:
 };
 
 /**
+ * @brief I-type ANDI instruction (AND immediate)
+ */
+class AndiInstruction : public ITypeInstruction {
+public:
+    AndiInstruction(int rt, int rs, int16_t imm);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief I-type XORI instruction (XOR immediate)
+ */
+class XoriInstruction : public ITypeInstruction {
+public:
+    XoriInstruction(int rt, int rs, int16_t imm);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type LW instruction (load word)
  */
 class LwInstruction : public ITypeInstruction {
