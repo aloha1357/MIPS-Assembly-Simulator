@@ -82,6 +82,28 @@ public:
 };
 
 /**
+ * @brief R-type XOR instruction (logical XOR)
+ */
+class XorInstruction : public RTypeInstruction {
+public:
+    XorInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief R-type NOR instruction (logical NOR)
+ */
+class NorInstruction : public RTypeInstruction {
+public:
+    NorInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {
