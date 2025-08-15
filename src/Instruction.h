@@ -60,6 +60,17 @@ public:
 };
 
 /**
+ * @brief R-type AND instruction (logical AND)
+ */
+class AndInstruction : public RTypeInstruction {
+public:
+    AndInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {

@@ -1,6 +1,7 @@
 # Cucumber-cpp test executable
 add_executable(cucumber_tests
     step_definitions.cpp
+    step_definitions_logical.cpp
 )
 
 target_link_libraries(cucumber_tests

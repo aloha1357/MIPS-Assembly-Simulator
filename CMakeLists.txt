@@ -99,4 +99,4 @@ endif()
 # Source directories
 add_subdirectory(src)
 add_subdirectory(tests)
-# add_subdirectory(features)  # Will be enabled later
+add_subdirectory(features)  # BDD tests enabled for logical instructions

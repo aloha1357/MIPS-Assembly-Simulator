@@ -43,6 +43,23 @@ std::string SubInstruction::getName() const {
     return "sub";
 }
 
+AndInstruction::AndInstruction(int rd, int rs, int rt) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void AndInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    uint32_t result = rsValue & rtValue;  // Bitwise AND operation
+    
+    cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string AndInstruction::getName() const {
+    return "and";
+}
+
 ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
     : m_rt(rt), m_rs(rs), m_imm(imm) {
 }

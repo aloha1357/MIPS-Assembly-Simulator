@@ -13,6 +13,7 @@ add_executable(unit_tests
     test_syscall_debug.cpp         # Debug syscall issues
     test_assembler_debug.cpp       # Debug assembler issues
     test_hello_mips.cpp            # Hello MIPS test files
+    test_logical_walking_skeleton.cpp  # Walking Skeleton for logical instructions
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
