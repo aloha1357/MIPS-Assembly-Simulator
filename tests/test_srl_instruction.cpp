@@ -39,9 +39,8 @@ protected:
  */
 TEST_F(SrlInstructionIntegrationTest, SrlInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
     // Given: Binary representation of "srl $t1, $t0, 4"
-    // Format: [6-bit op][5-bit rs][5-bit rt][5-bit rd][5-bit shamt][6-bit func]
-    // SRL: op=000000, rs=00000, rt=01000($t0), rd=01001($t1), shamt=00100(4), func=000010
-    uint32_t instruction = 0x00084122; // srl $t1, $t0, 4
+    // SRL $t1, $t0, 4 => R-type: op=0, rs=0, rt=8($t0), rd=9($t1), shamt=4, funct=0x02
+    uint32_t instruction = (0x00 << 26) | (0 << 21) | (8 << 16) | (9 << 11) | (4 << 6) | 0x02;
     
     // When: Decoding the instruction
     auto decoded = decoder->decode(instruction);
@@ -60,11 +59,12 @@ TEST_F(SrlInstructionIntegrationTest, SrlInstruction_AssemblerIntegration_Should
     std::string assembly = "srl $t1, $t0, 8";
     
     // When: Parsing the assembly
-    auto parsed = assembler->parseInstruction(assembly);
+    auto instructions = assembler->assemble(assembly);
     
     // Then: Should successfully parse as SRL instruction
-    ASSERT_NE(parsed, nullptr) << "SRL assembly should be parsed successfully";
-    EXPECT_EQ(parsed->getName(), "srl") << "Parsed instruction should be 'srl'";
+    ASSERT_EQ(instructions.size(), 1) << "應該解析出恰好一條指令";
+    ASSERT_NE(instructions[0], nullptr) << "解析的指令不應該為空";
+    EXPECT_EQ(instructions[0]->getName(), "srl") << "指令名稱應該是 'srl'";
 }
 
 /**

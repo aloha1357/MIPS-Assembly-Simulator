@@ -32,6 +32,7 @@ add_executable(unit_tests
     test_nor_instruction.cpp               # NOR instruction Integration tests
     test_sll_instruction.cpp               # SLL instruction Integration tests
     test_logical_srl_bdd_minimal.cpp       # SRL instruction BDD tests
+    test_srl_instruction.cpp               # SRL instruction Integration tests
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
