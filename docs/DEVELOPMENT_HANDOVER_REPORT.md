@@ -42,10 +42,10 @@ Instruction (基底類別)
 - [ ] **更新開發報告** - 記錄完成狀態和下一階段規劃
 
 ### 📈 階段完成目標
-- **✅ 當前狀態:** 178 個測試 (SRL指令完整實現完成)
-- **🎯 Phase 1.5 目標:** 182 個測試 (SRA指令完成，位移指令群組100%)
-- **🎯 Phase 2 目標:** 200+ 個測試 (立即值邏輯指令群組)
-- **中期目標:** 240+ 個測試 (分支指令完善)
+- **✅ Phase 1 完成:** 182 個測試 (位移指令群組100%完成)
+- **✅ Phase 2 完成:** 213 個測試 (立即值邏輯指令群組100%完成) **[剛完成]**
+- **🎯 Phase 3 目標:** 225+ 個測試 (分支指令群組)
+- **中期目標:** 250+ 個測試 (無符號算術指令群組)
 - **長期目標:** 320+ 個測試 (記憶體指令完善)struction ❌ (待實作)
 ├── ITypeInstruction (I-type指令基底)
 │   ├── AddiInstruction ✅ | SltiInstruction ⚠️
@@ -60,44 +60,56 @@ Instruction (基底類別)
 ```
 
 ### ✅ 測試統計
-- **總測試數:** 182 個測試 (完成SRA指令實現 +4)
-- **執行時間:** ~51ms
+- **總測試數:** 213 個測試 (完成Phase 2立即值邏輯指令群組)
+- **執行時間:** ~53ms
 - **DISABLED測試:** 0 個 (全部已解決)
-- **邏輯指令BDD測試:** 18 個測試 
-- **位移指令BDD測試:** 6 個測試 (+2 SRA, +2 SRL, +2 SLL)
-- **Integration測試:** 27 個測試 (+6 位移指令Integration: +2 SRA, +2 SRL, +2 SLL)
+- **邏輯指令BDD測試:** 18 個測試 (AND, OR, XOR, NOR - R-type指令)
+- **立即值邏輯BDD測試:** 12 個測試 (ORI, ANDI, XORI - I-type指令)
+- **位移指令BDD測試:** 6 個測試 (SLL, SRL, SRA)
+- **Integration測試:** 46 個測試 (全部指令群組的整合驗證)
 
 ### 🎯 最新完成成就 (本開發週期)
 
-#### ✅ SRA指令完整實現完成 (Phase 1.5) - **[剛完成]**
+#### ✅ Phase 2: 立即值邏輯指令群組100%完成 (超額達成) - **[剛完成]**
 
-**🎉 重大成就 - SRA (Shift Right Arithmetic) 指令100%完成:**
+**🎉 重大里程碑 - 立即值邏輯指令群組全面完成:**
 
-**1. SRA指令核心實現** ✅
-- **SraInstruction類別實現:** 完整的建構子、execute()方法、getName()方法
-- **解碼器支援:** InstructionDecoder支援function code 0x03
-- **組譯器支援:** Assembler支援"sra $rd, $rt, shamt"語法解析
-- **執行邏輯:** 正確的算術右位移實現 (帶符號位擴展)
+**1. 立即值邏輯指令核心實現** ✅
+- **ORI指令實現:** 完整的解碼器(0x0D)、組譯器、執行邏輯
+- **ANDI指令實現:** 完整的解碼器(0x0C)、組譯器、執行邏輯  
+- **XORI指令實現:** 完整的解碼器(0x0E)、組譯器、執行邏輯
+- **零擴展處理:** 正確的16位立即值零擴展到32位實現
 
-**2. SRA指令BDD測試實現** ✅
-- **BDD Test Cases (2個):**
-  - 正數算術右位移測試: 0x7FFFFFFF >>> 8 = 0x007FFFFF (零擴展)
-  - 負數算術右位移測試: 0x80000000 >>> 4 = 0xF8000000 (符號位擴展)
-- **測試檔案:** `tests/test_logical_sra_bdd_minimal.cpp`
+**2. 立即值邏輯指令BDD測試實現** ✅
+- **ORI BDD Test Cases (4個):**
+  - 基本立即值OR操作: 0xF0F00000 | 0x0F0F = 0xF0F00F0F
+  - 零立即值恆等操作: 0x12345678 | 0x0000 = 0x12345678
+- **ANDI BDD Test Cases (4個):**
+  - 基本立即值AND操作: 0xFFFFFFFF & 0x0F0F = 0x00000F0F  
+  - 位元遮罩操作: 0x12345678 & 0xFF00 = 0x00005600
+- **XORI BDD Test Cases (4個):**
+  - 基本立即值XOR操作: 0xF0F0F0F0 ^ 0x0F0F = 0xF0F0FFFF
+  - 位元切換操作: 0x12345678 ^ 0xFFFF = 0x1234A987
 
-**3. SRA指令Integration測試實現** ✅
-- **Integration Tests (2個):**
-  - Decoder Integration: 驗證 InstructionDecoder 正確解碼 SRA 指令
-  - Assembler Integration: 驗證 Assembler 正確解析 "sra" 語法
-- **測試檔案:** `tests/test_sra_instruction.cpp`
+**3. 立即值邏輯指令Integration測試實現** ✅
+- **ORI Integration Tests (6個):** 解碼器整合 + 組譯器整合 + 語法變體測試
+- **ANDI Integration Tests (6個):** 解碼器整合 + 組譯器整合 + 位元遮罩測試
+- **XORI Integration Tests (7個):** 解碼器整合 + 組譯器整合 + 位元切換測試 + 差異性測試
 
-**📊 SRA實現成果:**
-- **BDD測試:** 2個場景完全通過 (正數零擴展 + 負數符號位擴展)
-- **Integration測試:** 2個測試完全通過
-- **測試數量增長:** 178 → 182 (+4個測試)
-- **位移指令群組完成:** 3/3 = 100% (SLL ✅ + SRL ✅ + SRA ✅)
+**📊 Phase 2實現成果:**
+- **BDD測試:** 12個場景完全通過 (每個指令4個場景)
+- **Integration測試:** 19個測試完全通過 (ORI:6 + ANDI:6 + XORI:7)
+- **測試數量增長:** 182 → 213 (+31個測試，超額達成173%)
+- **立即值邏輯指令群組完成:** 3/3 = 100% (ORI ✅ + ANDI ✅ + XORI ✅)
 
-#### ✅ 位移指令群組100%完成里程碑達成 🎉
+#### ✅ 位移指令群組100%完成里程碑持續保持 🎉
+
+**位移指令群組完成狀態(持續完成):**
+- **SLL指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成
+- **SRL指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成  
+- **SRA指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成
+
+#### ✅ SRA指令實現完成標準 - **[之前完成]**
 
 **位移指令群組完成狀態:**
 - **SLL指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成
@@ -109,7 +121,7 @@ Instruction (基底類別)
 **位移指令完成度:** 3/3 = 100%
 **重大里程碑:** 位移指令群組全面完成
 
-### 🔧 MIPS指令完整開發狀態 (19/47 = 40%)
+### 🔧 MIPS指令完整開發狀態 (23/47 = 49%)
 
 | 指令 | 類型 | 功能 | Decoder | Assembler | BDD測試 | Integration | 狀態 |
 |------|------|------|---------|-----------|---------|-------------|------|
@@ -123,11 +135,14 @@ Instruction (基底類別)
 | `sltu` | R-type | 無符號比較 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
 | `sll` | R-type | 左位移 | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
 | `srl` | R-type | 右位移邏輯 | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **� 全面完成** |
-| `sra` | R-type | 右位移算術 | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **� 剛完成** |
+| `sra` | R-type | 右位移算術 | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
 | `syscall` | R-type | 系統呼叫 | ✅ | ✅ | ✅ | ✅ | 完成 |
 | `addi` | I-type | 立即值加法 | ✅ | ✅ | ✅ | ✅ | 完成 |
 | `slti` | I-type | 立即值有符號比較 | ✅ | ⚠️ | ⚠️ | ⚠️ | 需整合測試 |
 | `sltiu` | I-type | 立即值無符號比較 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
+| `ori` | I-type | 立即值OR | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `andi` | I-type | 立即值AND | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `xori` | I-type | 立即值XOR | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
 | `lw` | I-type | 載入字組 | ✅ | ✅ | ✅ | ✅ | 完成 |
 | `sw` | I-type | 儲存字組 | ✅ | ✅ | ✅ | ✅ | 完成 |
 | `beq` | I-type | 相等分支 | ✅ | ✅ | ✅ | ✅ | 完成 |
@@ -882,23 +897,194 @@ grep -r "0x00\|0x02" src/InstructionDecoder.cpp
 7. **CI/CD管道修復:** 解決 cucumber-cpp 依賴問題，恢復自動化構建 ✅
 
 ### 📊 完成度現況
-- **已完成指令:** 20/47 = 43% (新增SRA指令)
-- **部分完成指令:** 3/47 = 6%  
-- **待開發指令:** 24/47 = 51%
-- **測試覆蓋率:** 182個測試，預計最終386個測試 (47%完成)
+- **已完成指令:** 23/47 = 49% (新增3個立即值邏輯指令)
+- **部分完成指令:** 2/47 = 4%  
+- **待開發指令:** 22/47 = 47%
+- **測試覆蓋率:** 213個測試，預計最終386個測試 (55%完成)
+
+---
+
+## 🚀 Phase 3 開發指南 - 分支指令群組 (BLEZ, BGTZ)
+
+### 3.1 Phase 3 開發目標
+Phase 3 將完成MIPS分支指令群組的實現，包含兩個關鍵的分支指令：
+
+#### 目標指令清單
+1. **BLEZ** (Branch Less than or Equal Zero) - I-type 指令
+   - **Opcode:** 0x06
+   - **語法:** `blez $rs, offset`
+   - **功能:** 如果 $rs ≤ 0 則分支
+   
+2. **BGTZ** (Branch Greater Than Zero) - I-type 指令
+   - **Opcode:** 0x07  
+   - **語法:** `bgtz $rs, offset`
+   - **功能:** 如果 $rs > 0 則分支
+
+### 3.2 BDD實現週期規劃
+
+#### 🔴 Phase 3.1: BLEZ指令 Red-Light Phase
+**目標檔案:** `tests/test_blez_instruction_bdd_minimal.cpp`
+
+**必要測試情境 (DISABLED_前綴):**
+```cpp
+// 情境1: 正數測試 (不應分支)
+DISABLED_TEST(BLEZInstructionBDD, PositiveValueNoBranch)
+
+// 情境2: 零值測試 (應該分支) 
+DISABLED_TEST(BLEZInstructionBDD, ZeroValueBranch)
+
+// 情境3: 負數測試 (應該分支)
+DISABLED_TEST(BLEZInstructionBDD, NegativeValueBranch)
+
+// 情境4: 邊界值測試 (INT_MIN應該分支)
+DISABLED_TEST(BLEZInstructionBDD, MinIntValueBranch)
+```
+
+#### 🟢 Phase 3.2: BLEZ指令 Green-Light Phase
+**實現文件:**
+1. **InstructionDecoder.cpp** - 新增case 0x06路由
+2. **Assembler.cpp** - 新增"blez"語法解析
+3. **指令類別** - 確認BLEZInstruction類別存在且功能完整
+
+#### 🔄 Phase 3.3: BLEZ指令 Integration Testing
+**目標檔案:** `tests/test_blez_instruction_integration.cpp`
+
+**完整整合測試 (約6-7個測試):**
+- 組合器語法解析測試
+- 機器碼解碼測試  
+- PC分支跳轉計算測試
+- 邊界條件測試
+- 錯誤處理測試
+
+#### 🔴 Phase 3.4: BGTZ指令 Red-Light Phase
+**目標檔案:** `tests/test_bgtz_instruction_bdd_minimal.cpp`
+
+**必要測試情境 (DISABLED_前綴):**
+```cpp
+// 情境1: 正數測試 (應該分支)
+DISABLED_TEST(BGTZInstructionBDD, PositiveValueBranch)
+
+// 情境2: 零值測試 (不應分支)
+DISABLED_TEST(BGTZInstructionBDD, ZeroValueNoBranch)
+
+// 情境3: 負數測試 (不應分支)  
+DISABLED_TEST(BGTZInstructionBDD, NegativeValueNoBranch)
+
+// 情境4: 邊界值測試 (INT_MAX應該分支)
+DISABLED_TEST(BGTZInstructionBDD, MaxIntValueBranch)
+```
+
+#### 🟢 Phase 3.5: BGTZ指令 Green-Light Phase
+**實現文件:**
+1. **InstructionDecoder.cpp** - 新增case 0x07路由
+2. **Assembler.cpp** - 新增"bgtz"語法解析
+3. **指令類別** - 確認BGTZInstruction類別存在且功能完整
+
+#### 🔄 Phase 3.6: BGTZ指令 Integration Testing
+**目標檔案:** `tests/test_bgtz_instruction_integration.cpp`
+
+### 3.3 預期開發成果
+
+#### 量化目標
+- **新增測試數:** +12-14個測試 (213 → 225-227)
+- **指令完成:** 2個I-type分支指令
+- **完成度提升:** 49% → 53%
+- **估計開發時間:** 4-5小時
+
+#### 質化目標
+- **分支邏輯驗證:** 完整測試分支條件判斷
+- **PC計算準確性:** 驗證相對偏移計算
+- **邊界條件覆蓋:** INT_MIN, INT_MAX, 0值測試
+- **BDD方法論延續:** 保持嚴格red-light → green-light → refactor週期
+
+### 3.4 技術實現細節
+
+#### 分支指令關鍵特性
+1. **I-type格式:** rs, rt=0, 16位元立即值偏移
+2. **PC相對偏移:** offset左移2位元後與PC+4相加
+3. **條件判斷:** 需要正確處理有符號整數比較
+4. **流水線影響:** 分支指令對流水線的影響
+
+#### 預期實現模式
+```cpp
+// InstructionDecoder.cpp
+case 0x06: return decodeIType(word, "BLEZ");
+case 0x07: return decodeIType(word, "BGTZ");
+
+// Assembler.cpp  
+if (instruction == "blez") return new BLEZInstruction(rs, parseOffset(tokens[2]));
+if (instruction == "bgtz") return new BGTZInstruction(rs, parseOffset(tokens[2]));
+```
+
+### 3.5 Phase 3 開發檢核清單
+
+#### 🔴 Red-Light階段檢核
+- [ ] BLEZ BDD測試檔案建立 (4個DISABLED測試)
+- [ ] BGTZ BDD測試檔案建立 (4個DISABLED測試)  
+- [ ] CMakeLists.txt更新包含新測試檔案
+- [ ] 編譯確認 - 應該有8個失敗測試
+
+#### 🟢 Green-Light階段檢核
+- [ ] InstructionDecoder.cpp新增兩個opcode路由
+- [ ] Assembler.cpp新增兩個語法解析器
+- [ ] BDD測試全部通過 (移除DISABLED前綴)
+- [ ] 零編譯警告確認
+
+#### 🔄 Integration階段檢核
+- [ ] BLEZ整合測試檔案建立 (6-7個測試)
+- [ ] BGTZ整合測試檔案建立 (6-7個測試)
+- [ ] 完整回歸測試 (所有213+12個測試通過)
+- [ ] Phase 3完成驗收
+
+### 3.6 風險管控與除錯策略
+
+#### 已知風險點
+1. **分支邏輯複雜性:** 條件判斷可能有邊界錯誤
+2. **PC計算準確性:** 相對偏移計算容易出錯
+3. **有符號比較:** C++的有符號/無符號轉換陷阱
+
+#### 除錯策略
+1. **單一條件測試:** 每個分支條件獨立驗證
+2. **邊界值重點測試:** 0, INT_MIN, INT_MAX特殊處理
+3. **逐步增量實現:** 先實現基本功能，再處理邊界
+4. **對比參考實現:** 必要時參考MIPS官方文件
+
+### 3.7 Phase 3成功標準
+
+#### 技術指標
+- **213 → 225個測試:** 100%通過率
+- **零編譯錯誤:** 完整編譯成功
+- **BDD循環完整:** 完成6次完整red-light → green-light循環
+- **回歸穩定性:** 原有功能保持完整
+
+#### 驗收標準  
+- **BLEZ功能:** 正確判斷 ≤ 0 條件分支
+- **BGTZ功能:** 正確判斷 > 0 條件分支
+- **整合品質:** Assembler + Decoder完整支援
+- **程式碼品質:** 符合專案架構標準
+
+### 3.8 Phase 4預告
+
+Phase 3完成後，下一階段將進入：
+- **Phase 4:** 無符號算術指令群組 (ADDIU等)
+- **目標測試數:** 225 → 240個測試
+- **完成度目標:** 53% → 58%
+
+---
 
 ### 🎯 立即下一步行動
-**Phase 2 目標:** 立即值邏輯指令群組 (ANDI, ORI, XORI) 實現
-**優先任務:** 完成I-type立即值邏輯指令
-**預期成果:** 182 → 200個測試 (+18)
-**預估時間:** 3-4小時
-**達成里程碑:** 立即值邏輯指令群組100%完成
+**Phase 3.1啟動:** BLEZ指令BDD Red-Light Phase
+**首要任務:** 建立 `tests/test_blez_instruction_bdd_minimal.cpp`
+**預期成果:** 4個DISABLED_測試，編譯成功但測試失敗
+**預估時間:** 30分鐘
+**成功指標:** 編譯無錯誤，4個紅燈測試
 
 ### 🗺️ 中長期發展路線
-1. **已完成 (Phase 1):** 位移指令群組100% → 182個測試 → 43%總完成度
-2. **短期 (Phase 2):** 立即值邏輯指令群組 → 200個測試 → 49%總完成度  
-3. **中期 (Phase 3-4):** 分支+無符號算術指令 → 230個測試 → 60%總完成度
-4. **長期 (Phase 5-10):** 記憶體+乘除+完整系統 → 386個測試 → 100%總完成度
+1. **✅ 已完成 (Phase 1):** 位移指令群組100% → 182個測試 → 43%總完成度
+2. **✅ 已完成 (Phase 2):** 立即值邏輯指令群組100% → 213個測試 → 49%總完成度  
+3. **🚀 進行中 (Phase 3):** 分支指令群組 → 225個測試 → 53%總完成度
+4. **📋 規劃中 (Phase 4-5):** 無符號算術+其他指令 → 260個測試 → 65%總完成度
+5. **🎯 長期目標 (Phase 6-10):** 記憶體+乘除+完整系統 → 386個測試 → 100%總完成度
 
 ### 🏗️ 架構優勢維持
 - **嚴格BDD方法論:** 每個指令都有完整測試覆蓋
@@ -931,5 +1117,7 @@ grep -r "0x00\|0x02" src/InstructionDecoder.cpp
 > **小步前進 → 測試驅動 → 嚴格循環 → 持續重構** 🎯
 
 ---
-**開發交接完成** | **SRL指令100%達成** | **下一目標: SRA指令實現** 🚀  
-**總進度: 19/47指令 (40%)** | **測試覆蓋: 178個測試** | **架構: Pipeline + BDD** ✨
+**✅ Phase 2 開發交接完成** | **✅ 立即值邏輯指令群組100%達成** | **🚀 下一目標: Phase 3分支指令群組** 🚀  
+**總進度: 23/47指令 (49%)** | **測試覆蓋: 213個測試** | **架構: Pipeline + BDD** ✨
+
+**Phase 3 準備就緒 - 分支指令群組 (BLEZ, BGTZ) 實現指南已完整建立** 🎯
