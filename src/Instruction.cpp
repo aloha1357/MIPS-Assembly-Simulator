@@ -283,6 +283,40 @@ std::string BeqInstruction::getName() const {
     return "beq";
 }
 
+BneInstruction::BneInstruction(int rs, int rt, int16_t offset)
+    : ITypeInstruction(0, 0, offset) {  // 暫時設定 rt=0, rs=0
+    // BNE 指令的格式是 bne $rs, $rt, offset
+    // 正確設定暫存器編號
+    m_rs = rs;
+    m_rt = rt;
+    // m_imm 已經在基礎類別中正確設定為 offset
+}
+
+void BneInstruction::execute(Cpu& cpu) {
+    // 讀取兩個源暫存器的值
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    if (rsValue != rtValue) {
+        // 分支條件成立：rs != rt
+        // 計算分支目標地址
+        // PC = PC + 4 + (sign_extend(offset) << 2)
+        uint32_t currentPC = cpu.getProgramCounter();
+        int32_t signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
+        uint32_t targetPC = currentPC + 4 + (signExtendedOffset << 2);
+        
+        cpu.setProgramCounter(targetPC);
+    } else {
+        // 分支條件不成立：rs == rt
+        // 正常遞增 PC
+        cpu.setProgramCounter(cpu.getProgramCounter() + 4);
+    }
+}
+
+std::string BneInstruction::getName() const {
+    return "bne";
+}
+
 JInstruction::JInstruction(const std::string& label)
     : m_label(label) {
 }

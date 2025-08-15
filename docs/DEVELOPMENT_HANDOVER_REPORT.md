@@ -6,7 +6,7 @@
 
 ## 📊 當前實作狀況
 
-### ✅ 已完成指令清單 (17/47 = 36%)
+### ✅ 已完成指令清單 (18/47 = 38%)
 
 | 編號 | 指令 | 類型 | 功能碼 | TDD狀態 | BDD狀態 | 最後更新 |
 |------|------|------|--------|---------|---------|----------|
@@ -22,57 +22,64 @@
 | 10   | `syscall` | R-type | 0x0C | ✅ 完成 | ✅ 完成 | 系統呼叫 |
 | 11   | `addi` | I-type | 0x08 | ✅ 完成 | ✅ 完成 | 算術指令 |
 | 12   | `slti` | I-type | 0x0A | ✅ 完成 | ✅ 完成 | 比較指令 |
-| 13   | `sltiu` | I-type | 0x0B | ✅ 完成 | ✅ 完成 | **🆕 2025-08-15** |
+| 13   | `sltiu` | I-type | 0x0B | ✅ 完成 | ✅ 完成 | 比較指令 |
 | 14   | `lw` | I-type | 0x23 | ✅ 完成 | ✅ 完成 | 記憶體指令 |
 | 15   | `sw` | I-type | 0x2B | ✅ 完成 | ✅ 完成 | 記憶體指令 |
 | 16   | `beq` | I-type | 0x04 | ✅ 完成 | ✅ 完成 | 分支指令 |
-| 17   | `j` | J-type | 0x02 | ✅ 完成 | ✅ 完成 | 跳躍指令 |
+| 17   | `bne` | I-type | 0x05 | ✅ 完成 | ✅ 完成 | **🆕 2025-08-15** |
+| 18   | `j` | J-type | 0x02 | ✅ 完成 | ✅ 完成 | 跳躍指令 |
 
 ### 📊 指令類型分布
-- **R-Type 指令**: 8/17 (47%) - 算術、邏輯、比較、位移
-- **I-Type 指令**: 7/17 (41%) - 立即值、記憶體、分支
-- **J-Type 指令**: 1/17 (6%) - 跳躍
-- **Special**: 1/17 (6%) - 系統呼叫
+- **R-Type 指令**: 8/18 (44%) - 算術、邏輯、比較、位移
+- **I-Type 指令**: 8/18 (44%) - 立即值、記憶體、分支
+- **J-Type 指令**: 1/18 (6%) - 跳躍
+- **Special**: 1/18 (6%) - 系統呼叫
 
 ### 🧪 測試覆蓋狀況
-- **單元測試**: 118/118 通過 (100%) ⬆️ **從111增加**
+- **單元測試**: 125/125 通過 (100%) ⬆️ **從118增加**
 - **BDD 場景**: 所有已實作指令覆蓋
 - **整合測試**: CPU + 記憶體 + 管線
 - **性能測試**: <40ms 執行時間
 - **回歸測試**: 無破壞性變更
 
-## 🎯 最新完成: SLTIU 指令實作 (Scenario 7)
+## 🎯 最新完成: BNE 指令實作 (Scenario 8)
 
 ### 實作摘要
-- **指令**: `sltiu $rt, $rs, immediate` - Set Less Than Immediate Unsigned
+- **指令**: `bne $rs, $rt, offset` - Branch Not Equal
 - **開發方式**: 嚴格 BDD (紅燈→綠燈→重構)
 - **測試數**: 7 個原子測試 + 2 個整合測試 (禁用)
-- **關鍵特性**: 32位無符號整數與立即值比較
+- **關鍵特性**: 條件分支，偏移量計算
 
 ### 關鍵實作細節
 ```cpp
-void SltiuInstruction::execute(Cpu& cpu) {
-    // 無符號比較 (vs SLTI 的有符號比較)
+void BneInstruction::execute(Cpu& cpu) {
+    // 讀取兩個源暫存器的值
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
     
-    // 符號擴展立即值，但當作無符號數比較
-    uint32_t immValue = static_cast<uint32_t>(static_cast<int32_t>(m_imm));
-    
-    // 設定結果: rs < immediate (無符號) ? 1 : 0
-    uint32_t result = (rsValue < immValue) ? 1 : 0;
-    
-    cpu.getRegisterFile().write(m_rt, result);
-    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+    if (rsValue != rtValue) {
+        // 分支條件成立：rs != rt
+        // PC = PC + 4 + (sign_extend(offset) << 2)
+        uint32_t currentPC = cpu.getProgramCounter();
+        int32_t signExtendedOffset = static_cast<int32_t>(m_imm);
+        uint32_t targetPC = currentPC + 4 + (signExtendedOffset << 2);
+        
+        cpu.setProgramCounter(targetPC);
+    } else {
+        // 分支條件不成立：正常遞增 PC
+        cpu.setProgramCounter(cpu.getProgramCounter() + 4);
+    }
 }
 ```
 
 ### 驗證測試案例
-- **基本比較**: 5 < 10 → 1
-- **關鍵差異**: 0xFFFFFFFF < 100 → 0 (無符號: 4294967295 > 100)
-- **邊界測試**: 0 < 1 → 1
-- **相等測試**: 42 < 42 → 0
-- **立即值擴展**: 32767 < -1(擴展為0xFFFFFFFF) → 1
-- **PC 遞增**: 正確更新程式計數器
+- **基本分支**: 5 != 10 → 分支到 PC+4+(4<<2) = PC+20
+- **不分支**: 42 == 42 → PC+4 (正常遞增)
+- **負偏移**: 向後分支 PC+4+(-5<<2) = PC-16
+- **零偏移**: PC+4+(0<<2) = PC+4
+- **$zero測試**: 與零暫存器比較
+- **相同暫存器**: $t0 == $t0 永不分支
+- **大偏移量**: 正確處理16位偏移量符號擴展
 
 ## 🚀 下一階段開發建議
 
@@ -189,9 +196,9 @@ MIPS-Assembly-Simulator/
 ## 🎯 成功指標
 
 ### 定量目標
-- **指令覆蓋率**: 目標 20+ 指令 (當前 17) ⬆️ **新增 SLTIU**
-- **測試數量**: 目標 130+ 測試 (當前 118) ⬆️ **+7 測試**
-- **執行效能**: 維持 <50ms (當前 37ms) ✅ **性能優秀**
+- **指令覆蓋率**: 目標 20+ 指令 (當前 18) ⬆️ **新增 BNE**
+- **測試數量**: 目標 130+ 測試 (當前 125) ⬆️ **+7 測試**
+- **執行效能**: 維持 <50ms (當前 39ms) ✅ **性能優秀**
 - **代碼覆蓋率**: 維持 >95%
 
 ### 定性目標

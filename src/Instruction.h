@@ -223,6 +223,17 @@ public:
 };
 
 /**
+ * @brief I-type BNE instruction (branch not equal)
+ */
+class BneInstruction : public ITypeInstruction {
+public:
+    BneInstruction(int rs, int rt, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief Jump instruction
  */
 class JInstruction : public Instruction {
