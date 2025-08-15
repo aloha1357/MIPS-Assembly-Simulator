@@ -1,0 +1,116 @@
+Registers:
+name,id
+$zero, 0
+$at, 1
+$v0, 2
+$v1, 3
+$a0, 4
+$a1, 5
+$a2, 6
+$a3, 7
+$t0, 8
+$t1, 9
+$t2, 10
+$t3, 11
+$t4, 12
+$t5, 13
+$t6, 14
+$t7, 15
+$s0, 16
+$s1, 17
+$s2, 18
+$s3, 19
+$s4, 20
+$s5, 21
+$s6, 22
+$s7, 23
+$t8, 24
+$t9, 25
+$k0, 26
+$k1, 27
+$gp, 28
+$sp, 29
+$s8, 30
+$ra, 31
+
+Instructions types:
+name,format_string,arguments
+arith_logic, "{} {}, {}, {}", register(rd), register(rs), register(rt)
+div_mult, "{} {}, {}", register(rs), register(rt)
+shift, "{} {}, {}, {}", register(rd), register(rt), shift_width
+shift_reg, "{} {}, {}, {}", register(rd), register(rt), register(rs)
+jump_reg, "{} {}", register(rs)
+move_from, "{} {}", register(rs)
+move_to, "{} {}", register(rd)
+arith_logic_imm, "{} {}, {}, {}", register(rt), register(rs), immediate_value
+load_imm, "{} {}, {}", register(rt), immediate_value
+branch, "{} {}, {}, {}", register(rs), register(rt), relative_jump_label
+branch_zero, "{} {}, {}", register(rs), relative_jump_label
+load_store, "{} {}, {} ({})", register(rt), immediate_value_without_trailing_comma, register_in_parentheses(rs)
+jump, "{} {}", absolute_jump_label
+trap, "{} {}", syscall
+
+Register Instructions:
+opcode,function,name,type,code
+0b000000, 0b000000, sll, shift, rd = unsigned(signed(rt) << a)
+0b000000, 0b000010, srl, shift, rd = rt >> a
+0b000000, 0b000011, sra, shift, rd = unsigned(signed(rt) >> a)
+0b000000, 0b000100, sllv, shift_reg, rd = unsigned(signed(rt) << rs)
+0b000000, 0b000110, srlv, shift_reg, rd = rt >> rs
+0b000000, 0b000111, srav, shift_reg, rd = unsigned(signed(rt) >> rs)
+0b000000, 0b001000, jr, jump_reg, pc = rs
+0b000000, 0b001001, jalr, jump_reg, ra = pc; pc = rs
+0b000000, 0b010000, mfhi, move_from, rd = hi
+0b000000, 0b010001, mthi, move_from, hi = rs
+0b000000, 0b010010, mflo, move_to, rd = lo
+0b000000, 0b010011, mtlo, move_to, lo = rs
+0b000000, 0b011000, mult, div_mult, lo = lower_half(int64_t(rs) * int64_t(rt)); hi = upper_half(int64_t(rs) * int64_t(rt))
+0b000000, 0b011001, multu, div_mult, lo = lower_half(uint64_t(rs) * uint64_t(rt)); hi = upper_half(uint64_t(rs) * uint64_t(rt))
+0b000000, 0b011010, div, div_mult, lo = unsigned(signed(rs) / signed(rt)); hi = unsigned(signed(rs) % signed(rt))
+0b000000, 0b011011, divu, div_mult, lo = rs / rt; hi = rs % rt
+0b000000, 0b100000, add, arith_logic, rd = unsigned(signed(rs) + signed(rt))
+0b000000, 0b100001, addu, arith_logic, rd = rs + rt
+0b000000, 0b100010, sub, arith_logic, rd = unsigned(signed(rs) - signed(rt))
+0b000000, 0b100011, subu, arith_logic, rd = rs - rt
+0b000000, 0b100100, and, arith_logic, rd = rs & rt
+0b000000, 0b100101, or, arith_logic, rd = rs | rt
+0b000000, 0b100110, xor, arith_logic, rd = rs ^ rt
+0b000000, 0b100111, nor, arith_logic, rd = ~(rs | rt)
+0b000000, 0b101010, slt, arith_logic, rd = (rs < rt)
+0b000000, 0b101011, sltu, arith_logic, rd = (rs < rt)
+
+Other instructions:
+opcode,name,type,code
+0b000100, beq, branch, if (rs == rt) pc += sign_extend(uint16_t(imm << 2))
+0b000101, bne, branch, if (rs != rt) pc += sign_extend(uint16_t(imm << 2))
+0b000110, blez, branch_zero, if (rs <= 0) pc += sign_extend(uint16_t(imm << 2))
+0b000111, bgtz, branch_zero, if (rs > 0) pc += sign_extend(uint16_t(imm << 2))
+0b001000, addi, arith_logic_imm, rt = rs + sign_extend(imm)
+0b001001, addiu, arith_logic_imm, rt = rs + sign_extend(imm)
+0b001010, slti, arith_logic_imm, rt = (signed(rs) < signed(sign_extend(imm)))
+0b001011, sltiu, arith_logic_imm, rt = (rs < sign_extend(imm))
+0b001100, andi, arith_logic_imm, rt = rs & zero_extend(imm)
+0b001101, ori, arith_logic_imm, rt = rs | zero_extend(imm)
+0b001110, xori, arith_logic_imm, rt = rs ^ zero_extend(imm)
+0b011000, llo, load_imm, rt = rt & 0xffff0000u | imm
+0b011001, lhi, load_imm, rt = rt & 0x0000ffffu | (imm << 16)
+0b100000, lb, load_store, rt = sign_extend(load_byte(rs + imm))
+0b100001, lh, load_store, rt = sign_extend(load_half(rs + imm))
+0b100011, lw, load_store, rt = load_word(rs + imm)
+0b100100, lbu, load_store, rt = zero_extend(load_byte(rs + imm))
+0b100101, lhu, load_store, rt = zero_extend(load_half(rs + imm))
+0b101000, sb, load_store, store_byte(rs + imm, lower_byte(rt))
+0b101001, sh, load_store, store_half(rs + imm, lower_half(rt))
+0b101011, sw, load_store, store_word(rs + imm, rt)
+0b000010, j, jump, pc = imm
+0b000011, jal, jump, ra = pc; pc = imm
+0b011010, trap, trap, trap(imm)
+
+Syscalls:
+name,number
+print_int, 0
+print_character, 1
+print_string, 2
+read_int, 3
+read_character, 4
+exit, 5
