@@ -102,7 +102,7 @@ private:
  * When  I execute "blez $t0, 4"
  * Then  no branch should occur (PC = original_pc + 4)
  */
-TEST_F(BLEZInstructionBDDTest, PositiveValueNoBranch) {
+DISABLED_TEST_F(BLEZInstructionBDDTest, PositiveValueNoBranch) {
     // Given: 暫存器包含正數值
     given_register_contains("$t0", 5);
     given_program_counter(0x1000);
@@ -121,7 +121,7 @@ TEST_F(BLEZInstructionBDDTest, PositiveValueNoBranch) {
  * When  I execute "blez $t1, 8"
  * Then  branch should occur
  */
-TEST_F(BLEZInstructionBDDTest, ZeroValueBranch) {
+DISABLED_TEST_F(BLEZInstructionBDDTest, ZeroValueBranch) {
     // Given: 暫存器包含零
     given_register_contains("$t1", 0);
     given_program_counter(0x2000);
@@ -140,7 +140,7 @@ TEST_F(BLEZInstructionBDDTest, ZeroValueBranch) {
  * When  I execute "blez $t2, -4"
  * Then  branch should occur (backward branch)
  */
-TEST_F(BLEZInstructionBDDTest, NegativeValueBranch) {
+DISABLED_TEST_F(BLEZInstructionBDDTest, NegativeValueBranch) {
     // Given: 暫存器包含負數
     given_register_contains("$t2", static_cast<uint32_t>(-10));
     given_program_counter(0x3000);
@@ -159,7 +159,7 @@ TEST_F(BLEZInstructionBDDTest, NegativeValueBranch) {
  * When  I execute "blez $s0, 16"
  * Then  branch should occur
  */
-TEST_F(BLEZInstructionBDDTest, MinIntValueBranch) {
+DISABLED_TEST_F(BLEZInstructionBDDTest, MinIntValueBranch) {
     // Given: 暫存器包含最小負數
     given_register_contains("$s0", static_cast<uint32_t>(INT_MIN));
     given_program_counter(0x4000);

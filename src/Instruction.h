@@ -269,6 +269,17 @@ public:
 };
 
 /**
+ * @brief I-type BLEZ instruction (branch less than or equal zero)
+ */
+class BLEZInstruction : public ITypeInstruction {
+public:
+    BLEZInstruction(int rs, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief Jump instruction
  */
 class JInstruction : public Instruction {

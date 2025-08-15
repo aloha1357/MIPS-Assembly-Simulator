@@ -22,6 +22,7 @@ std::unique_ptr<Instruction> InstructionDecoder::decode(uint32_t word) {
         case 0x2B:  // SW instruction
         case 0x04:  // BEQ instruction
         case 0x05:  // BNE instruction
+        case 0x06:  // BLEZ instruction
             return decodeIType(word);
         default:
             return nullptr; // Unknown instruction
@@ -124,6 +125,9 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word) {
         case 0x05:  // BNE instruction
             // For BNE, use the signed immediate directly as offset
             return std::make_unique<BneInstruction>(rs, rt, signedImmediate);
+        case 0x06:  // BLEZ instruction
+            // For BLEZ, only rs is used, rt is ignored (should be 0)
+            return std::make_unique<BLEZInstruction>(rs, signedImmediate);
         case 0x0C:  // ANDI instruction
             return std::make_unique<AndiInstruction>(rt, rs, signedImmediate);
         case 0x0D:  // ORI instruction
