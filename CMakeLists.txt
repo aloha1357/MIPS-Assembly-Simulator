@@ -36,6 +36,7 @@ find_package(OpenGL)
 
 # Check if we're in a headless environment (CI)
 option(BUILD_HEADLESS "Build without GUI support for CI/CD" OFF)
+option(BUILD_CUCUMBER_TESTS "Build Cucumber-cpp BDD tests" OFF)
 
 if(NOT OpenGL_FOUND)
     message(WARNING "OpenGL not found, building in headless mode")
@@ -99,4 +100,22 @@ endif()
 # Source directories
 add_subdirectory(src)
 add_subdirectory(tests)
-add_subdirectory(features)  # BDD tests enabled for logical instructions
+
+# Only add cucumber tests if explicitly requested and dependencies are available
+if(BUILD_CUCUMBER_TESTS)
+    # Try to find cucumber-cpp
+    find_package(PkgConfig QUIET)
+    if(PkgConfig_FOUND)
+        pkg_check_modules(CUCUMBER_CPP QUIET cucumber-cpp)
+        if(CUCUMBER_CPP_FOUND)
+            add_subdirectory(features)  # BDD tests enabled for logical instructions
+            message(STATUS "Cucumber-cpp tests enabled")
+        else()
+            message(WARNING "Cucumber-cpp not found, skipping BDD tests")
+        endif()
+    else()
+        message(WARNING "PkgConfig not found, skipping cucumber-cpp detection")
+    endif()
+else()
+    message(STATUS "Cucumber-cpp tests disabled (use -DBUILD_CUCUMBER_TESTS=ON to enable)")
+endif()
