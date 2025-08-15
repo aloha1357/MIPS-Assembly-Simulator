@@ -52,13 +52,12 @@ Quality Assurance: 100% ✅ PRODUCTION READY
 - **⚡ Performance Optimized**: 85 tests execute in <30ms ✅ NEW!
 
 ### 📚 **Essential Documentation for Developers**
-- **📄 `docs/README_DOCS.md`** - **START HERE!** Complete documentation index and navigation guide
-- **📄 `docs/CURRENT_PROJECT_STATUS_2025.md`** - Current project status overview and achievements
-- **📄 `docs/FINAL_ITERATION_COMPLETION_REPORT.md`** - **NEW!** Final completion summary with all achievements
-- **📄 `docs/CI_CD_RELEASE_MODE_FIX_REPORT.md`** - **NEW!** CI/CD Release mode fix documentation
+- **📄 `MIPS_SIMULATOR_COMPLETE_GUIDE.md`** - **START HERE!** Complete project guide with all information
+- **📄 `QUICK_REFERENCE.md`** - Quick command reference for daily development
+- **📄 `docs/ESSENTIAL_DOCS_INDEX.md`** - Essential documentation index
 - **📄 `docs/user-guides/GUI_USER_MANUAL.md`** - Complete GUI user manual and learning guide
-- **📄 `docs/user-guides/QUICK_REFERENCE.md`** - Quick command reference for daily development
 - **📄 `docs/development-reports/DEVELOPMENT_HANDOVER_REPORT.md`** - Developer handover guide
+- **📄 `docs/development-reports/FINAL_COMPLETION_REPORT.md`** - Final completion summary
 
 ### 🚀 Quick Start
 ```powershell
