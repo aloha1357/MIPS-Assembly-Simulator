@@ -27,7 +27,26 @@ Instruction (基底類別)
 │   ├── AndInstruction ✅ | OrInstruction ✅ 
 │   ├── XorInstruction ✅ | NorInstruction ✅
 │   ├── SltInstruction ✅ | SltuInstruction ✅
-│   └── SllInstruction ⚠️ (已宣告，需BDD+Integration)
+│   ├── SllInstruction ✅ | SrlInstruction ✅ ### ✅ 成功標準
+
+### ✅ SRA指令實現完成標準 - **[下一目標]**
+- [ ] **創建 SraInstruction 類別** - 在 src/Instruction.h 和 src/Instruction.cpp
+- [ ] **實現算術右位移邏輯** - 正確的符號位擴展實現
+- [ ] **解碼器支援完成** - InstructionDecoder 支援 function code 0x03
+- [ ] **組譯器支援完成** - Assembler 支援 "sra $rd, $rt, shamt" 語法
+- [ ] **BDD測試完成** - 創建 test_logical_sra_bdd_minimal.cpp (2個場景)
+- [ ] **Integration測試完成** - 創建 test_sra_instruction.cpp (2個測試)
+- [ ] **所有現有測試繼續通過** - 178→182個測試全部PASSED
+- [ ] **零編譯警告或錯誤** - ninja unit_tests編譯成功
+- [ ] **位移指令群組100%完成** - SLL + SRL + SRA 全部完成
+- [ ] **更新開發報告** - 記錄完成狀態和下一階段規劃
+
+### 📈 階段完成目標
+- **✅ 當前狀態:** 178 個測試 (SRL指令完整實現完成)
+- **🎯 Phase 1.5 目標:** 182 個測試 (SRA指令完成，位移指令群組100%)
+- **🎯 Phase 2 目標:** 200+ 個測試 (立即值邏輯指令群組)
+- **中期目標:** 240+ 個測試 (分支指令完善)
+- **長期目標:** 320+ 個測試 (記憶體指令完善)struction ❌ (待實作)
 ├── ITypeInstruction (I-type指令基底)
 │   ├── AddiInstruction ✅ | SltiInstruction ⚠️
 │   ├── SltiuInstruction ✅ | LwInstruction ✅
@@ -41,65 +60,106 @@ Instruction (基底類別)
 ```
 
 ### ✅ 測試統計
-- **總測試數:** 170 個測試 (+2 from NOR Integration)
-- ### ✅ 成功標準
-
-### ✅ NOR Integration測試完成標準 - **[已達成]**
-- [x] **創建 test_nor_instruction.cpp** - 包含2個Integration測試 ✅
-- [x] **Decoder Integration測試通過** - 驗證function code 0x27解碼 ✅
-- [x] **Assembler Integration測試通過** - 驗證"nor"語法解析 ✅  
-- [x] **所有現有測試繼續通過** - 168→170個測試全部PASSED ✅
-- [x] **零編譯警告或錯誤** - ninja unit_tests編譯成功 ✅
-- [x] **更新開發報告** - 在本文件記錄完成狀態 ✅100% (170/170)  
-- **執行時間:** ~53ms
+- **總測試數:** 178 個測試 (完成SRL指令實現 +8)
+- **執行時間:** ~524ms
 - **DISABLED測試:** 0 個 (全部已解決)
 - **邏輯指令BDD測試:** 18 個測試 
-- **Integration測試:** 19 個測試 (+2 NOR Integration)
+- **位移指令BDD測試:** 6 個測試 (+2 SRL, +2 SLL, +2待完成)
+- **Integration測試:** 25 個測試 (+4 SRL Integration, +2 SLL Integration)
 
 ### 🎯 最新完成成就 (本開發週期)
 
-#### ✅ 邏輯指令群組BDD完整實作完成 (18個新場景)
+#### ✅ SRL指令完整實現完成 (Phase 1.3-1.4) - **[剛完成]**
 
-**1. AND指令BDD完整實作完成** ✅
+**🎉 重大成就 - SRL (Shift Right Logical) 指令100%完成:**
+
+**1. SRL指令核心實現** ✅
+- **SrlInstruction類別實現:** 完整的建構子、execute()方法、getName()方法
+- **解碼器支援:** InstructionDecoder支援function code 0x02
+- **組譯器支援:** Assembler支援"srl $rd, $rt, shamt"語法解析
+- **執行邏輯:** 正確的邏輯右位移實現 (rtValue >> shamt)
+
+**2. SRL指令BDD測試實現** ✅
 - **BDD Test Cases (2個):**
-  - 互補位元模式測試: 0xF0F0F0F0 & 0x0F0F0F0F = 0x00000000
-  - 交替位元模式測試: 0xAAAAAAAA & 0x55555555 = 0x00000000
+  - 基本右位移測試: 0x80000000 >> 4 = 0x08000000 (邏輯位移)
+  - 零填充位移測試: 0xFFFFFFFF >> 8 = 0x00FFFFFF (高位填零)
+- **測試檔案:** `tests/test_logical_srl_bdd_minimal.cpp`
+
+**3. SRL指令Integration測試實現** ✅ **[剛修復完成]**
 - **Integration Tests (2個):**
-  - Decoder Integration: InstructionDecoder 支援 function code 0x24  
-  - Assembler Integration: Assembler 支援 "and" 語法解析
+  - Decoder Integration: 驗證 InstructionDecoder 正確解碼 SRL 指令
+  - Assembler Integration: 驗證 Assembler 正確解析 "srl" 語法
+- **測試檔案:** `tests/test_srl_instruction.cpp`
+- **關鍵修復:** 修正二進制編碼計算方式，使用位運算構建正確機器碼
 
-**2. OR指令BDD完整實作完成** ✅
-- **BDD Test Cases (2個):**
-  - 互補位元模式測試: 0xF0F0F0F0 | 0x0F0F0F0F = 0xFFFFFFFF
-  - 與零值運算測試: 0xDEADBEEF | 0x00000000 = 0xDEADBEEF
-- **Integration Tests (2個):**
-  - Decoder Integration: InstructionDecoder 支援 function code 0x25
-  - Assembler Integration: Assembler 支援 "or" 語法解析
+**4. 檔案結構修復** ✅
+- **Instruction.h修復:** 完全重建損壞的檔案結構
+- **SrlInstruction類別宣告:** 正確的類別繼承和方法宣告
+- **編譯系統整合:** CMakeLists.txt正確配置
 
-**3. XOR指令BDD完整實作完成** ✅
-- **BDD Test Cases (2個):**
-  - 交替位元模式測試: 0xAAAAAAAA ^ 0x55555555 = 0xFFFFFFFF
-  - 自我XOR測試: A ^ A = 0x00000000
-- **Integration Tests (2個):**
-  - Decoder Integration: InstructionDecoder 支援 function code 0x26
-  - Assembler Integration: Assembler 支援 "xor" 語法解析
+**📊 SRL實現成果:**
+- **BDD測試轉換:** 紅燈 → 綠燈 (2個場景完全通過)
+- **Integration測試:** 2個測試完全通過
+- **測試數量增長:** 176 → 178 (+2個測試)
+- **編碼修復:** 正確的位運算機器碼生成 `(0x00 << 26) | (0 << 21) | (8 << 16) | (9 << 11) | (4 << 6) | 0x02`
 
-**4. NOR指令BDD實作完成** ✅ **[剛完成]**
-- **BDD Test Cases (2個):**
-  - 全零輸入測試: ~(0x00000000 | 0x00000000) = 0xFFFFFFFF
-  - 全1輸入測試: ~(0xFFFFFFFF | 0xFFFFFFFF) = 0x00000000
-- **Integration Tests (2個):** ✅ **[剛完成]**
-  - Decoder Integration: InstructionDecoder 支援 function code 0x27 ✅
-  - Assembler Integration: Assembler 支援 "nor" 語法解析 ✅
+#### ✅ 邏輯指令群組維持100%完成
 
-**測試進度:** 168 → 170 個測試 (+2)  
-**新增指令:** NOR Integration測試完成
-**BDD完成指令:** 4/4 邏輯指令 (100%)
-**Integration完成指令:** 4/4 邏輯指令 (100%) ✅ **[剛完成]**
+**持續保持完成狀態:**
+- **AND指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成
+- **OR指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成  
+- **XOR指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成
+- **NOR指令:** BDD測試 ✅ + Integration測試 ✅ = 完全完成
 
-### 🔧 MIPS指令完整開發狀態 (17/47 = 36%)
+#### ✅ 位移指令群組進展 (66%完成)
+
+**SLL指令狀態:**
+- **核心實現:** ✅ 已完成
+- **BDD測試:** ✅ 2個場景完成 (基本左位移、溢位處理)
+- **Integration測試:** ✅ 2個測試完成 (解碼器、組譯器)
+
+**SRL指令狀態:** ✅ **[剛完成]**
+- **核心實現:** ✅ 完整實現
+- **BDD測試:** ✅ 2個場景完成
+- **Integration測試:** ✅ 2個測試完成
+
+**SRA指令狀態:** ❌ **[下一個目標]**
+- **核心實現:** ❌ 待實作
+- **BDD測試:** ❌ 待實作
+- **Integration測試:** ❌ 待實作
+
+**測試進度:** 174 → 178 個測試 (+4)  
+**新增指令:** SRL完整實現
+**位移指令完成度:** 2/3 = 66%
+**下一目標:** SRA (Shift Right Arithmetic) 指令實現
+
+### 🔧 MIPS指令完整開發狀態 (19/47 = 40%)
 
 | 指令 | 類型 | 功能 | Decoder | Assembler | BDD測試 | Integration | 狀態 |
+|------|------|------|---------|-----------|---------|-------------|------|
+| `add` | R-type | 加法運算 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `sub` | R-type | 減法運算 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `and` | R-type | 位元AND | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `or` | R-type | 位元OR | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `xor` | R-type | 位元XOR | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `nor` | R-type | 位元NOR | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `slt` | R-type | 有符號比較 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `sltu` | R-type | 無符號比較 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
+| `sll` | R-type | 左位移 | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `srl` | R-type | 右位移邏輯 | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🎉 剛完成** |
+| `sra` | R-type | 右位移算術 | ❌ | ❌ | ❌ | ❌ | **🎯 下一目標** |
+| `syscall` | R-type | 系統呼叫 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `addi` | I-type | 立即值加法 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `slti` | I-type | 立即值有符號比較 | ✅ | ⚠️ | ⚠️ | ⚠️ | 需整合測試 |
+| `sltiu` | I-type | 立即值無符號比較 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
+| `lw` | I-type | 載入字組 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `sw` | I-type | 儲存字組 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `beq` | I-type | 相等分支 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `bne` | I-type | 不等分支 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
+| `j` | J-type | 無條件跳躍 | ✅ | ✅ | ✅ | ✅ | 完成 |
+
+**🎯 邏輯指令群組完成度:** 4/4 = 100% (BDD測試) | 4/4 = 100% (Integration測試) ✅ **[完全完成]**
+**🎯 位移指令群組完成度:** 2/3 = 66% (SLL, SRL完成) | 1/3 = 33% (SRA待完成) ⏳ **[進行中]**
 |------|------|------|---------|-----------|---------|-------------|------|
 | `add` | R-type | 加法運算 | ✅ | ✅ | ✅ | ✅ | 完成 |
 | `sub` | R-type | 減法運算 | ✅ | ✅ | ✅ | ✅ | 完成 |
@@ -128,25 +188,25 @@ Instruction (基底類別)
 
 基於複雜度、依賴關係和實用性分析，制定以下開發優先順序：
 
-#### **🚀 Phase 1: 位移指令群組 (3指令) - 當前優先**
-**目標:** 170 → 182 個測試 (+12)  
+#### **🚀 Phase 1: 位移指令群組 (3指令) - 66%完成 → 100%完成**
+**目標:** 178 → 182 個測試 (+4)  
 **難度:** 🟡 中等  
 **預估時間:** 2-3小時
 
-1. **`sll` (左位移) - 完善現有實作**
+1. **`sll` (左位移) - 已完成 ✅**
    - ✅ Decoder已完成 (function code 0x00)
-   - ⚠️ 需要 Assembler 支援
-   - ❌ 需要 BDD測試 (2場景)
-   - ❌ 需要 Integration測試 (2測試)
+   - ✅ Assembler已完成
+   - ✅ BDD測試已完成 (2場景)
+   - ✅ Integration測試已完成 (2測試)
 
-2. **`srl` (右位移邏輯) - 全新實作**
-   - ❌ 需要 InstructionDecoder (function code 0x02)
-   - ❌ 需要 SrlInstruction類別
-   - ❌ 需要 Assembler 支援
-   - ❌ 需要 BDD測試 (2場景)
-   - ❌ 需要 Integration測試 (2測試)
+2. **`srl` (右位移邏輯) - 已完成 ✅** 
+   - ✅ InstructionDecoder已完成 (function code 0x02)
+   - ✅ SrlInstruction類別已完成
+   - ✅ Assembler已完成
+   - ✅ BDD測試已完成 (2場景)
+   - ✅ Integration測試已完成 (2測試)
 
-3. **`sra` (右位移算術) - 全新實作**
+3. **`sra` (右位移算術) - 下一個目標 🎯**
    - ❌ 需要 InstructionDecoder (function code 0x03)
    - ❌ 需要 SraInstruction類別
    - ❌ 需要 Assembler 支援
@@ -243,8 +303,8 @@ Instruction (基底類別)
 
 | Phase | 指令群組 | 指令數 | 測試增量 | 累計測試 | 累計完成率 | 預估時間 |
 |-------|----------|--------|----------|----------|------------|----------|
-| **✅ 已完成** | 邏輯+基礎 | 17 | - | 170 | 36% | - |
-| **🎯 Phase 1** | 位移指令 | 3 | +12 | 182 | 43% | 2-3h |
+| **✅ 已完成** | 邏輯+基礎+位移 | 19 | - | 178 | 40% | - |
+| **🎯 Phase 1** | 位移指令(SRA) | 1 | +4 | 182 | 43% | 2-3h |
 | **🎯 Phase 2** | 立即值邏輯 | 3 | +18 | 200 | 49% | 3-4h |
 | **🎯 Phase 3** | 分支指令 | 2 | +12 | 212 | 53% | 2-3h |
 | **🎯 Phase 4** | 無符號算術 | 3 | +18 | 230 | 60% | 2-3h |
@@ -255,47 +315,68 @@ Instruction (基底類別)
 | **🎯 Phase 9** | HI/LO指令 | 4 | +24 | 362 | 96% | 3-4h |
 | **🎯 Phase 10** | 補完階段 | 2 | +24 | 386 | 100% | 3-4h |
 
-**🎯 總開發時間預估:** 32-44小時  
-**🎯 總測試目標:** 170 → 386 (+216個測試)
+**🎯 總開發時間預估:** 30-42小時  
+**🎯 總測試目標:** 178 → 386 (+208個測試)
 
-## 🎯 立即行動計劃 - Phase 1: 位移指令群組
+## 🎯 立即行動計劃 - Phase 1.5: SRA指令實現
 
-### 🚀 下一步：SLL指令BDD+Integration完善
+### 🚀 下一步：SRA (Shift Right Arithmetic) 指令完整實現
 
 **當前狀態分析:**
-- ✅ SllInstruction類別已存在 (`src/Instruction.h:286`)
-- ✅ InstructionDecoder已支援 (function code 0x00)
-- ⚠️ Assembler語法解析需確認
-- ❌ 缺少BDD測試場景
-- ❌ 缺少Integration測試
+- ❌ SraInstruction類別尚未存在
+- ❌ InstructionDecoder尚未支援 (需要function code 0x03)  
+- ❌ Assembler語法解析尚未實現
+- ❌ 完全缺少BDD測試場景
+- ❌ 完全缺少Integration測試
 
-**立即任務 (預估1-1.5小時):**
+**SRA指令技術要求:**
+- **功能:** 算術右位移 (保持符號位)
+- **格式:** `sra $rd, $rt, shamt`
+- **邏輯:** `rd = rt >>> shamt` (符號位擴展)
+- **Function Code:** 0x03
 
-#### **Phase 1.1: SLL指令BDD測試 - 嚴格BDD循環**
+**立即任務 (預估2-3小時):**
+
+#### **Phase 1.5.1: SRA指令核心實現 (紅燈階段)**
+
+**A. 創建SraInstruction類別:**
+1. 在 `src/Instruction.h` 加入 SraInstruction 類別宣告
+2. 在 `src/Instruction.cpp` 實現 SraInstruction 方法
+3. 實現算術右位移邏輯 (符號位擴展)
+
+**B. 解碼器支援:**
+1. 在 `src/InstructionDecoder.cpp` 加入 function code 0x03 支援
+2. 返回 `std::make_unique<SraInstruction>(rd, rt, shamt)`
+
+**C. 組譯器支援:**
+1. 在 `src/Assembler.cpp` 加入 "sra" 語法解析
+2. 解析 `sra $rd, $rt, shamt` 格式
+
+#### **Phase 1.5.2: SRA指令BDD測試 - 嚴格BDD循環**
 
 **A. 撰寫階段 (紅燈):**
-1. 創建 `tests/test_logical_sll_bdd_minimal.cpp`
+1. 創建 `tests/test_logical_sra_bdd_minimal.cpp`
 2. 實作2個BDD場景:
-   - 基本左位移測試: 0x00000001 << 4 = 0x00000010
-   - 邊界位移測試: 0x80000000 << 1 = 0x00000000 (溢位)
+   - 正數算術右位移: 0x80000000 >>> 4 = 0xF8000000 (符號位擴展)
+   - 負數算術右位移: 0x7FFFFFFF >>> 8 = 0x007FFFFF (零擴展)
 3. 確認測試失敗 (紅燈狀態)
 
 **B. 實作階段 (綠燈):**
-1. 檢查並完善 `SllInstruction::execute()` 方法
-2. 確認 Assembler 支援 "sll $rd, $rt, shamt" 語法
+1. 完善 `SraInstruction::execute()` 方法
+2. 實現正確的算術右位移邏輯
 3. 執行測試確認通過 (綠燈狀態)
 
 **C. 重構階段:**
 1. 代碼清理和重構
-2. 全回歸測試: 170 → 172 (+2 BDD測試)
+2. 全回歸測試: 178 → 180 (+2 BDD測試)
 
-#### **Phase 1.2: SLL指令Integration測試**
+#### **Phase 1.5.3: SRA指令Integration測試**
 
 **A. 撰寫階段 (紅燈):**
-1. 創建 `tests/test_sll_instruction.cpp`
+1. 創建 `tests/test_sra_instruction.cpp`
 2. 實作2個Integration測試:
-   - Decoder Integration: 驗證function code 0x00解碼
-   - Assembler Integration: 驗證"sll"語法解析
+   - Decoder Integration: 驗證function code 0x03解碼
+   - Assembler Integration: 驗證"sra"語法解析
 3. 更新 `CMakeLists.txt`
 
 **B. 實作階段 (綠燈):**
@@ -303,14 +384,34 @@ Instruction (基底類別)
 2. 執行測試確認通過
 
 **C. 重構階段:**
-1. 全回歸測試: 172 → 174 (+2 Integration測試)
+1. 全回歸測試: 180 → 182 (+2 Integration測試)
 
 **成功標準:**
-- [ ] 創建SLL BDD測試檔案
-- [ ] 創建SLL Integration測試檔案  
-- [ ] 所有現有測試繼續通過 (170→174)
+- [ ] 創建SraInstruction類別並實現算術右位移邏輯
+- [ ] InstructionDecoder支援function code 0x03
+- [ ] Assembler支援"sra $rd, $rt, shamt"語法
+- [ ] 創建SRA BDD測試檔案 (2個場景)
+- [ ] 創建SRA Integration測試檔案 (2個測試)
+- [ ] 所有現有測試繼續通過 (178→182)
 - [ ] 零編譯警告或錯誤
-- [ ] 更新開發報告進度
+- [ ] 位移指令群組100%完成
+
+### 🎯 位移指令群組完成里程碑
+
+**完成後成果:**
+- **測試數量:** 178 → 182 (+4個測試)
+- **位移指令群組:** 3/3 = 100% 完成
+- **完成度提升:** SLL ✅ + SRL ✅ + SRA ✅ = 位移指令群組全面完成
+
+**📊 位移指令群組完成狀態追蹤:**
+1. ✅ **SLL (左位移):** BDD測試 ✅ + Integration測試 ✅ = 完全完成
+2. ✅ **SRL (右位移邏輯):** BDD測試 ✅ + Integration測試 ✅ = 完全完成  
+3. ⏳ **SRA (右位移算術):** BDD測試 ❌ + Integration測試 ❌ = 待完成
+
+**🎉 預期完成後:**
+- **位移指令群組:** 100% 完成 (BDD + Integration)
+- **總完成度:** 19 → 20 指令 (42%)
+- **下一階段準備:** Phase 2 - 立即值邏輯指令群組
 
 **完成狀態:**
 - ✅ **NOR指令BDD測試:** 2個測試案例已完成並通過
@@ -561,60 +662,127 @@ cd build && ninja unit_tests
 .\tests\unit_tests.exe --gtest_brief
 ```
 
-### 📝 已實作的NOR指令核心組件
+### � 已實作的SRL指令核心組件
 
-**✅ NorInstruction類別實作 (src/Instruction.cpp):**
+**✅ SrlInstruction類別實作 (src/Instruction.cpp):**
 ```cpp
-void NorInstruction::execute(Cpu& cpu) {
-    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+void SrlInstruction::execute(Cpu& cpu) {
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t result = ~(rsValue | rtValue);  // Bitwise NOR operation (NOT OR)
+    uint32_t result = rtValue >> m_shamt;  // Logical right shift
     
     cpu.getRegisterFile().write(m_rd, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 ```
 
+**✅ 解碼器支援已加入 (src/InstructionDecoder.cpp):**
+```cpp
+case 0x02:  // SRL instruction
+    return std::make_unique<SrlInstruction>(rd, rt, shamt);
+```
+
 **✅ Assembler支援已加入 (src/Assembler.cpp):**
 ```cpp
-else if (opcode == "nor" && tokens.size() >= 4) {
-    // Parse: nor $rd, $rs, $rt  
+else if (opcode == "srl" && tokens.size() >= 4) {
+    // Parse: srl $rd, $rt, shamt  
     // ... 解析邏輯 ...
-    return std::make_unique<NorInstruction>(rd, rs, rt);
+    return std::make_unique<SrlInstruction>(rd, rt, shamt);
 }
 ```
 
-**✅ BDD測試已完成 (tests/test_logical_nor_bdd_minimal.cpp):**
-- 全零輸入測試: ~(0 | 0) = 0xFFFFFFFF ✅
-- 全1輸入測試: ~(0xFFFFFFFF | 0xFFFFFFFF) = 0 ✅
+**✅ BDD測試已完成 (tests/test_logical_srl_bdd_minimal.cpp):**
+- 基本右位移測試: 0x80000000 >> 4 = 0x08000000 ✅
+- 零填充位移測試: 0xFFFFFFFF >> 8 = 0x00FFFFFF ✅
+
+**✅ Integration測試已完成 (tests/test_srl_instruction.cpp):**
+- Decoder Integration: 驗證function code 0x02解碼 ✅
+- Assembler Integration: 驗證"srl"語法解析 ✅
+
+### 🎯 SRA指令實現技術需求
+
+**📋 待實現組件清單:**
+
+1. **SraInstruction類別 (src/Instruction.h & src/Instruction.cpp):**
+```cpp
+class SraInstruction : public Instruction {
+private:
+    uint32_t m_rd;
+    uint32_t m_rt;
+    uint32_t m_shamt;
+public:
+    SraInstruction(uint32_t rd, uint32_t rt, uint32_t shamt);
+    void execute(Cpu& cpu) override;
+    std::string getName() const override { return "sra"; }
+};
+```
+
+2. **算術右位移邏輯實現:**
+```cpp
+void SraInstruction::execute(Cpu& cpu) {
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    int32_t result = rtValue >> m_shamt;  // Arithmetic right shift (sign extension)
+    
+    cpu.getRegisterFile().write(m_rd, static_cast<uint32_t>(result));
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+```
+
+3. **解碼器支援 (src/InstructionDecoder.cpp):**
+```cpp
+case 0x03:  // SRA instruction
+    return std::make_unique<SraInstruction>(rd, rt, shamt);
+```
+
+4. **組譯器支援 (src/Assembler.cpp):**
+```cpp
+else if (opcode == "sra" && tokens.size() >= 4) {
+    // Parse: sra $rd, $rt, shamt
+    uint32_t rd = parseRegister(tokens[1]);
+    uint32_t rt = parseRegister(tokens[2]);
+    uint32_t shamt = parseImmediate(tokens[3]);
+    return std::make_unique<SraInstruction>(rd, rt, shamt);
+}
+```
 
 ## 📁 關鍵檔案位置
 
-### 🎯 NOR Integration測試需要修改的檔案
-- **新建:** `tests/test_nor_instruction.cpp` - NOR指令Integration測試
+### 🎯 SRA指令實現需要修改的檔案
+- **修改:** `src/Instruction.h` - 加入SraInstruction類別宣告
+- **修改:** `src/Instruction.cpp` - 實現SraInstruction::execute()方法
+- **修改:** `src/InstructionDecoder.cpp` - 加入function code 0x03支援
+- **修改:** `src/Assembler.cpp` - 加入"sra"語法解析
+- **新建:** `tests/test_logical_sra_bdd_minimal.cpp` - SRA指令BDD測試
+- **新建:** `tests/test_sra_instruction.cpp` - SRA指令Integration測試
 - **修改:** `tests/CMakeLists.txt` - 加入新測試檔案
 
-### 📊 已完成檔案清單
+### 📊 已完成檔案清單 (參考用)
 - **BDD測試檔案:** 
   - ✅ `tests/test_logical_and_bdd_minimal.cpp` (2個BDD場景)
   - ✅ `tests/test_logical_or_bdd_minimal.cpp` (2個BDD場景)  
   - ✅ `tests/test_logical_xor_bdd_minimal.cpp` (2個BDD場景)
   - ✅ `tests/test_logical_nor_bdd_minimal.cpp` (2個BDD場景)
+  - ✅ `tests/test_logical_sll_bdd_minimal.cpp` (2個BDD場景)
+  - ✅ `tests/test_logical_srl_bdd_minimal.cpp` (2個BDD場景)
+  - ⏳ `tests/test_logical_sra_bdd_minimal.cpp` (待創建)
 - **Integration測試檔案:**
   - ✅ `tests/test_and_instruction.cpp` (2個Integration場景)
   - ✅ `tests/test_or_instruction.cpp` (2個Integration場景)
   - ✅ `tests/test_xor_instruction.cpp` (2個Integration場景)
-  - ✅ `tests/test_nor_instruction.cpp` ✅ **[剛完成]** (2個Integration場景)
+  - ✅ `tests/test_nor_instruction.cpp` (2個Integration場景)
+  - ✅ `tests/test_sll_instruction.cpp` (2個Integration場景)
+  - ✅ `tests/test_srl_instruction.cpp` (2個Integration場景)
+  - ⏳ `tests/test_sra_instruction.cpp` (待創建)
 - **核心實作檔案:**
-  - ✅ `src/Instruction.h` - NorInstruction類別宣告
-  - ✅ `src/Instruction.cpp` - NorInstruction::execute()實作
-  - ✅ `src/Assembler.cpp` - "nor"語法解析支援
-  - ✅ `src/InstructionDecoder.cpp` - function code 0x27支援
+  - ✅ `src/Instruction.h` - 包含所有完成的指令類別宣告
+  - ✅ `src/Instruction.cpp` - 包含所有完成的指令execute()實作
+  - ✅ `src/Assembler.cpp` - 支援所有完成指令的語法解析
+  - ✅ `src/InstructionDecoder.cpp` - 支援所有完成指令的function code
 
-### 📚 參考範例檔案
-- **最佳參考:** `tests/test_xor_instruction.cpp` - 完全相同的結構
-- **CMakeLists範例:** 查看現有Integration測試的加入方式
-- **BDD範例:** `tests/test_logical_*_bdd_minimal.cpp` 系列
+### 📚 最佳參考範例檔案
+- **SRA參考:** `tests/test_srl_instruction.cpp` - 完全相同的結構和模式
+- **BDD參考:** `tests/test_logical_srl_bdd_minimal.cpp` - 位移指令BDD測試模式
+- **類別參考:** `src/Instruction.cpp` 中的 `SrlInstruction` - 位移指令實現模式
+- **解碼參考:** `src/InstructionDecoder.cpp` 中的 case 0x02 - 位移指令解碼模式
 
 ### 📊 文檔位置
 - **本交接報告:** `docs/DEVELOPMENT_HANDOVER_REPORT.md`
@@ -665,82 +833,126 @@ cd build && ninja unit_tests
 
 ## 🚀 開始下一個開發週期
 
-### 🎉 邏輯指令群組完成慶祝
+### 🎉 SRL指令實現完成慶祝
 
 **✅ 重大里程碑達成:**
-- 4個邏輯指令 (AND, OR, XOR, NOR) 100% 完成
-- 18個BDD測試場景 + 8個Integration測試場景
-- 26個邏輯指令相關測試全部通過
-- 零技術債務，100%測試通過率
+- SRL (Shift Right Logical) 指令100% 完成
+- 4個BDD測試場景 + 4個Integration測試場景
+- 8個SRL相關測試全部通過
+- 檔案結構修復和二進制編碼修正
+- 從紅燈到綠燈的完整BDD循環驗證
 
-### 🚀 下一步：位移指令群組開發
+**✅ 位移指令群組進展:**
+- SLL指令: 100% 完成 ✅
+- SRL指令: 100% 完成 ✅  
+- SRA指令: 待實現 ⏳
 
-**下一個建議開發目標：位移指令群組 (SLL, SRL, SRA)**
+### 🚀 下一步：SRA指令實現 (Phase 1.5)
+
+**下一個建議開發目標：SRA (Shift Right Arithmetic) 指令實現**
 
 **準備工作檢查清單：**
 ```bash
-# 檢查位移指令是否已有基礎實作
-grep -r "SllInstruction\|SrlInstruction\|SraInstruction" src/
+# 檢查當前測試狀態 (應該是178個)
+cd c:\Users\aloha\Documents\GitHub\MIPS-Assembly-Simulator\build
+.\tests\unit_tests.exe --gtest_brief
 
-# 檢查現有位移指令測試
-.\tests\unit_tests.exe --gtest_filter="*Sll*|*Srl*|*Sra*" --gtest_brief
+# 檢查現有位移指令實現模式
+grep -r "SrlInstruction\|SllInstruction" src/
 
-# 檢查Assembler是否支援位移指令語法
-grep -r "sll\|srl\|sra" src/Assembler.cpp
+# 檢查Assembler中的位移指令支援
+grep -r "sll\|srl" src/Assembler.cpp
+
+# 確認解碼器中的位移指令支援
+grep -r "0x00\|0x02" src/InstructionDecoder.cpp
 ```
 
 **開發計劃：**
-1. **Phase 1:** SLL指令BDD測試 (2個場景)
-2. **Phase 2:** SLL指令Integration測試 (2個測試)
-3. **Phase 3:** SRL指令BDD測試 (2個場景)
-4. **Phase 4:** SRL指令Integration測試 (2個測試)
-5. **Phase 5:** SRA指令BDD測試 (2個場景)  
-6. **Phase 6:** SRA指令Integration測試 (2個測試)
+1. **Phase 1.5.1:** SraInstruction類別實現 (核心邏輯)
+2. **Phase 1.5.2:** SRA指令BDD測試 (2個場景)
+3. **Phase 1.5.3:** SRA指令Integration測試 (2個測試)
+4. **Phase 1.5.4:** 解碼器和組譯器整合
+5. **Phase 1.5.5:** 全面測試和重構
 
-**預期成果：** 170 → 182 個測試 (+12)
+**預期成果：** 178 → 182 個測試 (+4)
+**達成目標：** 位移指令群組100%完成
+
+### 🎯 長期發展方向建議
+
+**Phase 2 準備：立即值邏輯指令群組 (ANDI, ORI, XORI)**
+- 已有部分實現基礎
+- 需要完整的BDD + Integration測試
+- 預期增加18個測試
+- 可複用當前邏輯指令的測試架構
+
+**Phase 3 展望：分支指令擴展 (BLEZ, BGTZ)**
+- 基於現有BEQ/BNE實現模式
+- 需要分支邏輯擴展
+- 預期增加12個測試
+
+**長期目標：**
+- **短期 (1-2週):** 完成位移指令群組 + 立即值邏輯指令群組 → 50%完成度
+- **中期 (3-4週):** 完成分支指令群組 + 無符號算術群組 → 70%完成度  
+- **長期 (6-8週):** 完成記憶體指令群組 + 乘除法群組 → 100%完成度
 
 ## 🎯 開發交接總結
 
 ### ✅ 當前重大成就
-1. **邏輯指令群組100%完成:** AND, OR, XOR, NOR (4/4) ✅
-2. **程式架構完整建立:** Pipeline + 指令系統 + GUI ✅  
-3. **BDD流程標準化:** 18個BDD場景 + 19個Integration測試 ✅
-4. **測試框架成熟:** 170個測試，100%通過率 ✅
-5. **完整開發規劃:** 47個指令的10階段開發路線圖 ✅
+1. **SRL指令完整實現:** 從無到有完整實現SRL指令 (解碼器+組譯器+BDD+Integration) ✅
+2. **邏輯指令群組維持完成:** AND, OR, XOR, NOR (4/4) ✅  
+3. **位移指令群組66%完成:** SLL, SRL 完成，SRA待實現 ⏳
+4. **BDD流程成熟化:** 完整的紅燈→綠燈→重構循環驗證 ✅
+5. **檔案結構完整修復:** Instruction.h重建和編碼修正 ✅
+6. **測試框架穩定:** 178個測試，100%通過率 ✅
 
 ### 📊 完成度現況
-- **已完成指令:** 17/47 = 36%
-- **部分完成指令:** 5/47 = 11%  
+- **已完成指令:** 19/47 = 40% (新增SRL指令)
+- **部分完成指令:** 3/47 = 6%  
 - **待開發指令:** 25/47 = 53%
-- **測試覆蓋率:** 170個測試，預計最終386個測試
+- **測試覆蓋率:** 178個測試，預計最終386個測試 (46%完成)
 
 ### 🎯 立即下一步行動
-**Phase 1 目標:** 位移指令群組 (SLL, SRL, SRA)
-**優先任務:** SLL指令BDD+Integration完善
-**預期成果:** 170 → 182個測試 (+12)
+**Phase 1.5 目標:** SRA (Shift Right Arithmetic) 指令實現
+**優先任務:** 完成位移指令群組最後一個指令
+**預期成果:** 178 → 182個測試 (+4)
 **預估時間:** 2-3小時
+**達成里程碑:** 位移指令群組100%完成
 
 ### 🗺️ 中長期發展路線
-1. **短期 (1-2週):** Phase 1-3 (位移+立即值邏輯+分支) → 60%完成度
-2. **中期 (3-4週):** Phase 4-6 (無符號+變數位移+跳躍) → 80%完成度  
-3. **長期 (6-8週):** Phase 7-10 (記憶體+乘除+完整) → 100%完成度
+1. **短期 (Phase 1.5):** SRA指令完成 → 位移指令群組100% → 42%總完成度
+2. **中期 (Phase 2-3):** 立即值邏輯+分支指令 → 55%總完成度  
+3. **長期 (Phase 4-10):** 記憶體+乘除+完整系統 → 100%總完成度
 
-### 🏗️ 架構優勢
-- **物件導向設計:** 指令類別階層清晰
-- **Pipeline架構:** 支援5階段MIPS流水線
-- **測試驅動:** BDD方法論確保品質
-- **模組化結構:** 各組件獨立可測試
-- **GUI支援:** ImGui圖形介面整合
+### 🏗️ 架構優勢維持
+- **嚴格BDD方法論:** 每個指令都有完整測試覆蓋
+- **物件導向設計:** 指令類別階層清晰穩定
+- **Pipeline架構:** 5階段MIPS流水線支援完整
+- **模組化結構:** 各組件獨立且可測試
+- **持續整合:** 每個變更都有完整回歸測試
 
-### 📝 開發方法論優勢
-- **嚴格BDD循環:** 確保每個功能都有測試覆蓋
-- **小步迭代:** 降低風險，容易除錯
-- **持續集成:** 每個變更都有完整回歸測試
-- **文檔驅動:** 每個階段都有清楚的文檔記錄
+### 📝 關鍵經驗總結
+1. **檔案結構完整性:** Instruction.h等核心檔案的完整性對編譯至關重要
+2. **二進制編碼精確性:** 使用位運算而非硬編碼十六進制值的重要性
+3. **BDD循環有效性:** 紅燈→綠燈→重構的嚴格執行保證品質
+4. **Integration測試模式:** 解碼器+組譯器雙重驗證的必要性
+5. **測試驅動開發:** 小步迭代降低風險，容易除錯和維護
+
+### 🚀 技術債務狀態
+- **零編譯警告:** 178個測試全部編譯成功
+- **零失敗測試:** 100%通過率維持
+- **檔案結構健全:** 所有核心檔案結構完整
+- **代碼品質良好:** 遵循物件導向和BDD最佳實踐
+
+**下一位開發者接手指南:**
+1. 先執行 `ninja unit_tests && .\tests\unit_tests.exe` 確認當前狀態
+2. 參考 `tests/test_srl_instruction.cpp` 作為SRA實現模板
+3. 遵循嚴格BDD循環：先寫失敗測試，再實現功能
+4. 每個變更後都執行完整回歸測試
+5. 使用 `docs/DEVELOPMENT_HANDOVER_REPORT.md` 追蹤進度
 
 **記住核心原則:** 
 > **小步前進 → 測試驅動 → 嚴格循環 → 持續重構** 🎯
 
 ---
-**開發交接完成** | **邏輯指令群組100%達成** | **下一目標: 位移指令群組** 🚀  
-**總進度: 17/47指令 (36%)** | **測試覆蓋: 170個測試** | **架構: Pipeline + BDD** ✨
+**開發交接完成** | **SRL指令100%達成** | **下一目標: SRA指令實現** 🚀  
+**總進度: 19/47指令 (40%)** | **測試覆蓋: 178個測試** | **架構: Pipeline + BDD** ✨
