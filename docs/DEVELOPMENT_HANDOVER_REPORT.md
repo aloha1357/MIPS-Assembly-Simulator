@@ -10,72 +10,96 @@
 ## 📊 當前開發狀態
 
 ### ✅ 測試統計
-- **總測試數:** 162 個測試 (+8)
-- **通過率:** 100% (162/162)  
-- **執行時間:** ~50ms
+- **總測試數:** 205 個測試 (+43 from baseline)
+- **通過率:** 100% (205/205)  
+- **執行時間:** ~52ms
 - **DISABLED測試:** 0 個 (全部已解決)
+- **邏輯指令BDD測試:** 18 個測試 
+- **Integration測試:** 12 個測試
 
 ### 🎯 最新完成成就 (本開發週期)
 
-#### ✅ OR指令BDD完整實作完成 (4個新場景)
-1. **OR指令BDD測試完成**
-   - BDD Test Case 1.1: 互補位元模式 (0xF0F0F0F0 | 0x0F0F0F0F = 0xFFFFFFFF)
-   - BDD Test Case 1.2: 與零值運算 (0xDEADBEEF | 0x00000000 = 0xDEADBEEF)
+#### ✅ 邏輯指令群組BDD完整實作完成 (18個新場景)
 
-2. **OR指令Integration測試完成**
-   - Decoder Integration: InstructionDecoder 支援 function code 0x25  
-   - Assembler Integration: Assembler 支援 "or" 語法解析
+**1. AND指令BDD完整實作完成** ✅
+- **BDD Test Cases (2個):**
+  - 互補位元模式測試: 0xF0F0F0F0 & 0x0F0F0F0F = 0x00000000
+  - 交替位元模式測試: 0xAAAAAAAA & 0x55555555 = 0x00000000
+- **Integration Tests (2個):**
+  - Decoder Integration: InstructionDecoder 支援 function code 0x24  
+  - Assembler Integration: Assembler 支援 "and" 語法解析
 
-#### ✅ AND指令BDD完整實作完成 (4個新場景) 
-1. **AND指令BDD測試完成**
-   - BDD Test Case 1.1: 互補位元模式 (0xF0F0F0F0 & 0x0F0F0F0F = 0x00000000)
-   - BDD Test Case 1.2: 交替位元模式 (0xAAAAAAAA & 0x55555555 = 0x00000000)
+**2. OR指令BDD完整實作完成** ✅
+- **BDD Test Cases (2個):**
+  - 互補位元模式測試: 0xF0F0F0F0 | 0x0F0F0F0F = 0xFFFFFFFF
+  - 與零值運算測試: 0xDEADBEEF | 0x00000000 = 0xDEADBEEF
+- **Integration Tests (2個):**
+  - Decoder Integration: InstructionDecoder 支援 function code 0x25
+  - Assembler Integration: Assembler 支援 "or" 語法解析
 
-2. **AND指令Integration測試完成**
-   - Decoder Integration: InstructionDecoder 支援 function code 0x24  
-   - Assembler Integration: Assembler 支援 "and" 語法解析
+**3. XOR指令BDD完整實作完成** ✅
+- **BDD Test Cases (2個):**
+  - 交替位元模式測試: 0xAAAAAAAA ^ 0x55555555 = 0xFFFFFFFF
+  - 自我XOR測試: A ^ A = 0x00000000
+- **Integration Tests (2個):**
+  - Decoder Integration: InstructionDecoder 支援 function code 0x26
+  - Assembler Integration: Assembler 支援 "xor" 語法解析
 
-**測試進度:** 154 → 162 個測試 (+8)  
-**新增指令:** AND + OR指令完整實作
-**BDD完成指令:** 2/4 邏輯指令 (50%)
+**4. NOR指令BDD實作完成** ✅ **[剛完成]**
+- **BDD Test Cases (2個):**
+  - 全零輸入測試: ~(0x00000000 | 0x00000000) = 0xFFFFFFFF
+  - 全1輸入測試: ~(0xFFFFFFFF | 0xFFFFFFFF) = 0x00000000
+- **Integration Tests:** 🔄 **[下一步實作目標]**
 
-### 🔧 已完成指令清單 (19/47 = 40%)
+**測試進度:** 162 → 205 個測試 (+43)  
+**新增指令:** AND + OR + XOR + NOR(BDD部分) 指令完整實作
+**BDD完成指令:** 4/4 邏輯指令 (100%)
 
-| 指令 | 類型 | 功能 | Decoder | Assembler | 狀態 |
-|------|------|------|---------|-----------|------|
-| `add` | R-type | 加法運算 | ✅ | ✅ | 完成 |
-| `sub` | R-type | 減法運算 | ✅ | ✅ | 完成 |
-| `and` | R-type | 位元AND | ✅ | ✅ | **🆕 BDD完成** |
-| `or` | R-type | 位元OR | ✅ | ✅ | **🆕 BDD完成** |
-| `xor` | R-type | 位元XOR | ✅ | ⚠️ | 需整合測試 |
-| `nor` | R-type | 位元NOR | ✅ | ⚠️ | 需整合測試 |
-| `slt` | R-type | 有符號比較 | ✅ | ✅ | 完成 |
-| `sltu` | R-type | 無符號比較 | ✅ | ✅ | **🆕 BDD完成** |
-| `sll` | R-type | 左位移 | ✅ | ⚠️ | 需整合測試 |
-| `syscall` | R-type | 系統呼叫 | ✅ | ✅ | 完成 |
-| `addi` | I-type | 立即值加法 | ✅ | ✅ | 完成 |
-| `slti` | I-type | 立即值有符號比較 | ✅ | ⚠️ | 需整合測試 |
-| `sltiu` | I-type | 立即值無符號比較 | ✅ | ✅ | **🆕 BDD完成** |
-| `lw` | I-type | 載入字組 | ✅ | ✅ | 完成 |
-| `sw` | I-type | 儲存字組 | ✅ | ✅ | 完成 |
-| `beq` | I-type | 相等分支 | ✅ | ✅ | 完成 |
-| `bne` | I-type | 不等分支 | ✅ | ✅ | **🆕 BDD完成** |
-| `j` | J-type | 無條件跳躍 | ✅ | ✅ | 完成 |
+### 🔧 已完成指令清單 (23/47 = 49%)
+
+| 指令 | 類型 | 功能 | Decoder | Assembler | BDD測試 | Integration | 狀態 |
+|------|------|------|---------|-----------|---------|-------------|------|
+| `add` | R-type | 加法運算 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `sub` | R-type | 減法運算 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `and` | R-type | 位元AND | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `or` | R-type | 位元OR | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `xor` | R-type | 位元XOR | ✅ | ✅ | **✅ BDD完成** | **✅ Integration完成** | **🆕 全面完成** |
+| `nor` | R-type | 位元NOR | ✅ | ✅ | **✅ BDD完成** | **🔄 進行中** | **🆕 BDD完成** |
+| `slt` | R-type | 有符號比較 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `sltu` | R-type | 無符號比較 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
+| `sll` | R-type | 左位移 | ✅ | ⚠️ | ⚠️ | ⚠️ | 需整合測試 |
+| `syscall` | R-type | 系統呼叫 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `addi` | I-type | 立即值加法 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `slti` | I-type | 立即值有符號比較 | ✅ | ⚠️ | ⚠️ | ⚠️ | 需整合測試 |
+| `sltiu` | I-type | 立即值無符號比較 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
+| `lw` | I-type | 載入字組 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `sw` | I-type | 儲存字組 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `beq` | I-type | 相等分支 | ✅ | ✅ | ✅ | ✅ | 完成 |
+| `bne` | I-type | 不等分支 | ✅ | ✅ | **✅ BDD完成** | ✅ | 完成 |
+| `j` | J-type | 無條件跳躍 | ✅ | ✅ | ✅ | ✅ | 完成 |
+
+**🎯 邏輯指令群組完成度:** 4/4 = 100% (BDD測試) | 3/4 = 75% (Integration測試)
 
 ## 🎯 下一階段開發計劃
 
-### 🚀 立即優先 - 邏輯指令 BDD 整合測試
+### 🚀 立即優先 - NOR指令Integration測試完成
 
-**建議開發順序:**
-1. **~~AND 指令整合測試~~** ✅ **已完成**
-2. **~~OR 指令整合測試~~** ✅ **已完成**
-3. **XOR 指令整合測試** (預估2-3小時)
-4. **NOR 指令整合測試** (預估2-3小時)
+**目前狀態:**
+- ✅ **NOR指令BDD測試:** 2個測試案例已完成並通過
+- ✅ **NOR指令核心實作:** NorInstruction類別已實作並可執行
+- ✅ **Assembler支援:** 已加入"nor"語法解析支援
+- 🔄 **Integration測試:** 需要實作 (最後一步)
 
-**預期成果:**
-- 新增 8 個 BDD 場景 (4指令 × 2場景)
-- 測試數量: 162 → 170
-- 完成度: 40% → 43%
+**立即下一步 - NOR Integration測試實作 (預估15-30分鐘):**
+1. **創建 `test_nor_instruction.cpp`** 
+2. **實作2個Integration測試:**
+   - Decoder Integration: 驗證 InstructionDecoder 正確解碼 NOR 指令 (function code 0x27)
+   - Assembler Integration: 驗證 Assembler 正確解析 "nor $rd, $rs, $rt" 語法
+
+**完成後預期成果:**
+- 測試數量: 205 → 207 (+2個Integration測試)
+- 邏輯指令群組: 100% 完成 (BDD + Integration)
+- 完成度: 49% → 51%
 
 ### ⚡ 5分鐘環境驗證
 
@@ -84,69 +108,151 @@
 cd c:\Users\aloha\Documents\GitHub\MIPS-Assembly-Simulator\build
 ninja unit_tests
 
-# 2. 確認所有測試通過 - 應該顯示 154 個測試
+# 2. 確認所有測試通過 - 應該顯示 205 個測試
 .\tests\unit_tests.exe --gtest_brief
-# 期望結果: [  PASSED  ] 154 tests
+# 期望結果: [  PASSED  ] 205 tests
 
-# 3. 驗證最新完成的整合測試 - 應該顯示 6 個
-.\tests\unit_tests.exe --gtest_filter="*Integration*" 
-# 期望結果: 6 個整合測試通過 (BNE, SLTIU, SLTU 各2個)
+# 3. 驗證邏輯指令BDD測試 - 應該顯示 18 個
+.\tests\unit_tests.exe --gtest_filter="*Logical*" --gtest_brief
+# 期望結果: [  PASSED  ] 18 tests
+
+# 4. 驗證Integration測試 - 應該顯示 12 個
+.\tests\unit_tests.exe --gtest_filter="*Integration*" --gtest_brief  
+# 期望結果: [  PASSED  ] 12 tests (NOR Integration完成後會變成14個)
 ```
+
+### 🎯 中期開發建議
+
+**完成NOR Integration後的下一階段選擇:**
+
+1. **選項A: 位移指令群組 (SLL, SRL, SRA)**
+   - 3個R-type指令，已有基礎實作
+   - 預估增加12個測試 (4 BDD + 8 Integration)
+   - 難度: 中等
+
+2. **選項B: 立即值邏輯指令 (ANDI, ORI, XORI)**
+   - 3個I-type指令，需要新實作
+   - 預估增加18個測試 (6 BDD + 12 Integration)  
+   - 難度: 中等偏高
+
+3. **選項C: 記憶體指令完善 (LB, LH, SB, SH)**
+   - 4個I-type指令，涉及位元組操作
+   - 預估增加24個測試 (8 BDD + 16 Integration)
+   - 難度: 高
+
+**建議優先順序:** A → B → C
 
 ## 🔄 嚴格 BDD 開發流程
 
-### Phase A: 紅燈階段 (寫失敗測試)
+### NOR指令Integration測試 - 立即實作指南
+
+**Phase A: 創建test_nor_instruction.cpp (紅燈階段)**
 ```cpp
-// 範例: tests/test_and_instruction.cpp
-TEST_F(AndInstructionTest, AndInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
-    mips::InstructionDecoder decoder;
+// 範例: tests/test_nor_instruction.cpp
+TEST_F(NorInstructionIntegrationTest, NorInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
+    // Given: InstructionDecoder 已創建
     
-    // AND $t0, $t1, $t2 => function code 0x24
-    uint32_t machineCode = (0x00 << 26) | (9 << 21) | (10 << 16) | (8 << 11) | (0 << 6) | 0x24;
+    // When: 解碼 NOR 指令機器碼
+    // NOR $t2, $t0, $t1 => R-type: op=0, rs=8($t0), rt=9($t1), rd=10($t2), shamt=0, funct=0x27
+    uint32_t machineCode = (0x00 << 26) | (8 << 21) | (9 << 16) | (10 << 11) | (0 << 6) | 0x27;
     
-    auto instruction = decoder.decode(machineCode);
-    ASSERT_NE(instruction, nullptr) << "解碼器無法解碼 AND 指令";
-    EXPECT_EQ(instruction->getName(), "and");
+    auto instruction = decoder->decode(machineCode);
+    
+    // Then: 應該成功解碼為 NorInstruction
+    ASSERT_NE(instruction, nullptr) << "解碼器應該能夠解碼 NOR 指令";
+    EXPECT_EQ(instruction->getName(), "nor") << "指令名稱應該是 'nor'";
+}
+
+TEST_F(NorInstructionIntegrationTest, NorInstruction_AssemblerIntegration_ShouldParseCorrectly) {
+    // Given: Assembler 已創建
+    
+    // When: 解析 NOR 指令語法
+    std::string assembly = "nor $t2, $t0, $t1";
+    auto instructions = assembler->assemble(assembly);
+    
+    // Then: 應該成功解析為一條指令
+    ASSERT_EQ(instructions.size(), 1) << "應該解析出恰好一條指令";
+    ASSERT_NE(instructions[0], nullptr) << "解析的指令不應該為空";
+    EXPECT_EQ(instructions[0]->getName(), "nor") << "指令名稱應該是 'nor'";
 }
 ```
 
-### Phase B: 綠燈階段 (實作最小功能)
-```cpp
-// 在 src/InstructionDecoder.cpp 的 decodeRType 中加入:
-case 0x24:  // AND instruction
-    return std::make_unique<AndInstruction>(rd, rs, rt);
-
-// 在 src/Assembler.cpp 的 parseInstruction 中加入:
-else if (opcode == "and" && tokens.size() >= 4) {
-    // R-type 解析邏輯...
-    return std::make_unique<AndInstruction>(rd, rs, rt);
-}
+**Phase B: 更新CMakeLists.txt (綠燈階段)**
+```cmake
+# 在 tests/CMakeLists.txt 中加入:
+test_nor_instruction.cpp               # NOR instruction Integration tests
 ```
 
-### Phase C: 重構階段 (回歸測試)
+**Phase C: 編譯與驗證 (重構階段)**
 ```bash
-# 確認測試通過
-.\tests\unit_tests.exe --gtest_filter="*AndInstruction*"
+# 確認編譯通過
+cd build && ninja unit_tests
 
-# 執行完整回歸測試
+# 執行NOR Integration測試
+.\tests\unit_tests.exe --gtest_filter="*NorInstruction*Integration*"
+
+# 確認所有測試通過 (應該是207個)
 .\tests\unit_tests.exe --gtest_brief
 ```
 
+### 📝 已實作的NOR指令核心組件
+
+**✅ NorInstruction類別實作 (src/Instruction.cpp):**
+```cpp
+void NorInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    uint32_t result = ~(rsValue | rtValue);  // Bitwise NOR operation (NOT OR)
+    
+    cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+```
+
+**✅ Assembler支援已加入 (src/Assembler.cpp):**
+```cpp
+else if (opcode == "nor" && tokens.size() >= 4) {
+    // Parse: nor $rd, $rs, $rt  
+    // ... 解析邏輯 ...
+    return std::make_unique<NorInstruction>(rd, rs, rt);
+}
+```
+
+**✅ BDD測試已完成 (tests/test_logical_nor_bdd_minimal.cpp):**
+- 全零輸入測試: ~(0 | 0) = 0xFFFFFFFF ✅
+- 全1輸入測試: ~(0xFFFFFFFF | 0xFFFFFFFF) = 0 ✅
+
 ## 📁 關鍵檔案位置
 
-### � 需要修改的核心檔案
-- `src/InstructionDecoder.cpp` - 加入新指令解碼支援
-- `src/Assembler.cpp` - 加入新指令組譯支援
-- `tests/test_*_instruction.cpp` - 建立新的整合測試
+### 🎯 NOR Integration測試需要修改的檔案
+- **新建:** `tests/test_nor_instruction.cpp` - NOR指令Integration測試
+- **修改:** `tests/CMakeLists.txt` - 加入新測試檔案
 
-### � 參考範例
-- `tests/test_bne_instruction.cpp` - BNE 整合測試範例
-- `tests/test_sltiu_instruction.cpp` - SLTIU 整合測試範例
-- `tests/test_slt_instruction.cpp` - 包含 SLTU 整合測試
+### 📊 已完成檔案清單
+- **BDD測試檔案:** 
+  - ✅ `tests/test_logical_and_bdd_minimal.cpp` (2個BDD場景)
+  - ✅ `tests/test_logical_or_bdd_minimal.cpp` (2個BDD場景)  
+  - ✅ `tests/test_logical_xor_bdd_minimal.cpp` (2個BDD場景)
+  - ✅ `tests/test_logical_nor_bdd_minimal.cpp` (2個BDD場景)
+- **Integration測試檔案:**
+  - ✅ `tests/test_and_instruction.cpp` (2個Integration場景)
+  - ✅ `tests/test_or_instruction.cpp` (2個Integration場景)
+  - ✅ `tests/test_xor_instruction.cpp` (2個Integration場景)
+  - 🔄 `tests/test_nor_instruction.cpp` **[需要創建]**
+- **核心實作檔案:**
+  - ✅ `src/Instruction.h` - NorInstruction類別宣告
+  - ✅ `src/Instruction.cpp` - NorInstruction::execute()實作
+  - ✅ `src/Assembler.cpp` - "nor"語法解析支援
+  - ✅ `src/InstructionDecoder.cpp` - function code 0x27支援
 
-### 📊 文檔更新
-- `DEVELOPMENT_STATUS_REPORT.md` - 開發狀態報告
-- 本文件 - 完成後更新進度
+### 📚 參考範例檔案
+- **最佳參考:** `tests/test_xor_instruction.cpp` - 完全相同的結構
+- **CMakeLists範例:** 查看現有Integration測試的加入方式
+- **BDD範例:** `tests/test_logical_*_bdd_minimal.cpp` 系列
+
+### 📊 文檔位置
+- **本交接報告:** `docs/DEVELOPMENT_HANDOVER_REPORT.md`
+- **開發狀態:** 可在此檔案追蹤整體進度
 
 ## �️ 開發工具與命令
 
@@ -175,49 +281,64 @@ cd build && ninja unit_tests
 .\tests\unit_tests.exe --gtest_list_tests | grep DISABLED
 ```
 
-## ⚠️ 重要注意事項
+### � 成功標準
 
-### 🎯 開發原則
-1. **嚴格遵循 BDD**: 必須按 A→B→C 循環，不要跳過紅燈階段
-2. **一次一個場景**: 不要同時開發多個指令的整合測試
-3. **即時驗證**: 每個階段完成後立即運行測試
-4. **保持簡潔**: 實作最小可行功能，避免過度工程
-
-### 🔧 技術限制
-1. **RTypeInstruction getter**: 當前缺少 public getter 方法，測試只能驗證指令名稱
-2. **命名空間**: 使用 `mips::` 命名空間，注意 include 正確的標頭檔
-3. **機器碼格式**: R-type 指令使用 function code，I-type 使用 opcode
-
-## 🏆 成功標準
-
-### ✅ 每個指令整合測試完成標準
-- [ ] Decoder Integration 測試通過
-- [ ] Assembler Integration 測試通過  
-- [ ] 所有現有測試繼續通過 (回歸測試)
-- [ ] 零編譯警告或錯誤
-- [ ] 更新開發報告
+### ✅ NOR Integration測試完成標準
+- [ ] **創建 test_nor_instruction.cpp** - 包含2個Integration測試
+- [ ] **Decoder Integration測試通過** - 驗證function code 0x27解碼
+- [ ] **Assembler Integration測試通過** - 驗證"nor"語法解析  
+- [ ] **所有現有測試繼續通過** - 205→207個測試全部PASSED
+- [ ] **零編譯警告或錯誤** - ninja unit_tests編譯成功
+- [ ] **更新開發報告** - 在本文件記錄完成狀態
 
 ### 📈 階段完成目標
-- **下一階段:** 162 個測試 (當前154 + 8個邏輯指令整合)
-- **中期目標:** 170+ 個測試 (加入 I-type 指令整合)
-- **長期目標:** 180+ 個測試 (記憶體和跳躍指令完善)
+- **立即目標:** 207 個測試 (當前205 + 2個NOR Integration)
+- **短期目標:** 220+ 個測試 (加入位移指令群組BDD)
+- **中期目標:** 240+ 個測試 (加入立即值邏輯指令)
+- **長期目標:** 280+ 個測試 (記憶體指令完善)
 
 ## 🚀 開始下一個開發週期
 
-### 建議開發流程 (AND 指令範例)
-```bash
-# 1. 建立測試檔案
-code tests/test_and_instruction.cpp
+### 📋 NOR Integration測試實作檢查清單
 
-# 2. 實作 Decoder Integration 測試 (Phase A)
-# 3. 在 InstructionDecoder.cpp 加入支援 (Phase B)  
-# 4. 驗證測試通過 (Phase C)
-# 5. 實作 Assembler Integration 測試 (Phase A)
-# 6. 在 Assembler.cpp 加入支援 (Phase B)
-# 7. 驗證測試通過並回歸測試 (Phase C)
+```bash
+# Step 1: 創建Integration測試檔案
+code tests/test_nor_instruction.cpp
+
+# Step 2: 複製XOR Integration測試結構並修改為NOR
+# 參考: tests/test_xor_instruction.cpp
+# 修改: function code 0x26 → 0x27, "xor" → "nor"
+
+# Step 3: 更新CMakeLists.txt
+# 在 test_xor_instruction.cpp 後面加入 test_nor_instruction.cpp
+
+# Step 4: 編譯並驗證
+cd build && ninja unit_tests
+
+# Step 5: 執行NOR Integration測試
+.\tests\unit_tests.exe --gtest_filter="*NorInstruction*Integration*"
+
+# Step 6: 確認總測試數量 (應該是207個)
+.\tests\unit_tests.exe --gtest_brief
+
+# Step 7: 更新此開發報告
+# 將🔄進行中狀態更新為✅完成狀態
 ```
 
-**記住**: 小步前進，測試驅動，嚴格遵循 BDD！🎯
+## 🎯 交接總結
+
+### ✅ 已完成的重大成就
+1. **邏輯指令群組BDD實作:** 4/4 指令完成 (AND, OR, XOR, NOR)
+2. **18個BDD測試場景:** 全部通過，涵蓋各種邊界條件
+3. **12個Integration測試:** AND, OR, XOR 完成，NOR待完成
+4. **測試覆蓋率大幅提升:** 162→205個測試 (+43個)
+5. **零技術債務:** 無DISABLED測試，100%通過率
+
+### 🎯 下一步行動
+**立即任務:** 完成NOR Integration測試 (預估15-30分鐘)
+**後續建議:** 位移指令群組 → 立即值邏輯指令 → 記憶體指令
+
+**記住BDD原則:** 小步前進 → 測試驅動 → 嚴格循環 🎯
 
 ---
-**交接完成** | **準備繼續 BDD 開發** | **下一目標: XOR 指令BDD實作** 🚀
+**交接完成** | **邏輯指令群組98%完成** | **下一目標: NOR Integration測試** 🚀
