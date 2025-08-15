@@ -1,258 +1,217 @@
-# MIPS Assembly Simulator - 開發進度與交接報告
+# 🚀 MIPS Assembly Simulator - 完整開發交接報告
 
-**報告日期**: 2025年8月15日  
-**報告類型**: BDD 開發完成交接報告  
-**專案階段**: 16指令實作完成，持續擴展中
+## 📋 專案概要
+**專案名稱:** MIPS Assembly Simulator  
+**開發方法:** 嚴格 BDD (Behavior-Driven Development) 方法論  
+**測試框架:** Google Test Framework  
+**開發語言:** C++17  
+**交接日期:** 2025年8月15日  
 
-## 📊 當前實作狀況
+## 📊 當前開發狀態
 
-### ✅ 已完成指令清單 (21/47 = 45%)
+### ✅ 測試統計
+- **總測試數:** 154 個測試
+- **通過率:** 100% (154/154)
+- **執行時間:** ~46ms
+- **DISABLED測試:** 0 個 (全部已解決)
 
-| 編號 | 指令 | 類型 | 功能碼 | TDD狀態 | BDD狀態 | 最後更新 |
-|------|------|------|--------|---------|---------|----------|
-| 1    | `add` | R-type | 0x20 | ✅ 完成 | ✅ 完成 | 原始實作 |
-| 2    | `sub` | R-type | 0x22 | ✅ 完成 | ✅ 完成 | 原始實作 |
-| 3    | `and` | R-type | 0x24 | ✅ 完成 | ✅ 完成 | 邏輯指令組 |
-| 4    | `or` | R-type | 0x25 | ✅ 完成 | ✅ 完成 | 邏輯指令組 |
-| 5    | `xor` | R-type | 0x26 | ✅ 完成 | ✅ 完成 | 邏輯指令組 |
-| 6    | `nor` | R-type | 0x27 | ✅ 完成 | ✅ 完成 | 邏輯指令組 |
-| 7    | `slt` | R-type | 0x2A | ✅ 完成 | ✅ 完成 | 比較指令組 |
-| 8    | `sltu` | R-type | 0x2B | ✅ 完成 | ✅ 完成 | 比較指令組 |
-| 9    | `sll` | R-type | 0x00 | ✅ 完成 | ✅ 完成 | 位移指令 |
-| 10   | `syscall` | R-type | 0x0C | ✅ 完成 | ✅ 完成 | 系統呼叫 |
-| 11   | `addi` | I-type | 0x08 | ✅ 完成 | ✅ 完成 | 算術指令 |
-| 12   | `slti` | I-type | 0x0A | ✅ 完成 | ✅ 完成 | 比較指令 |
-| 13   | `sltiu` | I-type | 0x0B | ✅ 完成 | ✅ 完成 | 比較指令 |
-| 14   | `ori` | I-type | 0x0D | ✅ 完成 | ✅ 完成 | 立即值邏輯指令 |
-| 15   | `andi` | I-type | 0x0C | ✅ 完成 | ✅ 完成 | **🆕 2025-08-15** |
-| 16   | `xori` | I-type | 0x0E | ✅ 完成 | ✅ 完成 | **🆕 2025-08-15** |
-| 17   | `lw` | I-type | 0x23 | ✅ 完成 | ✅ 完成 | 記憶體指令 |
-| 18   | `sw` | I-type | 0x2B | ✅ 完成 | ✅ 完成 | 記憶體指令 |
-| 19   | `beq` | I-type | 0x04 | ✅ 完成 | ✅ 完成 | 分支指令 |
-| 20   | `bne` | I-type | 0x05 | ✅ 完成 | ✅ 完成 | 分支指令 |
-| 21   | `j` | J-type | 0x02 | ✅ 完成 | ✅ 完成 | 跳躍指令 |
+### 🎯 最新完成成就 (本開發週期)
 
-### 📊 指令類型分布
-- **R-Type 指令**: 8/21 (38%) - 算術、邏輯、比較、位移
-- **I-Type 指令**: 11/21 (52%) - 立即值、記憶體、分支
-- **J-Type 指令**: 1/21 (5%) - 跳躍
-- **Special**: 1/21 (5%) - 系統呼叫
+#### ✅ BDD 整合測試完成 (6個新場景)
+1. **BNE (Branch Not Equal) 指令整合測試**
+   - Decoder Integration: InstructionDecoder 支援 opcode 0x05
+   - Assembler Integration: Assembler 支援 "bne" 語法解析
 
-### 🧪 測試覆蓋狀況
-- **單元測試**: 148/148 通過 (100%) ⬆️ **從140增加**
-- **BDD 場景**: 所有已實作指令覆蓋
-- **整合測試**: CPU + 記憶體 + 管線
-- **性能測試**: <43ms 執行時間
-- **回歸測試**: 無破壞性變更
+2. **SLTIU (Set Less Than Immediate Unsigned) 指令整合測試**
+   - Decoder Integration: InstructionDecoder 支援 opcode 0x0B
+   - Assembler Integration: Assembler 支援 "sltiu" 語法解析
 
-## 🎯 最新完成: XORI 指令實作 (Scenario 11)
+3. **SLTU (Set Less Than Unsigned) 指令整合測試**
+   - Decoder Integration: InstructionDecoder 支援 function code 0x2B
+   - Assembler Integration: Assembler 支援 "sltu" 語法解析
 
-### 實作摘要
-- **指令**: `xori $rt, $rs, immediate` - XOR Immediate
-- **開發方式**: 嚴格 BDD (紅燈→綠燈→重構)
-- **測試數**: 8 個原子測試 (6個功能測試 + 2個框架測試)
-- **關鍵特性**: 16位立即值零擴展，位元XOR運算，完善立即值邏輯運算三角
+**測試進度:** 148 → 154 個測試 (+6)  
+**DISABLED解決:** 6 → 0 個 (-6)
 
-### 關鍵實作細節
+### 🔧 已完成指令清單 (19/47 = 40%)
+
+| 指令 | 類型 | 功能 | Decoder | Assembler | 狀態 |
+|------|------|------|---------|-----------|------|
+| `add` | R-type | 加法運算 | ✅ | ✅ | 完成 |
+| `sub` | R-type | 減法運算 | ✅ | ✅ | 完成 |
+| `and` | R-type | 位元AND | ✅ | ⚠️ | 需整合測試 |
+| `or` | R-type | 位元OR | ✅ | ⚠️ | 需整合測試 |
+| `xor` | R-type | 位元XOR | ✅ | ⚠️ | 需整合測試 |
+| `nor` | R-type | 位元NOR | ✅ | ⚠️ | 需整合測試 |
+| `slt` | R-type | 有符號比較 | ✅ | ✅ | 完成 |
+| `sltu` | R-type | 無符號比較 | ✅ | ✅ | **🆕 BDD完成** |
+| `sll` | R-type | 左位移 | ✅ | ⚠️ | 需整合測試 |
+| `syscall` | R-type | 系統呼叫 | ✅ | ✅ | 完成 |
+| `addi` | I-type | 立即值加法 | ✅ | ✅ | 完成 |
+| `slti` | I-type | 立即值有符號比較 | ✅ | ⚠️ | 需整合測試 |
+| `sltiu` | I-type | 立即值無符號比較 | ✅ | ✅ | **🆕 BDD完成** |
+| `lw` | I-type | 載入字組 | ✅ | ✅ | 完成 |
+| `sw` | I-type | 儲存字組 | ✅ | ✅ | 完成 |
+| `beq` | I-type | 相等分支 | ✅ | ✅ | 完成 |
+| `bne` | I-type | 不等分支 | ✅ | ✅ | **🆕 BDD完成** |
+| `j` | J-type | 無條件跳躍 | ✅ | ✅ | 完成 |
+
+## 🎯 下一階段開發計劃
+
+### 🚀 立即優先 - 邏輯指令 BDD 整合測試
+
+**建議開發順序:**
+1. **AND 指令整合測試** (預估2-3小時)
+2. **OR 指令整合測試** (預估2-3小時)
+3. **XOR 指令整合測試** (預估2-3小時)
+4. **NOR 指令整合測試** (預估2-3小時)
+
+**預期成果:**
+- 新增 8 個 BDD 場景 (4指令 × 2場景)
+- 測試數量: 154 → 162
+- 完成度: 40% → 43%
+
+### ⚡ 5分鐘環境驗證
+
+```bash
+# 1. 確認編譯正常
+cd c:\Users\aloha\Documents\GitHub\MIPS-Assembly-Simulator\build
+ninja unit_tests
+
+# 2. 確認所有測試通過 - 應該顯示 154 個測試
+.\tests\unit_tests.exe --gtest_brief
+# 期望結果: [  PASSED  ] 154 tests
+
+# 3. 驗證最新完成的整合測試 - 應該顯示 6 個
+.\tests\unit_tests.exe --gtest_filter="*Integration*" 
+# 期望結果: 6 個整合測試通過 (BNE, SLTIU, SLTU 各2個)
+```
+
+## 🔄 嚴格 BDD 開發流程
+
+### Phase A: 紅燈階段 (寫失敗測試)
 ```cpp
-void XoriInstruction::execute(Cpu& cpu) {
-    // 讀取源暫存器值
-    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+// 範例: tests/test_and_instruction.cpp
+TEST_F(AndInstructionTest, AndInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
+    mips::InstructionDecoder decoder;
     
-    // 零擴展16位立即值到32位 (XORI使用零擴展，非符號擴展)
-    uint32_t immValue = static_cast<uint32_t>(static_cast<uint16_t>(m_imm));
+    // AND $t0, $t1, $t2 => function code 0x24
+    uint32_t machineCode = (0x00 << 26) | (9 << 21) | (10 << 16) | (8 << 11) | (0 << 6) | 0x24;
     
-    // 執行位元XOR運算
-    uint32_t result = rsValue ^ immValue;
-    
-    // 寫入目標暫存器
-    cpu.getRegisterFile().write(m_rt, result);
-    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+    auto instruction = decoder.decode(machineCode);
+    ASSERT_NE(instruction, nullptr) << "解碼器無法解碼 AND 指令";
+    EXPECT_EQ(instruction->getName(), "and");
 }
 ```
 
-### 驗證測試案例
-- **基本XOR運算**: 0x0000FFFF ^ 0x00FF = 0x0000FF00
-- **零立即值恆等**: 0x12345678 ^ 0x0000 = 0x12345678 (恆等操作)
-- **全1立即值**: 0x12345678 ^ 0xFFFF = 0x1234A987 (翻轉低16位)
-- **位元遮罩**: 0xAAAABBBB ^ 0x0F0F = 0xAAAAB4B4 (選擇性位元翻轉)
-- **與$zero XOR**: 0x00000000 ^ 0x1234 = 0x00001234
-- **位元翻轉**: 0xDEADBEEF ^ 0x00FF = 0xDEADBE10 (翻轉低8位)
-
-### BDD流程確認
-✅ **Phase A (紅燈)**: 8個測試失敗，確認類別未實作  
-✅ **Phase B (綠燈)**: 實作XoriInstruction類別，所有測試通過  
-✅ **Phase C (重構)**: 修正編譯警告，代碼清理，無回歸問題
-
-### 立即值邏輯指令組完成 🎉
-**ORI + ANDI + XORI 三角組合**: 立即值邏輯運算現已完整實作
-- **ORI**: 位元OR，用於設定特定位元
-- **ANDI**: 位元AND，用於遮罩和位元組提取  
-- **XORI**: 位元XOR，用於位元翻轉和加密操作
-
-## 🚀 下一階段開發建議
-
-### 優先實作候選 (按重要性排序)
-
-#### 1. ANDI - AND Immediate (P1)
-- **類型**: I-type 指令
-- **功能碼**: 0x0C
-- **複雜度**: 低 (基於 ORI 經驗)
-- **預估時間**: 1.5 小時
-- **價值**: 完善立即值邏輯運算，與ORI成對
-
-#### 2. SRLV - Shift Right Logical Variable (P2)
-- **類型**: R-type 位移指令
-- **功能碼**: 0x06
-- **複雜度**: 中等 (基於 SLL 經驗)
-- **預估時間**: 2 小時
-- **價值**: 擴展位移指令家族
-
-#### 3. LUI - Load Upper Immediate (P2)
-- **類型**: I-type 載入指令
-- **功能碼**: 0x0F
-- **複雜度**: 低
-- **預估時間**: 1.5 小時
-- **價值**: 支援32位常數載入
-
-#### 4. XORI - XOR Immediate (P2)
-- **類型**: I-type 邏輯指令
-- **功能碼**: 0x0E
-- **複雜度**: 低
-- **預估時間**: 1.5 小時
-- **價值**: 完成立即值邏輯運算三角
-
-## 📋 開發流程標準 (BDD 最佳實務)
-
-### A. 紅燈階段 (30-45分鐘)
-1. **創建 feature 檔案**: `features/[instruction]_only.feature`
-2. **撰寫失敗測試**: `tests/test_[instruction].cpp`
-3. **確認編譯失敗**: 類別未宣告錯誤
-4. **驗證測試框架**: 無框架問題
-
-### B. 綠燈階段 (60-90分鐘)
-1. **宣告類別**: 在 `src/Instruction.h` 添加
-2. **實作執行邏輯**: 在 `src/Instruction.cpp` 添加
-3. **最小實作**: 只讓測試通過
-4. **驗證測試**: 所有新測試通過
-
-### C. 重構階段 (30分鐘)
-1. **代碼清理**: 遵循現有模式
-2. **命名一致**: 與其他指令一致
-3. **回歸測試**: 確保無破壞性變更
-4. **文檔更新**: 更新此報告
-
-### 🔧 技術架構參考
-
-#### 指令類別模板
+### Phase B: 綠燈階段 (實作最小功能)
 ```cpp
-// Instruction.h
-class [Name]Instruction : public [Type]Instruction {
-public:
-    [Name]Instruction(/* parameters */);
-    void execute(Cpu& cpu) override;
-    std::string getName() const override;
-};
+// 在 src/InstructionDecoder.cpp 的 decodeRType 中加入:
+case 0x24:  // AND instruction
+    return std::make_unique<AndInstruction>(rd, rs, rt);
 
-// Instruction.cpp
-[Name]Instruction::[Name]Instruction(/* parameters */) 
-    : [Type]Instruction(/* base params */) {}
-
-void [Name]Instruction::execute(Cpu& cpu) {
-    // 1. 讀取暫存器值
-    // 2. 執行運算
-    // 3. 寫入結果
-    // 4. 更新 PC
-}
-
-std::string [Name]Instruction::getName() const {
-    return "[name]";
+// 在 src/Assembler.cpp 的 parseInstruction 中加入:
+else if (opcode == "and" && tokens.size() >= 4) {
+    // R-type 解析邏輯...
+    return std::make_unique<AndInstruction>(rd, rs, rt);
 }
 ```
 
-#### 測試類別模板
-```cpp
-class [Name]InstructionTest : public ::testing::Test {
-protected:
-    std::unique_ptr<mips::Cpu> cpu;
-    void SetUp() override { /* 初始化 */ }
-};
+### Phase C: 重構階段 (回歸測試)
+```bash
+# 確認測試通過
+.\tests\unit_tests.exe --gtest_filter="*AndInstruction*"
 
-TEST_F([Name]InstructionTest, [Name]Instruction_BasicOperation) {
-    // Arrange, Act, Assert
-}
+# 執行完整回歸測試
+.\tests\unit_tests.exe --gtest_brief
 ```
 
-## 📁 關鍵檔案結構
+## 📁 關鍵檔案位置
 
+### � 需要修改的核心檔案
+- `src/InstructionDecoder.cpp` - 加入新指令解碼支援
+- `src/Assembler.cpp` - 加入新指令組譯支援
+- `tests/test_*_instruction.cpp` - 建立新的整合測試
+
+### � 參考範例
+- `tests/test_bne_instruction.cpp` - BNE 整合測試範例
+- `tests/test_sltiu_instruction.cpp` - SLTIU 整合測試範例
+- `tests/test_slt_instruction.cpp` - 包含 SLTU 整合測試
+
+### 📊 文檔更新
+- `DEVELOPMENT_STATUS_REPORT.md` - 開發狀態報告
+- 本文件 - 完成後更新進度
+
+## �️ 開發工具與命令
+
+### 🔍 常用搜尋命令
+```bash
+# 查找現有指令實作模式
+grep -r "AndInstruction" src/
+grep -r "function code" src/InstructionDecoder.cpp
+
+# 查找測試範例
+grep -r "Integration" tests/
 ```
-MIPS-Assembly-Simulator/
-├── src/
-│   ├── Instruction.h          # 指令類別宣告
-│   ├── Instruction.cpp        # 指令實作
-│   ├── InstructionDecoder.cpp # 解碼器 (後續整合)
-│   └── Assembler.cpp         # 彙編器 (後續整合)
-├── tests/
-│   ├── test_slt_instruction.cpp  # SLTU 測試檔案
-│   └── test_*.cpp               # 其他測試檔案
-├── features/
-│   ├── *.feature              # BDD 場景定義
-│   └── step_definitions_*.cpp # BDD 步驟實作
-└── docs/
-    └── 此報告檔案
+
+### 🧪 測試命令
+```bash
+# 編譯專案
+cd build && ninja unit_tests
+
+# 測試特定指令
+.\tests\unit_tests.exe --gtest_filter="*And*"
+
+# 完整測試
+.\tests\unit_tests.exe --gtest_brief
+
+# 查看 DISABLED 測試
+.\tests\unit_tests.exe --gtest_list_tests | grep DISABLED
 ```
 
-## 🎯 成功指標
+## ⚠️ 重要注意事項
 
-### 定量目標
-- **指令覆蓋率**: 目標 22+ 指令 (當前 21) ⬆️ **新增 XORI**
-- **測試數量**: 目標 150+ 測試 (當前 148) ⬆️ **+8 測試**
-- **執行效能**: 維持 <50ms (當前 <43ms) ✅ **性能優秀**
-- **代碼覆蓋率**: 維持 >95%
+### 🎯 開發原則
+1. **嚴格遵循 BDD**: 必須按 A→B→C 循環，不要跳過紅燈階段
+2. **一次一個場景**: 不要同時開發多個指令的整合測試
+3. **即時驗證**: 每個階段完成後立即運行測試
+4. **保持簡潔**: 實作最小可行功能，避免過度工程
 
-### 定性目標
-- **架構一致性**: 新指令遵循現有模式
-- **測試品質**: 每個指令 4-6 個原子測試
-- **文檔完整**: 即時更新開發報告
-- **無迴歸**: 每次新增後全測試通過
+### 🔧 技術限制
+1. **RTypeInstruction getter**: 當前缺少 public getter 方法，測試只能驗證指令名稱
+2. **命名空間**: 使用 `mips::` 命名空間，注意 include 正確的標頭檔
+3. **機器碼格式**: R-type 指令使用 function code，I-type 使用 opcode
 
-## 🔄 持續整合建議
+## 🏆 成功標準
 
-### 每個指令完成後
-1. 更新此報告的指令清單
-2. 檢查總測試數量變化
-3. 驗證性能指標
-4. 提交程式碼變更
+### ✅ 每個指令整合測試完成標準
+- [ ] Decoder Integration 測試通過
+- [ ] Assembler Integration 測試通過  
+- [ ] 所有現有測試繼續通過 (回歸測試)
+- [ ] 零編譯警告或錯誤
+- [ ] 更新開發報告
 
-### 每週里程碑
-1. 檢視實作進度
-2. 評估架構改進
-3. 優化測試執行時間
-4. 規劃下週目標
+### 📈 階段完成目標
+- **下一階段:** 162 個測試 (當前154 + 8個邏輯指令整合)
+- **中期目標:** 170+ 個測試 (加入 I-type 指令整合)
+- **長期目標:** 180+ 個測試 (記憶體和跳躍指令完善)
 
-## 🏆 專案成就總結
+## 🚀 開始下一個開發週期
 
-### 技術成就
-- ✅ **100% 測試通過率**: 132/132 測試
-- ✅ **嚴格 BDD 流程**: 紅燈→綠燈→重構
-- ✅ **無迴歸保證**: 完整回歸測試套件
-- ✅ **高效性能**: <42ms 測試執行
+### 建議開發流程 (AND 指令範例)
+```bash
+# 1. 建立測試檔案
+code tests/test_and_instruction.cpp
 
-### 架構成就
-- ✅ **模組化設計**: 清晰的指令類別階層
-- ✅ **可擴展性**: 易於添加新指令
-- ✅ **一致性**: 統一的實作模式
-- ✅ **可維護性**: 完整的測試覆蓋
+# 2. 實作 Decoder Integration 測試 (Phase A)
+# 3. 在 InstructionDecoder.cpp 加入支援 (Phase B)  
+# 4. 驗證測試通過 (Phase C)
+# 5. 實作 Assembler Integration 測試 (Phase A)
+# 6. 在 Assembler.cpp 加入支援 (Phase B)
+# 7. 驗證測試通過並回歸測試 (Phase C)
+```
+
+**記住**: 小步前進，測試驅動，嚴格遵循 BDD！🎯
 
 ---
-
-## 🚀 給下一位開發者的建議
-
-1. **從 ANDI 開始**: 最自然的延續，與ORI成對，難度低
-2. **嚴格遵循 BDD**: 不要跳過紅燈階段
-3. **保持架構一致**: 參考 ORI 指令實作模式
-4. **注意立即值處理**: AND/OR使用零擴展，比較運算使用符號擴展
-5. **即時更新文檔**: 每完成一個指令就更新此報告
-6. **關注回歸測試**: 確保不破壞現有功能
-
-**祝你開發順利！記住：小步前進，測試驅動，保持代碼簡潔！** 🎯
+**交接完成** | **準備繼續 BDD 開發** | **下一目標: AND 指令整合測試** 🚀
