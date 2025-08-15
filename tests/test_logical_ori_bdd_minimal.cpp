@@ -57,7 +57,7 @@ protected:
         auto instructions = assembler->assemble(assembly);
         ASSERT_FALSE(instructions.empty()) << "組譯失敗: " << assembly;
         
-        for (int i = 0; i < cycles && i < instructions.size(); ++i) {
+        for (int i = 0; i < cycles && i < static_cast<int>(instructions.size()); ++i) {
             instructions[i]->execute(*cpu);
         }
     }
