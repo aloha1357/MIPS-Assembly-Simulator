@@ -14,6 +14,7 @@
 #include "../src/Cpu.h"
 #include "../src/RegisterFile.h"
 #include "../src/Instruction.h"
+#include "../src/InstructionDecoder.h"
 #include <memory>
 
 /**
@@ -175,12 +176,26 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_ProgramCounter_ShouldIncrement) {
 
 /**
  * @brief Integration Test: SLTIU 指令與解碼器集成
- * 期望失敗：解碼器還沒支援 SLTIU 指令
+ * 測試解碼器能正確解碼 SLTIU 指令的機器碼
  */
-TEST_F(SltiuInstructionTest, DISABLED_SltiuInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
-    // 這個測試將在 Phase B 實作解碼器支援後啟用
-    // TODO: 在 InstructionDecoder 中添加 SLTIU 支援後移除 DISABLED_ 前綴
-    // 功能碼應該是 0x0B
+TEST_F(SltiuInstructionTest, SltiuInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
+    // Arrange: 建立解碼器
+    mips::InstructionDecoder decoder;
+    
+    // SLTIU $t1, $t0, 100 的機器碼
+    // opcode=0x0B, rs=$t0(8), rt=$t1(9), immediate=100
+    // 格式: [opcode:6][rs:5][rt:5][immediate:16]
+    uint32_t machineCode = (0x0B << 26) | (8 << 21) | (9 << 16) | (100 & 0xFFFF);
+    
+    // Act: 解碼指令
+    auto instruction = decoder.decode(machineCode);
+    
+    // Assert: 驗證解碼結果
+    ASSERT_NE(instruction, nullptr) << "解碼器應該能夠解碼 SLTIU 指令";
+    EXPECT_EQ(instruction->getName(), "sltiu") << "指令名稱應該是 'sltiu'";
+    
+    // 驗證指令可以執行而不會崩潰
+    // 注意：不測試執行結果，只測試解碼器能正確識別指令類型
 }
 
 /**

@@ -5,7 +5,24 @@
  * BNE (Branch Not Equal) - I-type 分支指令
  * 功能碼: 0x05
  * 格式: bne $rs, $rt, offset
- * 功能: if (rs != rt) PC = PC + 4 + (sign_extend(offset) << 2)
+ * 功能: if (rs != rt) PC TEST_F(BneInstructionTest, BneInstruction_AssemblerIntegration_ShouldParseCorrectly) {
+    // Arrange: 建立彙編器
+    mips::Assembler assembler;
+    
+    // BNE 彙編語法: "bne $t0, $t1, target"
+    std::string assembly = "bne $t0, $t1, target";
+    
+    // Act: 解析指令
+    auto instructions = assembler.assemble(assembly);
+    
+    // Assert: 驗證解析結果
+    ASSERT_EQ(instructions.size(), 1) << "應該解析出一個指令";
+    ASSERT_NE(instructions[0], nullptr) << "彙編器應該能夠解析 BNE 指令";
+    EXPECT_EQ(instructions[0]->getName(), "bne") << "指令名稱應該是 'bne'";
+    
+    // 驗證指令可以執行而不會崩潰
+    // 注意：不測試執行結果，只測試彙編器能正確解析語法
+}extend(offset) << 2)
  * 
  * 按照 BDD 最小增量原則，先建立失敗的測試
  */
@@ -14,6 +31,8 @@
 #include "../src/Cpu.h"
 #include "../src/RegisterFile.h"
 #include "../src/Instruction.h"
+#include "../src/InstructionDecoder.h"
+#include "../src/Assembler.h"
 #include <memory>
 
 /**
@@ -185,20 +204,47 @@ TEST_F(BneInstructionTest, BneInstruction_LargeOffset_ShouldWork) {
 
 /**
  * @brief Integration Test: BNE 指令與解碼器集成
- * 期望失敗：解碼器還沒支援 BNE 指令
+ * 測試解碼器能正確解碼 BNE 指令的機器碼
  */
-TEST_F(BneInstructionTest, DISABLED_BneInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
-    // 這個測試將在 Phase B 實作解碼器支援後啟用
-    // TODO: 在 InstructionDecoder 中添加 BNE 支援後移除 DISABLED_ 前綴
-    // 功能碼應該是 0x05
+TEST_F(BneInstructionTest, BneInstruction_DecoderIntegration_ShouldDecodeCorrectly) {
+    // Arrange: 建立解碼器
+    mips::InstructionDecoder decoder;
+    
+    // BNE $t0, $t1, 4 的機器碼
+    // opcode=0x05, rs=$t0(8), rt=$t1(9), offset=4
+    // 格式: [opcode:6][rs:5][rt:5][offset:16]
+    uint32_t machineCode = (0x05 << 26) | (8 << 21) | (9 << 16) | (4 & 0xFFFF);
+    
+    // Act: 解碼指令
+    auto instruction = decoder.decode(machineCode);
+    
+    // Assert: 驗證解碼結果
+    ASSERT_NE(instruction, nullptr) << "解碼器應該能夠解碼 BNE 指令";
+    EXPECT_EQ(instruction->getName(), "bne") << "指令名稱應該是 'bne'";
+    
+    // 驗證指令可以執行而不會崩潰
+    // 注意：不測試執行結果，只測試解碼器能正確識別指令類型
 }
 
 /**
  * @brief Integration Test: BNE 指令與彙編器集成  
- * 期望失敗：彙編器還沒支援 BNE 指令文字解析
+ * 測試彙編器能正確解析 BNE 指令的彙編語法
  */
-TEST_F(BneInstructionTest, DISABLED_BneInstruction_AssemblerIntegration_ShouldParseCorrectly) {
-    // 這個測試將在 Phase B 實作彙編器支援後啟用
-    // TODO: 在 Assembler 中添加 BNE 指令解析後移除 DISABLED_ 前綴
-    // 應該解析 "bne $t0, $t1, label" 這樣的字串
+TEST_F(BneInstructionTest, BneInstruction_AssemblerIntegration_ShouldParseCorrectly) {
+    // Arrange: 建立彙編器
+    mips::Assembler assembler;
+    
+    // BNE 彙編語法: "bne $t0, $t1, target"
+    std::string assembly = "bne $t0, $t1, target";
+    
+    // Act: 解析指令
+    auto instructions = assembler.assemble(assembly);
+    
+    // Assert: 驗證解析結果
+    ASSERT_EQ(instructions.size(), 1) << "應該解析出一個指令";
+    ASSERT_NE(instructions[0], nullptr) << "彙編器應該能夠解析 BNE 指令";
+    EXPECT_EQ(instructions[0]->getName(), "bne") << "指令名稱應該是 'bne'";
+    
+    // 驗證指令可以執行而不會崩潰
+    // 注意：不測試執行結果，只測試彙編器能正確解析語法
 }

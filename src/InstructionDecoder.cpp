@@ -14,9 +14,11 @@ std::unique_ptr<Instruction> InstructionDecoder::decode(uint32_t word) {
             return decodeJType(word);
         case 0x08:  // ADDI instruction
         case 0x0A:  // SLTI instruction
+        case 0x0B:  // SLTIU instruction
         case 0x23:  // LW instruction
         case 0x2B:  // SW instruction
         case 0x04:  // BEQ instruction
+        case 0x05:  // BNE instruction
             return decodeIType(word);
         default:
             return nullptr; // Unknown instruction
@@ -100,6 +102,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word) {
             return std::make_unique<AddiInstruction>(rt, rs, signedImmediate);
         case 0x0A:  // SLTI instruction
             return std::make_unique<SltiInstruction>(rt, rs, signedImmediate);
+        case 0x0B:  // SLTIU instruction
+            return std::make_unique<SltiuInstruction>(rt, rs, signedImmediate);
         case 0x23:  // LW instruction
             return std::make_unique<LwInstruction>(rt, rs, signedImmediate);
         case 0x2B:  // SW instruction
@@ -108,6 +112,9 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word) {
             // For BEQ, we need to convert immediate to a label (simplified approach)
             // In a real implementation, this would need a symbol table
             return std::make_unique<BeqInstruction>(rs, rt, "label_" + std::to_string(signedImmediate));
+        case 0x05:  // BNE instruction
+            // For BNE, use the signed immediate directly as offset
+            return std::make_unique<BneInstruction>(rs, rt, signedImmediate);
         default:
             return nullptr; // Unknown I-type instruction
     }

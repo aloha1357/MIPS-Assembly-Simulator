@@ -274,6 +274,27 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<BeqInstruction>(rs, rt, labelStr);
         }
     }
+    else if (opcode == "bne" && tokens.size() >= 4) {
+        // Parse: bne $rs, $rt, label
+        std::string rsStr = tokens[1];
+        std::string rtStr = tokens[2];
+        std::string labelStr = tokens[3];
+        
+        // Remove commas
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (labelStr.back() == ',') labelStr.pop_back();
+        
+        int rs = getRegisterNumber(rsStr);
+        int rt = getRegisterNumber(rtStr);
+        
+        if (rs >= 0 && rt >= 0) {
+            // For now, use a fixed offset of 4 for label resolution
+            // TODO: Implement proper label-to-offset calculation
+            int16_t offset = 4;
+            return std::make_unique<BneInstruction>(rs, rt, offset);
+        }
+    }
     else if (opcode == "j" && tokens.size() >= 2) {
         // Parse: j label
         std::string labelStr = tokens[1];

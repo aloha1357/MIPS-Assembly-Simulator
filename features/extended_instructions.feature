@@ -148,7 +148,6 @@ Feature: Extended MIPS Instruction Set
   # Immediate Logical Operations
   # ────────────────────────────────────────────────
 
-  @ignore
   Scenario Outline: andi performs bitwise AND with immediate
     Given register <rs> contains <rs_val>
     When  the program
