@@ -144,6 +144,17 @@ public:
 };
 
 /**
+ * @brief I-type SLTI instruction (set less than immediate)
+ */
+class SltiInstruction : public ITypeInstruction {
+public:
+    SltiInstruction(int rt, int rs, int16_t imm);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type LW instruction (load word)
  */
 class LwInstruction : public ITypeInstruction {

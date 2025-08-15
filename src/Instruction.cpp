@@ -131,6 +131,28 @@ std::string SltInstruction::getName() const {
     return "slt";
 }
 
+SltiInstruction::SltiInstruction(int rt, int rs, int16_t imm)
+    : ITypeInstruction(rt, rs, imm) {
+}
+
+void SltiInstruction::execute(Cpu& cpu) {
+    // Read register value as signed integer for proper comparison
+    int32_t rsValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rs));
+    
+    // Sign-extend immediate to 32-bit for comparison
+    int32_t immValue = static_cast<int32_t>(m_imm);
+    
+    // Set rt to 1 if rs < imm, otherwise 0
+    uint32_t result = (rsValue < immValue) ? 1 : 0;
+    
+    cpu.getRegisterFile().write(m_rt, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SltiInstruction::getName() const {
+    return "slti";
+}
+
 ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
     : m_rt(rt), m_rs(rs), m_imm(imm) {
 }

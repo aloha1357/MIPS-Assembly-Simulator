@@ -98,7 +98,6 @@ Feature: Extended MIPS Instruction Set
       | $s0| $s1| $s2|   10   |   5    |    0     |
       | $a0| $a1| $v0|  -5    |   5    |    1     |
 
-  @ignore
   Scenario Outline: slti sets rt to 1 if rs < immediate (signed)
     Given register <rs> contains <rs_val>
     When  the program
