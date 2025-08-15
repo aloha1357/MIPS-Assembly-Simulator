@@ -60,6 +60,23 @@ std::string AndInstruction::getName() const {
     return "and";
 }
 
+OrInstruction::OrInstruction(int rd, int rs, int rt) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void OrInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    uint32_t result = rsValue | rtValue;  // Bitwise OR operation
+    
+    cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string OrInstruction::getName() const {
+    return "or";
+}
+
 ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
     : m_rt(rt), m_rs(rs), m_imm(imm) {
 }

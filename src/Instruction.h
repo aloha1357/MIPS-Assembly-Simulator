@@ -71,6 +71,17 @@ public:
 };
 
 /**
+ * @brief R-type OR instruction (logical OR)
+ */
+class OrInstruction : public RTypeInstruction {
+public:
+    OrInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {

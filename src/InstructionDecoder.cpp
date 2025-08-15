@@ -70,6 +70,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
             return std::make_unique<SubInstruction>(rd, rs, rt);
         case 0x24:  // AND instruction
             return std::make_unique<AndInstruction>(rd, rs, rt);
+        case 0x25:  // OR instruction
+            return std::make_unique<OrInstruction>(rd, rs, rt);
         case 0x0C:  // SYSCALL instruction
             return std::make_unique<SyscallInstruction>();
         default:

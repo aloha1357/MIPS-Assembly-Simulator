@@ -81,10 +81,10 @@ protected:
     }
     
     /**
-     * @brief 簡化的指令執行函式 - Phase C保持簡單有效
+     * @brief 簡化的指令執行函式 - Phase D添加OR支援
      */
     void executeInstruction(const std::string& instruction) {
-        // Phase C: 保持簡單但有效的解析器
+        // AND指令支援
         if (instruction == "and $t2, $t0, $t1") {
             auto andInstr = std::make_unique<mips::AndInstruction>(10, 8, 9);
             andInstr->execute(*cpu);
@@ -104,7 +104,12 @@ protected:
             auto andInstr = std::make_unique<mips::AndInstruction>(10, 9, 0);
             andInstr->execute(*cpu);
         }
-        // 其他指令將在OR階段添加
+        // Phase D: OR指令支援
+        else if (instruction == "or $t2, $t0, $t1") {
+            auto orInstr = std::make_unique<mips::OrInstruction>(10, 8, 9);
+            orInstr->execute(*cpu);
+        }
+        // 其他指令將在XOR階段添加
     }
 };
 
@@ -237,10 +242,31 @@ TEST_F(LogicalInstructionWalkingSkeleton, OR_BasicFunctionality_ShouldFail) {
 }
 
 /**
- * @brief 未來實作：XOR指令測試套件
+ * @brief Phase E: XOR指令基本功能測試 - 期望紅燈轉綠燈
  */
-TEST_F(LogicalInstructionWalkingSkeleton, DISABLED_XOR_BasicFunctionality) {
-    // XOR指令的測試將在OR指令完成後實作
+TEST_F(LogicalInstructionWalkingSkeleton, XOR_BasicFunctionality_ShouldPass) {
+    // Arrange: 設定初始狀態
+    setRegister("$t0", 0xAAAAAAAA);  // 來源暫存器1: 10101010...
+    setRegister("$t1", 0x55555555);  // 來源暫存器2: 01010101...
+    
+    // Act: 執行XOR指令
+    std::string instruction = "xor $t2, $t0, $t1";
+    executeInstruction(instruction);
+    
+    // Assert: 檢查預期結果
+    uint32_t expectedResult = 0xFFFFFFFF;  // 0xAAAAAAAA ^ 0x55555555 = 0xFFFFFFFF
+    expectRegister("$t2", expectedResult);
+    
+    // 測試案例2: XOR with zero (identity test)
+    setRegister("$t0", 0x12345678);
+    setRegister("$t1", 0x00000000);
+    executeInstruction("xor $t3, $t0, $t1");
+    expectRegister("$t3", 0x12345678);  // x ^ 0 = x
+    
+    // 測試案例3: XOR with self (should be zero)
+    setRegister("$t0", 0xDEADBEEF);
+    executeInstruction("xor $t4, $t0, $t0");
+    expectRegister("$t4", 0x00000000);  // x ^ x = 0
 }
 
 /**

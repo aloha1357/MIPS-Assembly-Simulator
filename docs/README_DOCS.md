@@ -1,8 +1,8 @@
 # MIPS Assembly Simulator - 文件索引
 
-**專案版本**：Dear ImGui Version 1.0  
-**最後更新**：2025年7月31日  
-**專案狀態**：✅ 100% 完成
+**專案版本**：Dear ImGui Version 1.1 - 邏輯指令擴展版  
+**最後更新**：2025年8月15日  
+**專案狀態**：🔄 進行中 - 邏輯指令模組開發
 
 ## 📚 文件結構概覽
 
@@ -11,11 +11,14 @@
 ### 📁 目錄結構
 ```
 docs/
-├── CURRENT_PROJECT_STATUS_2025.md     # 🔥 當前專案狀態總覽
-├── development-reports/               # 📊 開發報告資料夾
-├── user-guides/                      # 📖 使用者指南
-├── architecture/                     # 🏗️ 架構設計文件
-└── README_DOCS.md                    # 📋 本文件索引
+├── CURRENT_PROJECT_STATUS_2025.md           # 🔥 當前專案狀態總覽
+├── LOGICAL_INSTRUCTIONS_DEVELOPMENT_REPORT.md # 🆕 邏輯指令開發報告
+├── XOR_NOR_QUICKSTART_GUIDE.md             # 🚀 XOR/NOR快速入門指南  
+├── DEVELOPMENT_HANDOVER_CHECKLIST.md       # 📋 開發交接檢查清單
+├── development-reports/                     # 📊 開發報告資料夾
+├── user-guides/                            # 📖 使用者指南
+├── architecture/                           # 🏗️ 架構設計文件
+└── README_DOCS.md                          # 📋 本文件索引
 ```
 
 ---
@@ -28,9 +31,12 @@ docs/
 3. **[快速參考指南](../QUICK_REFERENCE.md)** - 常用指令和快捷操作
 
 ### 👨‍💻 開發者資源
-1. **[開發移交報告](development-reports/DEVELOPMENT_HANDOVER_REPORT.md)** - 開發者必讀
-2. **[最終完成報告](development-reports/FINAL_COMPLETION_REPORT.md)** - 完整技術實現
-3. **[架構決策文件](architecture/ARCHITECTURE_DECISIONS.md)** - 設計決策說明
+1. **[邏輯指令開發報告](LOGICAL_INSTRUCTIONS_DEVELOPMENT_REPORT.md)** 🆕 - 最新開發成果
+2. **[XOR/NOR 快速入門](XOR_NOR_QUICKSTART_GUIDE.md)** 🚀 - 下一階段實作指南
+3. **[開發交接檢查清單](DEVELOPMENT_HANDOVER_CHECKLIST.md)** 📋 - 開發者必讀
+4. **[開發移交報告](development-reports/DEVELOPMENT_HANDOVER_REPORT.md)** - 基礎開發指南
+5. **[最終完成報告](development-reports/FINAL_COMPLETION_REPORT.md)** - 完整技術實現
+6. **[架構決策文件](architecture/ARCHITECTURE_DECISIONS.md)** - 設計決策說明
 
 ### 🔍 詳細技術文件
 1. **[核心指令設計](architecture/01_core_instructions.md)** - MIPS 指令實現
