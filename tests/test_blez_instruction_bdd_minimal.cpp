@@ -16,6 +16,7 @@
 #include "../src/Assembler.h"
 #include "../src/InstructionDecoder.h"
 #include <memory>
+#include <climits>
 
 /**
  * @brief BLEZ指令BDD測試fixture
