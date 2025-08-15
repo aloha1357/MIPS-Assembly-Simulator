@@ -166,6 +166,17 @@ public:
 };
 
 /**
+ * @brief I-type SLTIU instruction (set less than immediate unsigned)
+ */
+class SltiuInstruction : public ITypeInstruction {
+public:
+    SltiuInstruction(int rt, int rs, int16_t imm);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type LW instruction (load word)
  */
 class LwInstruction : public ITypeInstruction {

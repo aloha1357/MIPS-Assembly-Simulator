@@ -16,6 +16,7 @@ add_executable(unit_tests
     test_logical_walking_skeleton.cpp  # Walking Skeleton for logical instructions
     test_extended_instructions_atomic.cpp  # Extended instructions (SLT, SLTI, etc.)
     test_slt_instruction.cpp               # SLT instruction TDD tests (Phase A: Red Light)
+    test_sltiu_instruction.cpp             # SLTIU instruction TDD tests (Phase A: Red Light)
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

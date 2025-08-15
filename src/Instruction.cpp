@@ -173,6 +173,29 @@ std::string SltiInstruction::getName() const {
     return "slti";
 }
 
+SltiuInstruction::SltiuInstruction(int rt, int rs, int16_t imm)
+    : ITypeInstruction(rt, rs, imm) {
+}
+
+void SltiuInstruction::execute(Cpu& cpu) {
+    // Read register value as unsigned integer for unsigned comparison
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    
+    // Sign-extend immediate to 32-bit, then treat as unsigned
+    // MIPS 立即值會被符號擴展，但比較時當作無符號數
+    uint32_t immValue = static_cast<uint32_t>(static_cast<int32_t>(m_imm));
+    
+    // Set rt to 1 if rs < imm (unsigned comparison), otherwise 0
+    uint32_t result = (rsValue < immValue) ? 1 : 0;
+    
+    cpu.getRegisterFile().write(m_rt, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SltiuInstruction::getName() const {
+    return "sltiu";
+}
+
 ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
     : m_rt(rt), m_rs(rs), m_imm(imm) {
 }
