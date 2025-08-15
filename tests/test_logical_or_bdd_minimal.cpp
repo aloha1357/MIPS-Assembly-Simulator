@@ -1,6 +1,6 @@
 /**
- * @file test_logical_and_bdd_minimal.cpp
- * @brief BDD Minimal AND Instruction Test - Phase A
+ * @file test_logical_or_bdd_minimal.cpp
+ * @brief BDD Minimal OR Instruction Test - Phase A
  * 
  * 按照BDD最小增量原則：
  * Phase A: 撰寫步驟 - 先創建失敗的測試
@@ -21,11 +21,11 @@ namespace mips {
 namespace test {
 
 /**
- * @brief BDD AND指令最小測試類別
+ * @brief BDD OR指令最小測試類別
  * 
- * 專注於單一 Scenario：AND 指令執行位元 AND 運算
+ * 專注於單一 Scenario：OR 指令執行位元 OR 運算
  */
-class LogicalAndMinimalBddTest : public ::testing::Test {
+class LogicalOrMinimalBddTest : public ::testing::Test {
 protected:
     void SetUp() override {
         cpu = std::make_unique<mips::Cpu>();
@@ -63,7 +63,7 @@ protected:
     void whenIExecuteInstruction(const std::string& instruction) {
         lastInstruction = instruction;
         
-        // Phase B: 實作AND指令執行
+        // Phase B: 實作OR指令執行
         try {
             auto instructions = assembler->assemble(instruction);
             if (!instructions.empty()) {
@@ -143,34 +143,34 @@ private:
 };
 
 // ============================================================================
-// BDD Scenario 1: AND 指令執行位元 AND 運算 - 互補位元模式
+// BDD Scenario 1: OR 指令執行位元 OR 運算 - 互補位元模式
 // ============================================================================
 
 /**
- * @brief BDD Test Case 1.1: AND指令互補位元模式
+ * @brief BDD Test Case 1.1: OR指令互補位元模式
  * 
- * Scenario: AND 指令執行位元 AND 運算
+ * Scenario: OR 指令執行位元 OR 運算
  *   Given 暫存器 $t0 包含 0xF0F0F0F0
  *   And 暫存器 $t1 包含 0x0F0F0F0F  
- *   When 我執行指令 "and $t2, $t0, $t1"
- *   Then 暫存器 $t2 應該包含 0x00000000
+ *   When 我執行指令 "or $t2, $t0, $t1"
+ *   Then 暫存器 $t2 應該包含 0xFFFFFFFF
  *   And 暫存器 $t0 應該仍然包含 0xF0F0F0F0
  *   And 暫存器 $t1 應該仍然包含 0x0F0F0F0F
  *   And 指令應該在恰好 1 個 CPU 週期內完成
  */
-TEST_F(LogicalAndMinimalBddTest, AndInstruction_ComplementaryBitPattern_PhaseA) {
+TEST_F(LogicalOrMinimalBddTest, OrInstruction_ComplementaryBitPattern_PhaseA) {
     // Given 暫存器 $t0 包含 0xF0F0F0F0
     givenRegisterContains("$t0", 0xF0F0F0F0);
     
     // And 暫存器 $t1 包含 0x0F0F0F0F
     givenRegisterContains("$t1", 0x0F0F0F0F);
     
-    // When 我執行指令 "and $t2, $t0, $t1"
+    // When 我執行指令 "or $t2, $t0, $t1"
     // Phase A: 這裡會失敗，這是預期的
-    whenIExecuteInstruction("and $t2, $t0, $t1");
+    whenIExecuteInstruction("or $t2, $t0, $t1");
     
-    // Then 暫存器 $t2 應該包含 0x00000000
-    thenRegisterShouldContain("$t2", 0x00000000);
+    // Then 暫存器 $t2 應該包含 0xFFFFFFFF
+    thenRegisterShouldContain("$t2", 0xFFFFFFFF);
     
     // And 暫存器 $t0 應該仍然包含 0xF0F0F0F0
     thenRegisterShouldRemainUnchanged("$t0");
@@ -183,27 +183,27 @@ TEST_F(LogicalAndMinimalBddTest, AndInstruction_ComplementaryBitPattern_PhaseA) 
 }
 
 /**
- * @brief BDD Test Case 1.2: AND指令交替位元模式
+ * @brief BDD Test Case 1.2: OR指令與零值運算
  * 
  * 啟用第二個測試案例
  */
-TEST_F(LogicalAndMinimalBddTest, AndInstruction_AlternatingBitPattern_PhaseB) {
-    // Given 暫存器 $s0 包含 0xAAAAAAAA
-    givenRegisterContains("$s0", 0xAAAAAAAA);
+TEST_F(LogicalOrMinimalBddTest, OrInstruction_WithZero_PhaseB) {
+    // Given 暫存器 $s0 包含 0xDEADBEEF
+    givenRegisterContains("$s0", 0xDEADBEEF);
     
-    // And 暫存器 $s1 包含 0x55555555
-    givenRegisterContains("$s1", 0x55555555);
+    // And 暫存器 $s1 包含 0x00000000
+    givenRegisterContains("$s1", 0x00000000);
     
-    // When 我執行指令 "and $s2, $s0, $s1"
-    whenIExecuteInstruction("and $s2, $s0, $s1");
+    // When 我執行指令 "or $s2, $s0, $s1"
+    whenIExecuteInstruction("or $s2, $s0, $s1");
     
-    // Then 暫存器 $s2 應該包含 0x00000000
-    thenRegisterShouldContain("$s2", 0x00000000);
+    // Then 暫存器 $s2 應該包含 0xDEADBEEF (OR with 0 = identity)
+    thenRegisterShouldContain("$s2", 0xDEADBEEF);
     
-    // And 暫存器 $s0 應該仍然包含 0xAAAAAAAA
+    // And 暫存器 $s0 應該仍然包含 0xDEADBEEF
     thenRegisterShouldRemainUnchanged("$s0");
     
-    // And 暫存器 $s1 應該仍然包含 0x55555555
+    // And 暫存器 $s1 應該仍然包含 0x00000000
     thenRegisterShouldRemainUnchanged("$s1");
     
     // And 指令應該在恰好 1 個 CPU 週期內完成
@@ -222,11 +222,11 @@ TEST_F(LogicalAndMinimalBddTest, AndInstruction_AlternatingBitPattern_PhaseB) {
  * - ✅ 創建了失敗的測試（`whenIExecuteInstruction` 故意失敗）
  * - ✅ 使用 DISABLED_ 前綴確保只有第一個測試會執行
  * - ✅ 遵循 BDD Given-When-Then 結構
- * - ✅ 專注於單一 Scenario（AND 指令執行位元 AND 運算）
+ * - ✅ 專注於單一 Scenario（OR 指令執行位元 OR 運算）
  * 
  * 下一步 Phase B：
  * 1. 移除 `whenIExecuteInstruction` 中的 FAIL()
- * 2. 實作組譯器 AND 指令支援
+ * 2. 實作組譯器 OR 指令支援
  * 3. 實作指令執行邏輯
  * 4. 確保測試通過
  */

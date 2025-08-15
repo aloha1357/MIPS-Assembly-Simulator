@@ -21,6 +21,10 @@ add_executable(unit_tests
     test_ori_instruction.cpp               # ORI instruction TDD tests (Phase A: Red Light)
     test_andi_instruction.cpp              # ANDI instruction TDD tests (Phase A: Red Light)
     test_xori_instruction.cpp              # XORI instruction TDD tests (Phase A: Red Light)
+    test_logical_and_bdd_minimal.cpp       # AND instruction BDD tests (Phase A: Red Light)
+    test_logical_or_bdd_minimal.cpp        # OR instruction BDD tests (Phase A: Red Light)
+    test_and_instruction.cpp               # AND instruction Integration tests
+    test_or_instruction.cpp                # OR instruction Integration tests
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
