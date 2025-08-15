@@ -35,6 +35,12 @@ add_executable(unit_tests
     test_srl_instruction.cpp               # SRL instruction Integration tests
     test_logical_sra_bdd_minimal.cpp       # SRA instruction BDD tests
     test_sra_instruction.cpp               # SRA instruction Integration tests
+    test_logical_ori_bdd_minimal.cpp       # ORI instruction BDD tests (Phase A: Red Light)
+    test_ori_instruction_integration.cpp   # ORI instruction Integration tests
+    test_logical_andi_bdd_minimal.cpp      # ANDI instruction BDD tests (Phase A: Red Light)
+    test_andi_instruction_integration.cpp  # ANDI instruction Integration tests
+    test_logical_xori_bdd_minimal.cpp      # XORI instruction BDD tests (Phase A: Red Light)
+    test_xori_instruction_integration.cpp  # XORI instruction Integration tests
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

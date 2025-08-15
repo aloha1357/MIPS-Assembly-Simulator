@@ -279,6 +279,96 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             }
         }
     }
+    else if (opcode == "andi" && tokens.size() >= 4) {
+        // Parse: andi $rt, $rs, imm
+        std::string rtStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string immStr = tokens[3];
+        
+        // Remove commas
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (immStr.back() == ',') immStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rt >= 0 && rs >= 0) {
+            // Parse immediate value (support decimal and hex)
+            int16_t imm = 0;
+            try {
+                if (immStr.substr(0, 2) == "0x" || immStr.substr(0, 2) == "0X") {
+                    imm = static_cast<int16_t>(std::stoi(immStr, nullptr, 16));
+                } else {
+                    imm = static_cast<int16_t>(std::stoi(immStr));
+                }
+                return std::make_unique<AndiInstruction>(rt, rs, imm);
+            } catch (const std::exception&) {
+                // Invalid immediate value
+                return nullptr;
+            }
+        }
+    }
+    else if (opcode == "ori" && tokens.size() >= 4) {
+        // Parse: ori $rt, $rs, imm
+        std::string rtStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string immStr = tokens[3];
+        
+        // Remove commas
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (immStr.back() == ',') immStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rt >= 0 && rs >= 0) {
+            // Parse immediate value (support decimal and hex)
+            int16_t imm = 0;
+            try {
+                if (immStr.substr(0, 2) == "0x" || immStr.substr(0, 2) == "0X") {
+                    imm = static_cast<int16_t>(std::stoi(immStr, nullptr, 16));
+                } else {
+                    imm = static_cast<int16_t>(std::stoi(immStr));
+                }
+                return std::make_unique<OriInstruction>(rt, rs, imm);
+            } catch (const std::exception&) {
+                // Invalid immediate value
+                return nullptr;
+            }
+        }
+    }
+    else if (opcode == "xori" && tokens.size() >= 4) {
+        // Parse: xori $rt, $rs, imm
+        std::string rtStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string immStr = tokens[3];
+        
+        // Remove commas
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (immStr.back() == ',') immStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rt >= 0 && rs >= 0) {
+            // Parse immediate value (support decimal and hex)
+            int16_t imm = 0;
+            try {
+                if (immStr.substr(0, 2) == "0x" || immStr.substr(0, 2) == "0X") {
+                    imm = static_cast<int16_t>(std::stoi(immStr, nullptr, 16));
+                } else {
+                    imm = static_cast<int16_t>(std::stoi(immStr));
+                }
+                return std::make_unique<XoriInstruction>(rt, rs, imm);
+            } catch (const std::exception&) {
+                // Invalid immediate value
+                return nullptr;
+            }
+        }
+    }
     else if (opcode == "sltiu" && tokens.size() >= 4) {
         // Parse: sltiu $rt, $rs, imm
         std::string rtStr = tokens[1];

@@ -15,6 +15,9 @@ std::unique_ptr<Instruction> InstructionDecoder::decode(uint32_t word) {
         case 0x08:  // ADDI instruction
         case 0x0A:  // SLTI instruction
         case 0x0B:  // SLTIU instruction
+        case 0x0C:  // ANDI instruction
+        case 0x0D:  // ORI instruction
+        case 0x0E:  // XORI instruction
         case 0x23:  // LW instruction
         case 0x2B:  // SW instruction
         case 0x04:  // BEQ instruction
@@ -121,6 +124,12 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word) {
         case 0x05:  // BNE instruction
             // For BNE, use the signed immediate directly as offset
             return std::make_unique<BneInstruction>(rs, rt, signedImmediate);
+        case 0x0C:  // ANDI instruction
+            return std::make_unique<AndiInstruction>(rt, rs, signedImmediate);
+        case 0x0D:  // ORI instruction
+            return std::make_unique<OriInstruction>(rt, rs, signedImmediate);
+        case 0x0E:  // XORI instruction
+            return std::make_unique<XoriInstruction>(rt, rs, signedImmediate);
         default:
             return nullptr; // Unknown I-type instruction
     }
