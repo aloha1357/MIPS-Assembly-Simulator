@@ -33,6 +33,8 @@ add_executable(unit_tests
     test_sll_instruction.cpp               # SLL instruction Integration tests
     test_logical_srl_bdd_minimal.cpp       # SRL instruction BDD tests
     test_srl_instruction.cpp               # SRL instruction Integration tests
+    test_logical_sra_bdd_minimal.cpp       # SRA instruction BDD tests
+    test_sra_instruction.cpp               # SRA instruction Integration tests
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

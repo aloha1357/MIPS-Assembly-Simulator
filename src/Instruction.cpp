@@ -446,6 +446,28 @@ std::string SrlInstruction::getName() const {
     return "srl";
 }
 
+SraInstruction::SraInstruction(uint32_t rd, uint32_t rt, uint32_t shamt) 
+    : m_rd(rd), m_rt(rt), m_shamt(shamt) {
+}
+
+void SraInstruction::execute(Cpu& cpu) {
+    // Read source register value as signed for arithmetic shift
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    
+    // Perform arithmetic right shift (sign-extend from left)
+    int32_t result = rtValue >> m_shamt;
+    
+    // Write result to destination register (convert back to unsigned)
+    cpu.getRegisterFile().write(m_rd, static_cast<uint32_t>(result));
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SraInstruction::getName() const {
+    return "sra";
+}
+
 SyscallInstruction::SyscallInstruction() {
 }
 

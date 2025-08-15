@@ -69,6 +69,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
             return std::make_unique<SllInstruction>(rd, rt, shamt);
         case 0x02:  // SRL instruction
             return std::make_unique<SrlInstruction>(rd, rt, shamt);
+        case 0x03:  // SRA instruction
+            return std::make_unique<SraInstruction>(rd, rt, shamt);
         case 0x20:  // ADD instruction
             return std::make_unique<AddInstruction>(rd, rs, rt);
         case 0x22:  // SUB instruction
