@@ -173,6 +173,44 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<OrInstruction>(rd, rs, rt);
         }
     }
+    else if (opcode == "xor" && tokens.size() >= 4) {
+        // Parse: xor $rd, $rs, $rt
+        std::string rdStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string rtStr = tokens[3];
+        
+        // Remove commas
+        if (rdStr.back() == ',') rdStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rd = getRegisterNumber(rdStr);
+        int rs = getRegisterNumber(rsStr);
+        int rt = getRegisterNumber(rtStr);
+        
+        if (rd >= 0 && rs >= 0 && rt >= 0) {
+            return std::make_unique<XorInstruction>(rd, rs, rt);
+        }
+    }
+    else if (opcode == "nor" && tokens.size() >= 4) {
+        // Parse: nor $rd, $rs, $rt
+        std::string rdStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string rtStr = tokens[3];
+        
+        // Remove commas
+        if (rdStr.back() == ',') rdStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rd = getRegisterNumber(rdStr);
+        int rs = getRegisterNumber(rsStr);
+        int rt = getRegisterNumber(rtStr);
+        
+        if (rd >= 0 && rs >= 0 && rt >= 0) {
+            return std::make_unique<NorInstruction>(rd, rs, rt);
+        }
+    }
     else if (opcode == "sub" && tokens.size() >= 4) {
         // Parse: sub $rd, $rs, $rt
         std::string rdStr = tokens[1];
