@@ -111,6 +111,26 @@ std::string NorInstruction::getName() const {
     return "nor";
 }
 
+SltInstruction::SltInstruction(int rd, int rs, int rt) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void SltInstruction::execute(Cpu& cpu) {
+    // Read values as signed integers for proper comparison
+    int32_t rsValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rs));
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    
+    // Set rd to 1 if rs < rt, otherwise 0
+    uint32_t result = (rsValue < rtValue) ? 1 : 0;
+    
+    cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SltInstruction::getName() const {
+    return "slt";
+}
+
 ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
     : m_rt(rt), m_rs(rs), m_imm(imm) {
 }

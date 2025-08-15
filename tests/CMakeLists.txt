@@ -14,6 +14,7 @@ add_executable(unit_tests
     test_assembler_debug.cpp       # Debug assembler issues
     test_hello_mips.cpp            # Hello MIPS test files
     test_logical_walking_skeleton.cpp  # Walking Skeleton for logical instructions
+    test_extended_instructions_atomic.cpp  # Extended instructions (SLT, SLTI, etc.)
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

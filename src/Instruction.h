@@ -104,6 +104,17 @@ public:
 };
 
 /**
+ * @brief R-type SLT instruction (set less than)
+ */
+class SltInstruction : public RTypeInstruction {
+public:
+    SltInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {

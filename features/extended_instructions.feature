@@ -12,7 +12,7 @@ Feature: Extended MIPS Instruction Set
   # Logical Operations (R-type)
   # ────────────────────────────────────────────────
 
-  @todo
+  @ignore
   Scenario Outline: and performs bitwise AND operation
     Given register <rs> contains <rs_val>
     And   register <rt> contains <rt_val>
@@ -28,7 +28,7 @@ Feature: Extended MIPS Instruction Set
       | $t0| $t1| $t2| 0xFF00 | 0x0F0F | 0x0F00   |
       | $s0| $s1| $s2| 0xFFFF | 0x0000 | 0x0000   |
 
-  @todo
+  @ignore
   Scenario Outline: or performs bitwise OR operation
     Given register <rs> contains <rs_val>
     And   register <rt> contains <rt_val>
@@ -48,7 +48,7 @@ Feature: Extended MIPS Instruction Set
   # Shift Operations
   # ────────────────────────────────────────────────
 
-  @todo
+  @ignore
   Scenario Outline: sll performs logical left shift
     Given register <rt> contains <rt_val>
     When  the program
@@ -63,7 +63,7 @@ Feature: Extended MIPS Instruction Set
       | $t0| $t1| 0x0001 |   4   | 0x0010   |
       | $s0| $s1| 0x00FF |   8   | 0xFF00   |
 
-  @todo
+  @ignore
   Scenario Outline: srl performs logical right shift
     Given register <rt> contains <rt_val>
     When  the program
@@ -82,7 +82,6 @@ Feature: Extended MIPS Instruction Set
   # Comparison Operations
   # ────────────────────────────────────────────────
 
-  @todo
   Scenario Outline: slt sets rd to 1 if rs < rt (signed)
     Given register <rs> contains <rs_val>
     And   register <rt> contains <rt_val>
@@ -99,7 +98,7 @@ Feature: Extended MIPS Instruction Set
       | $s0| $s1| $s2|   10   |   5    |    0     |
       | $a0| $a1| $v0|  -5    |   5    |    1     |
 
-  @todo
+  @ignore
   Scenario Outline: slti sets rt to 1 if rs < immediate (signed)
     Given register <rs> contains <rs_val>
     When  the program
@@ -119,7 +118,7 @@ Feature: Extended MIPS Instruction Set
   # Additional Branch Operations
   # ────────────────────────────────────────────────
 
-  @todo
+  @ignore
   Scenario: bne branches when registers are not equal
     Given register $t0 contains 5
     And   register $t1 contains 3
@@ -133,7 +132,7 @@ Feature: Extended MIPS Instruction Set
     is executed for 4 cycles
     Then  register $v0 should equal 42
 
-  @todo
+  @ignore
   Scenario: bgtz branches when register is greater than zero
     Given register $t0 contains 5
     When  the program
@@ -150,7 +149,7 @@ Feature: Extended MIPS Instruction Set
   # Immediate Logical Operations
   # ────────────────────────────────────────────────
 
-  @todo
+  @ignore
   Scenario Outline: andi performs bitwise AND with immediate
     Given register <rs> contains <rs_val>
     When  the program
@@ -165,7 +164,7 @@ Feature: Extended MIPS Instruction Set
       | $t0| $t1| 0xFFFF | 0x00FF | 0x00FF   |
       | $s0| $s1| 0xF0F0 | 0x0F0F | 0x0000   |
 
-  @todo
+  @ignore
   Scenario Outline: ori performs bitwise OR with immediate
     Given register <rs> contains <rs_val>
     When  the program
