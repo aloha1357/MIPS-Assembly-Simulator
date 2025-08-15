@@ -177,6 +177,17 @@ public:
 };
 
 /**
+ * @brief I-type ORI instruction (OR immediate)
+ */
+class OriInstruction : public ITypeInstruction {
+public:
+    OriInstruction(int rt, int rs, int16_t imm);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type LW instruction (load word)
  */
 class LwInstruction : public ITypeInstruction {

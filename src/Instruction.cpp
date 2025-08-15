@@ -196,6 +196,30 @@ std::string SltiuInstruction::getName() const {
     return "sltiu";
 }
 
+OriInstruction::OriInstruction(int rt, int rs, int16_t imm)
+    : ITypeInstruction(rt, rs, imm) {
+}
+
+void OriInstruction::execute(Cpu& cpu) {
+    // Read source register value
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    
+    // Zero-extend 16-bit immediate to 32-bit for OR operation
+    // ORI instruction uses zero extension, not sign extension
+    uint32_t immValue = static_cast<uint32_t>(static_cast<uint16_t>(m_imm));
+    
+    // Perform bitwise OR operation
+    uint32_t result = rsValue | immValue;
+    
+    // Write result to target register
+    cpu.getRegisterFile().write(m_rt, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string OriInstruction::getName() const {
+    return "ori";
+}
+
 ITypeInstruction::ITypeInstruction(int rt, int rs, int16_t imm)
     : m_rt(rt), m_rs(rs), m_imm(imm) {
 }
