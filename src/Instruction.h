@@ -115,6 +115,17 @@ public:
 };
 
 /**
+ * @brief R-type SLTU instruction (set less than unsigned)
+ */
+class SltuInstruction : public RTypeInstruction {
+public:
+    SltuInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {

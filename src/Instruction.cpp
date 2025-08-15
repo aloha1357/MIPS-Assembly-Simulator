@@ -131,6 +131,26 @@ std::string SltInstruction::getName() const {
     return "slt";
 }
 
+SltuInstruction::SltuInstruction(int rd, int rs, int rt) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void SltuInstruction::execute(Cpu& cpu) {
+    // Read register values as unsigned integers for unsigned comparison
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    // Set rd to 1 if rs < rt (unsigned), otherwise 0
+    uint32_t result = (rsValue < rtValue) ? 1 : 0;
+    
+    cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SltuInstruction::getName() const {
+    return "sltu";
+}
+
 SltiInstruction::SltiInstruction(int rt, int rs, int16_t imm)
     : ITypeInstruction(rt, rs, imm) {
 }
