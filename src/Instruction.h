@@ -14,7 +14,37 @@ public:
     
     /**
      * @brief Execute the instruction
-     * @param cpu Reference to CPU for register/memory access
+     * @param cpu Reference /**
+ * @brief SLL (Shift Left Logical) instruction
+ */
+class SllInstruction : public Instruction {
+public:
+    SllInstruction(uint32_t rd, uint32_t rt, uint32_t shamt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+    
+private:
+    uint32_t m_rd;     // Destination register
+    uint32_t m_rt;     // Source register
+    uint32_t m_shamt;  // Shift amount
+};
+
+/**
+ * @brief SRL (Shift Right Logical) instruction
+ */
+class SrlInstruction : public Instruction {
+public:
+    SrlInstruction(uint32_t rd, uint32_t rt, uint32_t shamt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+    
+private:
+    uint32_t m_rd;     // Destination register
+    uint32_t m_rt;     // Source register
+    uint32_t m_shamt;  // Shift amount
+};ster/memory access
      */
     virtual void execute(class Cpu& cpu) = 0;
     

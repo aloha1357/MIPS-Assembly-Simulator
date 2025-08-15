@@ -9,6 +9,37 @@
 
 ## 📊 當前開發狀態
 
+### 🏗️ 程式架構分析
+
+#### **核心架構組件:**
+- **📁 Pipeline架構:** 5階段MIPS流水線 (IF, ID, EX, MEM, WB)
+- **📁 指令系統:** 物件導向指令類別階層
+- **📁 組譯器:** MIPS組合語言到機器碼的轉換
+- **📁 解碼器:** 機器碼到指令物件的解碼  
+- **📁 GUI系統:** ImGui-based 圖形介面
+- **📁 測試框架:** Google Test + BDD方法論
+
+#### **指令類別架構:**
+```cpp
+Instruction (基底類別)
+├── RTypeInstruction (R-type指令基底)
+│   ├── AddInstruction ✅ | SubInstruction ✅
+│   ├── AndInstruction ✅ | OrInstruction ✅ 
+│   ├── XorInstruction ✅ | NorInstruction ✅
+│   ├── SltInstruction ✅ | SltuInstruction ✅
+│   └── SllInstruction ⚠️ (已宣告，需BDD+Integration)
+├── ITypeInstruction (I-type指令基底)
+│   ├── AddiInstruction ✅ | SltiInstruction ⚠️
+│   ├── SltiuInstruction ✅ | LwInstruction ✅
+│   ├── SwInstruction ✅ | OriInstruction ⚠️
+│   ├── AndiInstruction ⚠️ | XoriInstruction ⚠️
+│   └── BneInstruction ✅
+├── BranchInstruction (分支指令基底)
+│   └── BeqInstruction ✅
+└── JTypeInstruction (跳躍指令基底)
+    └── JInstruction ✅
+```
+
 ### ✅ 測試統計
 - **總測試數:** 170 個測試 (+2 from NOR Integration)
 - ### ✅ 成功標準
@@ -66,7 +97,7 @@
 **BDD完成指令:** 4/4 邏輯指令 (100%)
 **Integration完成指令:** 4/4 邏輯指令 (100%) ✅ **[剛完成]**
 
-### 🔧 已完成指令清單 (23/47 = 49%)
+### 🔧 MIPS指令完整開發狀態 (17/47 = 36%)
 
 | 指令 | 類型 | 功能 | Decoder | Assembler | BDD測試 | Integration | 狀態 |
 |------|------|------|---------|-----------|---------|-------------|------|
@@ -91,9 +122,195 @@
 
 **🎯 邏輯指令群組完成度:** 4/4 = 100% (BDD測試) | 4/4 = 100% (Integration測試) ✅ **[完全完成]**
 
-## 🎯 下一階段開發計劃
+## 🗺️ 完整開發規劃 (17/47 → 47/47)
 
-### ✅ 立即優先 - NOR指令Integration測試完成 - **[已完成]**
+### 🎯 開發優先順序策略
+
+基於複雜度、依賴關係和實用性分析，制定以下開發優先順序：
+
+#### **🚀 Phase 1: 位移指令群組 (3指令) - 當前優先**
+**目標:** 170 → 182 個測試 (+12)  
+**難度:** 🟡 中等  
+**預估時間:** 2-3小時
+
+1. **`sll` (左位移) - 完善現有實作**
+   - ✅ Decoder已完成 (function code 0x00)
+   - ⚠️ 需要 Assembler 支援
+   - ❌ 需要 BDD測試 (2場景)
+   - ❌ 需要 Integration測試 (2測試)
+
+2. **`srl` (右位移邏輯) - 全新實作**
+   - ❌ 需要 InstructionDecoder (function code 0x02)
+   - ❌ 需要 SrlInstruction類別
+   - ❌ 需要 Assembler 支援
+   - ❌ 需要 BDD測試 (2場景)
+   - ❌ 需要 Integration測試 (2測試)
+
+3. **`sra` (右位移算術) - 全新實作**
+   - ❌ 需要 InstructionDecoder (function code 0x03)
+   - ❌ 需要 SraInstruction類別
+   - ❌ 需要 Assembler 支援
+   - ❌ 需要 BDD測試 (2場景)
+   - ❌ 需要 Integration測試 (2測試)
+
+#### **🚀 Phase 2: 立即值邏輯指令群組 (3指令)**
+**目標:** 182 → 200 個測試 (+18)  
+**難度:** 🟡 中等偏高  
+**預估時間:** 3-4小時
+
+4. **`ori` (立即值OR) - 部分實作存在**
+5. **`andi` (立即值AND) - 部分實作存在**
+6. **`xori` (立即值XOR) - 部分實作存在**
+
+#### **🚀 Phase 3: 分支指令群組 (2指令)**
+**目標:** 200 → 212 個測試 (+12)  
+**難度:** 🟡 中等  
+**預估時間:** 2-3小時
+
+7. **`blez` (小於等於零分支)**
+8. **`bgtz` (大於零分支)**
+
+#### **🚀 Phase 4: 無符號算術指令群組 (3指令)**
+**目標:** 212 → 230 個測試 (+18)  
+**難度:** 🟢 簡單  
+**預估時間:** 2-3小時
+
+9. **`addu` (無符號加法)**
+10. **`subu` (無符號減法)**
+11. **`addiu` (無符號立即值加法)**
+
+#### **🚀 Phase 5: 變數位移指令群組 (3指令)**
+**目標:** 230 → 248 個測試 (+18)  
+**難度:** 🟡 中等  
+**預估時間:** 3-4小時
+
+12. **`sllv` (變數左位移)**
+13. **`srlv` (變數右位移邏輯)**
+14. **`srav` (變數右位移算術)**
+
+#### **🚀 Phase 6: 跳躍指令群組 (3指令)**
+**目標:** 248 → 266 個測試 (+18)  
+**難度:** 🟡 中等偏高  
+**預估時間:** 3-4小時
+
+15. **`jr` (跳到暫存器)**
+16. **`jalr` (跳到暫存器並連結)**
+17. **`jal` (跳躍並連結)**
+
+#### **🚀 Phase 7: 記憶體指令群組 (8指令)**
+**目標:** 266 → 314 個測試 (+48)  
+**難度:** 🔴 高  
+**預估時間:** 6-8小時
+
+18. **`lb` (載入位元組)**
+19. **`lh` (載入半字)**
+20. **`lbu` (載入無符號位元組)**
+21. **`lhu` (載入無符號半字)**
+22. **`sb` (儲存位元組)**
+23. **`sh` (儲存半字)**
+24. **`llo` (載入低位立即值)**
+25. **`lhi` (載入高位立即值)**
+
+#### **🚀 Phase 8: 乘除法指令群組 (4指令)**
+**目標:** 314 → 338 個測試 (+24)  
+**難度:** 🔴 高  
+**預估時間:** 5-7小時
+
+26. **`mult` (有符號乘法)** - 需要HI/LO暫存器
+27. **`multu` (無符號乘法)** - 需要HI/LO暫存器
+28. **`div` (有符號除法)** - 需要HI/LO暫存器
+29. **`divu` (無符號除法)** - 需要HI/LO暫存器
+
+#### **🚀 Phase 9: HI/LO指令群組 (4指令)**
+**目標:** 338 → 362 個測試 (+24)  
+**難度:** 🟡 中等  
+**預估時間:** 3-4小時
+
+30. **`mfhi` (從HI移動)**
+31. **`mthi` (移動到HI)**
+32. **`mflo` (從LO移動)**
+33. **`mtlo` (移動到LO)**
+
+#### **🚀 Phase 10: 補完階段 (4指令)**
+**目標:** 362 → 386 個測試 (+24)  
+**難度:** 🟡 中等  
+**預估時間:** 3-4小時
+
+34. **`slti` (立即值有符號比較)** - 完善現有實作
+35. **`trap` (陷阱指令)**
+
+### 📊 開發里程碑追蹤
+
+| Phase | 指令群組 | 指令數 | 測試增量 | 累計測試 | 累計完成率 | 預估時間 |
+|-------|----------|--------|----------|----------|------------|----------|
+| **✅ 已完成** | 邏輯+基礎 | 17 | - | 170 | 36% | - |
+| **🎯 Phase 1** | 位移指令 | 3 | +12 | 182 | 43% | 2-3h |
+| **🎯 Phase 2** | 立即值邏輯 | 3 | +18 | 200 | 49% | 3-4h |
+| **🎯 Phase 3** | 分支指令 | 2 | +12 | 212 | 53% | 2-3h |
+| **🎯 Phase 4** | 無符號算術 | 3 | +18 | 230 | 60% | 2-3h |
+| **🎯 Phase 5** | 變數位移 | 3 | +18 | 248 | 66% | 3-4h |
+| **🎯 Phase 6** | 跳躍指令 | 3 | +18 | 266 | 72% | 3-4h |
+| **🎯 Phase 7** | 記憶體指令 | 8 | +48 | 314 | 85% | 6-8h |
+| **🎯 Phase 8** | 乘除法指令 | 4 | +24 | 338 | 91% | 5-7h |
+| **🎯 Phase 9** | HI/LO指令 | 4 | +24 | 362 | 96% | 3-4h |
+| **🎯 Phase 10** | 補完階段 | 2 | +24 | 386 | 100% | 3-4h |
+
+**🎯 總開發時間預估:** 32-44小時  
+**🎯 總測試目標:** 170 → 386 (+216個測試)
+
+## 🎯 立即行動計劃 - Phase 1: 位移指令群組
+
+### 🚀 下一步：SLL指令BDD+Integration完善
+
+**當前狀態分析:**
+- ✅ SllInstruction類別已存在 (`src/Instruction.h:286`)
+- ✅ InstructionDecoder已支援 (function code 0x00)
+- ⚠️ Assembler語法解析需確認
+- ❌ 缺少BDD測試場景
+- ❌ 缺少Integration測試
+
+**立即任務 (預估1-1.5小時):**
+
+#### **Phase 1.1: SLL指令BDD測試 - 嚴格BDD循環**
+
+**A. 撰寫階段 (紅燈):**
+1. 創建 `tests/test_logical_sll_bdd_minimal.cpp`
+2. 實作2個BDD場景:
+   - 基本左位移測試: 0x00000001 << 4 = 0x00000010
+   - 邊界位移測試: 0x80000000 << 1 = 0x00000000 (溢位)
+3. 確認測試失敗 (紅燈狀態)
+
+**B. 實作階段 (綠燈):**
+1. 檢查並完善 `SllInstruction::execute()` 方法
+2. 確認 Assembler 支援 "sll $rd, $rt, shamt" 語法
+3. 執行測試確認通過 (綠燈狀態)
+
+**C. 重構階段:**
+1. 代碼清理和重構
+2. 全回歸測試: 170 → 172 (+2 BDD測試)
+
+#### **Phase 1.2: SLL指令Integration測試**
+
+**A. 撰寫階段 (紅燈):**
+1. 創建 `tests/test_sll_instruction.cpp`
+2. 實作2個Integration測試:
+   - Decoder Integration: 驗證function code 0x00解碼
+   - Assembler Integration: 驗證"sll"語法解析
+3. 更新 `CMakeLists.txt`
+
+**B. 實作階段 (綠燈):**
+1. 確認Integration組件正常運作
+2. 執行測試確認通過
+
+**C. 重構階段:**
+1. 全回歸測試: 172 → 174 (+2 Integration測試)
+
+**成功標準:**
+- [ ] 創建SLL BDD測試檔案
+- [ ] 創建SLL Integration測試檔案  
+- [ ] 所有現有測試繼續通過 (170→174)
+- [ ] 零編譯警告或錯誤
+- [ ] 更新開發報告進度
 
 **完成狀態:**
 - ✅ **NOR指令BDD測試:** 2個測試案例已完成並通過
@@ -170,9 +387,130 @@ ninja unit_tests
 
 **建議優先順序:** A → B → C
 
-## 🔄 嚴格 BDD 開發流程
+## 🔄 嚴格 BDD 開發流程指南
 
-### NOR指令Integration測試 - 立即實作指南
+### 📋 每個指令的標準BDD循環
+
+**適用範圍:** 每個新指令都必須遵循此循環
+
+#### **🔴 Phase A: 撰寫步驟 (紅燈階段)**
+
+1. **創建BDD測試檔案**
+```bash
+# 命名規範: test_logical_{指令名}_bdd_minimal.cpp
+# 例如: test_logical_sll_bdd_minimal.cpp
+```
+
+2. **實作BDD測試場景 (失敗狀態)**
+```cpp
+/**
+ * @file test_logical_sll_bdd_minimal.cpp
+ * @brief SLL指令的BDD測試場景
+ * 
+ * Phase A: 紅燈階段 - 故意失敗的測試
+ */
+
+class SllInstructionBDDTest : public ::testing::Test {
+    // Setup/TearDown邏輯
+    // Given-When-Then helper方法
+};
+
+TEST_F(SllInstructionBDDTest, Sll_BasicShift_ShouldShiftLeftCorrectly) {
+    // Given: 暫存器包含初始值
+    // When: 執行SLL指令
+    // Then: 結果應該是左位移後的值
+    FAIL() << "Phase A: 故意失敗 - 需要實作SLL指令";
+}
+
+TEST_F(SllInstructionBDDTest, Sll_OverflowShift_ShouldHandleOverflow) {
+    // Given: 暫存器包含會溢位的值
+    // When: 執行SLL指令
+    // Then: 應該正確處理溢位
+    FAIL() << "Phase A: 故意失敗 - 需要實作溢位處理";
+}
+```
+
+3. **執行測試確認紅燈**
+```bash
+ninja unit_tests
+.\tests\unit_tests.exe --gtest_filter="*Sll*" --gtest_brief
+# 應該顯示: [  FAILED  ] 2 tests
+```
+
+#### **🟢 Phase B: 實作階段 (綠燈階段)**
+
+1. **檢查核心實作**
+```cpp
+// 檢查 src/Instruction.h 中的類別宣告
+// 檢查 src/Instruction.cpp 中的 execute() 實作
+// 檢查 src/InstructionDecoder.cpp 中的解碼邏輯
+// 檢查 src/Assembler.cpp 中的語法解析
+```
+
+2. **移除FAIL()並實作邏輯**
+```cpp
+TEST_F(SllInstructionBDDTest, Sll_BasicShift_ShouldShiftLeftCorrectly) {
+    // Given
+    given_register_contains("$t0", 0x00000001);
+    
+    // When  
+    when_program_executed_for_cycles("sll $t1, $t0, 4", 1);
+    
+    // Then
+    then_register_should_equal("$t1", 0x00000010);
+}
+```
+
+3. **執行測試確認綠燈**
+```bash
+.\tests\unit_tests.exe --gtest_filter="*Sll*" --gtest_brief
+# 應該顯示: [  PASSED  ] 2 tests
+```
+
+#### **♻️ Phase C: 重構階段**
+
+1. **代碼重構**
+   - 清理重複代碼
+   - 改善命名
+   - 優化演算法
+
+2. **全回歸測試**
+```bash
+.\tests\unit_tests.exe --gtest_brief
+# 確認測試數量增加且全部通過
+```
+
+3. **Integration測試循環**
+   - 重複 A→B→C 循環建立Integration測試
+   - 檔案命名: `test_{指令名}_instruction.cpp`
+
+### 🎯 BDD最佳實踐原則
+
+#### **✅ DO (應該做的)**
+- 每次只實作一個指令
+- 嚴格遵循紅燈→綠燈→重構循環
+- 先寫失敗的測試，再實作功能
+- 每個測試只驗證一個行為
+- 使用描述性的測試名稱
+- Given-When-Then結構清晰
+
+#### **❌ DON'T (不應該做的)**
+- 一次實作多個指令
+- 跳過紅燈階段直接寫通過的測試
+- 在沒有測試的情況下寫生產代碼
+- 忽略重構階段
+- 寫過於複雜的測試場景
+
+### 📊 進度追蹤模板
+
+每完成一個指令後，更新以下追蹤表：
+
+```markdown
+| 指令 | BDD測試 | Integration測試 | 測試數增量 | 累計測試數 | 狀態 |
+|------|---------|----------------|-----------|-----------|------|
+| sll  | ✅ 2個  | ✅ 2個        | +4        | 174       | 完成 |
+| srl  | ⏳ 進行中 | ❌ 待實作    | +0        | 174       | 開發中 |
+```
 
 **Phase A: 創建test_nor_instruction.cpp (紅燈階段)**
 ```cpp
@@ -361,22 +699,48 @@ grep -r "sll\|srl\|sra" src/Assembler.cpp
 
 **預期成果：** 170 → 182 個測試 (+12)
 
-## 🎯 交接總結
+## 🎯 開發交接總結
 
-### ✅ 已完成的重大成就
-1. **邏輯指令群組完整實作:** 4/4 指令100%完成 (AND, OR, XOR, NOR) ✅
-2. **18個BDD測試場景:** 全部通過，涵蓋各種邊界條件 ✅
-3. **19個Integration測試:** 包含8個邏輯指令Integration測試 ✅
-4. **測試覆蓋率大幅提升:** 168→170個測試 (+2個NOR Integration) ✅
-5. **零技術債務:** 無DISABLED測試，100%通過率 ✅
-6. **邏輯指令群組里程碑達成:** BDD + Integration 100%覆蓋 ✅
+### ✅ 當前重大成就
+1. **邏輯指令群組100%完成:** AND, OR, XOR, NOR (4/4) ✅
+2. **程式架構完整建立:** Pipeline + 指令系統 + GUI ✅  
+3. **BDD流程標準化:** 18個BDD場景 + 19個Integration測試 ✅
+4. **測試框架成熟:** 170個測試，100%通過率 ✅
+5. **完整開發規劃:** 47個指令的10階段開發路線圖 ✅
 
-### 🎯 下一步行動
-**下一階段建議:** 位移指令群組開發 (SLL, SRL, SRA)
-**預期增加:** 12個測試 (6 BDD + 6 Integration)
-**難度評估:** 中等，可複用邏輯指令的測試結構
+### 📊 完成度現況
+- **已完成指令:** 17/47 = 36%
+- **部分完成指令:** 5/47 = 11%  
+- **待開發指令:** 25/47 = 53%
+- **測試覆蓋率:** 170個測試，預計最終386個測試
 
-**記住BDD原則:** 小步前進 → 測試驅動 → 嚴格循環 🎯
+### 🎯 立即下一步行動
+**Phase 1 目標:** 位移指令群組 (SLL, SRL, SRA)
+**優先任務:** SLL指令BDD+Integration完善
+**預期成果:** 170 → 182個測試 (+12)
+**預估時間:** 2-3小時
+
+### 🗺️ 中長期發展路線
+1. **短期 (1-2週):** Phase 1-3 (位移+立即值邏輯+分支) → 60%完成度
+2. **中期 (3-4週):** Phase 4-6 (無符號+變數位移+跳躍) → 80%完成度  
+3. **長期 (6-8週):** Phase 7-10 (記憶體+乘除+完整) → 100%完成度
+
+### 🏗️ 架構優勢
+- **物件導向設計:** 指令類別階層清晰
+- **Pipeline架構:** 支援5階段MIPS流水線
+- **測試驅動:** BDD方法論確保品質
+- **模組化結構:** 各組件獨立可測試
+- **GUI支援:** ImGui圖形介面整合
+
+### 📝 開發方法論優勢
+- **嚴格BDD循環:** 確保每個功能都有測試覆蓋
+- **小步迭代:** 降低風險，容易除錯
+- **持續集成:** 每個變更都有完整回歸測試
+- **文檔驅動:** 每個階段都有清楚的文檔記錄
+
+**記住核心原則:** 
+> **小步前進 → 測試驅動 → 嚴格循環 → 持續重構** 🎯
 
 ---
-**交接完成** | **邏輯指令群組100%完成** | **下一目標: 位移指令群組開發** 🚀
+**開發交接完成** | **邏輯指令群組100%達成** | **下一目標: 位移指令群組** 🚀  
+**總進度: 17/47指令 (36%)** | **測試覆蓋: 170個測試** | **架構: Pipeline + BDD** ✨

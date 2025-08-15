@@ -424,6 +424,28 @@ std::string SllInstruction::getName() const {
     return "sll";
 }
 
+SrlInstruction::SrlInstruction(uint32_t rd, uint32_t rt, uint32_t shamt) 
+    : m_rd(rd), m_rt(rt), m_shamt(shamt) {
+}
+
+void SrlInstruction::execute(Cpu& cpu) {
+    // Read source register value
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    // Perform logical right shift (zero-fill from left)
+    uint32_t result = rtValue >> m_shamt;
+    
+    // Write result to destination register
+    cpu.getRegisterFile().write(m_rd, result);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SrlInstruction::getName() const {
+    return "srl";
+}
+
 SyscallInstruction::SyscallInstruction() {
 }
 
