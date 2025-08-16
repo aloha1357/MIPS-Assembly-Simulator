@@ -272,6 +272,37 @@ std::string DIVInstruction::getName() const {
     return "div";
 }
 
+DIVUInstruction::DIVUInstruction(int rs, int rt) 
+    : m_rs(rs), m_rt(rt) {
+}
+
+void DIVUInstruction::execute(Cpu& cpu) {
+    // Read register values as unsigned integers for unsigned division
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    if (rtValue == 0) {
+        // Handle divide by zero - set both HI and LO to zero (undefined behavior, but safe)
+        cpu.getRegisterFile().writeHI(0);
+        cpu.getRegisterFile().writeLO(0);
+    } else {
+        // Perform unsigned division
+        uint32_t quotient = rsValue / rtValue;
+        uint32_t remainder = rsValue % rtValue;
+        
+        // Store results: LO = quotient, HI = remainder
+        cpu.getRegisterFile().writeLO(quotient);
+        cpu.getRegisterFile().writeHI(remainder);
+    }
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string DIVUInstruction::getName() const {
+    return "divu";
+}
+
 SltiInstruction::SltiInstruction(int rt, int rs, int16_t imm)
     : ITypeInstruction(rt, rs, imm) {
 }

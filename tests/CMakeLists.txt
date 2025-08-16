@@ -64,7 +64,8 @@ add_executable(unit_tests
     test_register_file_hilo_bdd.cpp     # RegisterFile HI/LO BDD tests (Phase 8.1: Green Light)
     test_mult_instruction_bdd_minimal.cpp   # MULT instruction BDD tests (Phase 8.2: Green Light)
     test_multu_instruction_bdd_minimal.cpp  # MULTU instruction BDD tests (Phase 8.4: Green Light)
-    test_div_instruction_bdd_minimal.cpp    # DIV instruction BDD tests (Phase 8.5: Red Light)
+    test_div_instruction_bdd_minimal.cpp    # DIV instruction BDD tests (Phase 8.5: Green Light)
+    test_divu_instruction_bdd_minimal.cpp   # DIVU instruction BDD tests (Phase 8.6: Red Light)
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

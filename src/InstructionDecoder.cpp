@@ -119,6 +119,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
             return std::make_unique<MULTUInstruction>(rs, rt);
         case 0x1A:  // DIV instruction
             return std::make_unique<DIVInstruction>(rs, rt);
+        case 0x1B:  // DIVU instruction
+            return std::make_unique<DIVUInstruction>(rs, rt);
         case 0x0C:  // SYSCALL instruction
             return std::make_unique<SyscallInstruction>();
         default:

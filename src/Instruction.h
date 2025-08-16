@@ -219,6 +219,29 @@ private:
 };
 
 /**
+ * @brief DIVU instruction (divide unsigned)
+ * Function Code: 0x1B
+ * Format: divu $rs, $rt
+ * Operation: LO = $rs ÷ $rt, HI = $rs mod $rt (unsigned division)
+ */
+class DIVUInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a DIVU instruction
+     * @param rs Source register 1 (dividend)
+     * @param rt Source register 2 (divisor)
+     */
+    DIVUInstruction(int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rs; // Source register 1 (dividend)
+    int m_rt; // Source register 2 (divisor)
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {
