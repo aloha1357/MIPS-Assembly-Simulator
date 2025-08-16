@@ -701,6 +701,28 @@ std::string JALInstruction::getName() const {
     return "jal";
 }
 
+// ===== JALR Instruction =====
+
+JALRInstruction::JALRInstruction(int rd, int rs) 
+    : RTypeInstruction(rd, rs, 0) {  // rt=0 (unused for JALR)
+}
+
+void JALRInstruction::execute(Cpu& cpu) {
+    // Read target address from source register
+    uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
+    
+    // Save return address in destination register
+    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
+    cpu.getRegisterFile().write(m_rd, returnAddress);
+    
+    // Jump to target address (convert to word address by dividing by 4)
+    cpu.setProgramCounter(targetAddress / 4);
+}
+
+std::string JALRInstruction::getName() const {
+    return "jalr";
+}
+
 // ===== Syscall Instruction =====
 
 SyscallInstruction::SyscallInstruction() {

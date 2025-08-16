@@ -53,6 +53,7 @@ add_executable(unit_tests
     test_jr_instruction_bdd_minimal.cpp    # JR instruction BDD tests (Phase 6.1: Red Light)
     test_jr_instruction_integration.cpp    # JR instruction Integration tests (Phase 6.1: Integration)
     test_jal_instruction_bdd_minimal.cpp   # JAL instruction BDD tests (Phase 6.2: Red Light)
+    test_jalr_instruction_bdd_minimal.cpp  # JALR instruction BDD tests (Phase 6.3: Red Light)
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 

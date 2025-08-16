@@ -840,6 +840,36 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return nullptr;
         }
     }
+    else if (opcode == "jalr" && (tokens.size() == 2 || tokens.size() == 3)) {
+        // Parse: jalr $rs (implicit $rd = $ra) or jalr $rd, $rs
+        try {
+            if (tokens.size() == 2) {
+                // jalr $rs (default destination is $ra = $31)
+                std::string rsStr = tokens[1];
+                int rs = getRegisterNumber(rsStr);
+                if (rs == -1) {
+                    return nullptr; // Invalid register
+                }
+                return std::make_unique<JALRInstruction>(31, rs); // $ra = 31
+            } else {
+                // jalr $rd, $rs
+                std::string rdStr = tokens[1];
+                if (rdStr.back() == ',') {
+                    rdStr.pop_back(); // Remove comma
+                }
+                std::string rsStr = tokens[2];
+                
+                int rd = getRegisterNumber(rdStr);
+                int rs = getRegisterNumber(rsStr);
+                if (rd == -1 || rs == -1) {
+                    return nullptr; // Invalid register
+                }
+                return std::make_unique<JALRInstruction>(rd, rs);
+            }
+        } catch (const std::exception&) {
+            return nullptr;
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();

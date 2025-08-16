@@ -85,6 +85,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
             return std::make_unique<SRAVInstruction>(rd, rt, rs);
         case 0x08:  // JR instruction
             return std::make_unique<JRInstruction>(rs);
+        case 0x09:  // JALR instruction
+            return std::make_unique<JALRInstruction>(rd, rs);
         case 0x20:  // ADD instruction
             return std::make_unique<AddInstruction>(rd, rs, rt);
         case 0x21:  // ADDU instruction

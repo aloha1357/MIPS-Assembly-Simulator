@@ -460,6 +460,25 @@ private:
 };
 
 /**
+ * @brief JALR (Jump And Link Register) instruction - R-type instruction with special format
+ * Function Code: 0x09
+ * Format: jalr $rd, $rs or jalr $rs (default $rd=$ra)
+ * Operation: $rd = PC+4; PC = $rs (jump to register address and save return address)
+ */
+class JALRInstruction : public RTypeInstruction {
+public:
+    /**
+     * @brief Construct a JALR instruction
+     * @param rd Destination register for return address
+     * @param rs Source register containing target address
+     */
+    JALRInstruction(int rd, int rs);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {
