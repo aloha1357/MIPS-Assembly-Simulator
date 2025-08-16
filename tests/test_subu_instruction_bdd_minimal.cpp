@@ -69,6 +69,7 @@ TEST_F(SUBUInstructionBDDTest, BasicUnsignedSubtraction) {
 
     // Given: 建構SUBU指令 (Function Code: 0x23)
     uint32_t instruction_encoding = (rs_register << 21) | (rt_register << 16) | (rd_register << 11) | 0x23;
+    (void)instruction_encoding; // Suppress unused variable warning
     
     // When: 創建並執行SUBU指令
     mips::SUBUInstruction subu_instruction(rd_register, rs_register, rt_register);

@@ -72,6 +72,7 @@ TEST_F(ADDIUInstructionBDDTest, BasicImmediateAddition) {
     // Format: ADDIU rt, rs, immediate
     // Encoding: 0x09 (opcode) | rs (5 bits) | rt (5 bits) | immediate (16 bits)
     uint32_t instruction_encoding = (0x09 << 26) | (rs_register << 21) | (rt_register << 16) | immediate;
+    (void)instruction_encoding; // Suppress unused variable warning
     
     // Create ADDIU instruction and execute
     // Note: This will fail initially as ADDIUInstruction class doesn't exist

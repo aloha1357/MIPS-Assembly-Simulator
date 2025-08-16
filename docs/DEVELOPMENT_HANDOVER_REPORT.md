@@ -1840,3 +1840,21 @@ cd c:\Users\aloha\Documents\GitHub\MIPS-Assembly-Simulator\build
 **立即行動:** 參考 `docs/PHASE_5_DEVELOPMENT_GUIDE.md` 開始SLLV指令BDD開發  
 **目標成果:** 244 → 262個測試，60% → 66%完成度  
 **關鍵特性:** 變數位移指令群組 (SLLV, SRLV, SRAV)
+
+---
+
+## 🔧 最新技術修復 (2025年8月16日)
+
+### ✅ CI/CD編譯警告修復
+**問題:** Phase 4 BDD測試文件中有未使用的 `instruction_encoding` 變數，導致 `-Werror=unused-variable` 編譯錯誤
+**影響檔案:**
+- `tests/test_addiu_instruction_bdd_minimal.cpp` ✅ 已修復
+- `tests/test_subu_instruction_bdd_minimal.cpp` ✅ 已修復  
+- `tests/test_addu_instruction_bdd_minimal.cpp` ✅ 已修復
+
+**解決方案:** 添加 `(void)instruction_encoding;` 來抑制未使用變數警告
+
+**驗證結果:**
+- 編譯成功: ninja unit_tests ✅
+- 所有測試通過: 244/244 tests PASSED ✅
+- Phase 4指令驗證: ADDIU(4/4) + SUBU(4/4) + ADDU(4/4) = 12/12 tests PASSED ✅

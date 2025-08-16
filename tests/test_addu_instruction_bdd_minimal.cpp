@@ -69,6 +69,7 @@ TEST_F(ADDUInstructionBDDTest, BasicUnsignedAddition) {
 
     // Given: 建構ADDU指令 (Function Code: 0x21)
     uint32_t instruction_encoding = (rs_register << 21) | (rt_register << 16) | (rd_register << 11) | 0x21;
+    (void)instruction_encoding; // Suppress unused variable warning
     
     // When: 創建並執行ADDU指令
     mips::ADDUInstruction addu_instruction(rd_register, rs_register, rt_register);
