@@ -504,6 +504,113 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             }
         }
     }
+    else if (opcode == "sb" && tokens.size() >= 3) {
+        // Parse: sb $rt, offset($rs)
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr = tokens[2];
+        
+        // Remove comma from rt
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        if (rt >= 0) {
+            // Parse offset($rs) format
+            size_t parenPos = offsetRegStr.find('(');
+            if (parenPos != std::string::npos) {
+                std::string offsetStr = offsetRegStr.substr(0, parenPos);
+                std::string rsStr = offsetRegStr.substr(parenPos + 1);
+                if (rsStr.back() == ')') rsStr.pop_back();
+                
+                int rs = getRegisterNumber(rsStr);
+                if (rs >= 0) {
+                    try {
+                        int16_t offset = 0;
+                        if (!offsetStr.empty()) {
+                            if (offsetStr.front() == '+') {
+                                offsetStr = offsetStr.substr(1);
+                            }
+                            if (!offsetStr.empty()) {
+                                offset = static_cast<int16_t>(std::stoi(offsetStr));
+                            }
+                        }
+                        return std::make_unique<SBInstruction>(rt, rs, offset);
+                    } catch (const std::exception&) {
+                        return nullptr;
+                    }
+                }
+            }
+        }
+    }
+    else if (opcode == "lbu" && tokens.size() >= 3) {
+        // Parse: lbu $rt, offset($rs)
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr = tokens[2];
+        
+        // Remove comma from rt
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        if (rt >= 0) {
+            // Parse offset($rs) format
+            size_t parenPos = offsetRegStr.find('(');
+            if (parenPos != std::string::npos) {
+                std::string offsetStr = offsetRegStr.substr(0, parenPos);
+                std::string rsStr = offsetRegStr.substr(parenPos + 1);
+                if (rsStr.back() == ')') rsStr.pop_back();
+                
+                int rs = getRegisterNumber(rsStr);
+                if (rs >= 0) {
+                    try {
+                        int16_t offset = 0;
+                        if (!offsetStr.empty()) {
+                            if (offsetStr.front() == '+') {
+                                offsetStr = offsetStr.substr(1);
+                            }
+                            offset = static_cast<int16_t>(std::stoi(offsetStr));
+                        }
+                        return std::make_unique<LBUInstruction>(rt, rs, offset);
+                    } catch (const std::exception&) {
+                        return nullptr;
+                    }
+                }
+            }
+        }
+    }
+    else if (opcode == "lh" && tokens.size() >= 3) {
+        // Parse: lh $rt, offset($rs)
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr = tokens[2];
+        
+        // Remove comma from rt
+        if (rtStr.back() == ',') rtStr.pop_back();
+        
+        int rt = getRegisterNumber(rtStr);
+        if (rt >= 0) {
+            // Parse offset($rs) format
+            size_t parenPos = offsetRegStr.find('(');
+            if (parenPos != std::string::npos) {
+                std::string offsetStr = offsetRegStr.substr(0, parenPos);
+                std::string rsStr = offsetRegStr.substr(parenPos + 1);
+                if (rsStr.back() == ')') rsStr.pop_back();
+                
+                int rs = getRegisterNumber(rsStr);
+                if (rs >= 0) {
+                    try {
+                        int16_t offset = 0;
+                        if (!offsetStr.empty()) {
+                            if (offsetStr.front() == '+') {
+                                offsetStr = offsetStr.substr(1);
+                            }
+                            offset = static_cast<int16_t>(std::stoi(offsetStr));
+                        }
+                        return std::make_unique<LHInstruction>(rt, rs, offset);
+                    } catch (const std::exception&) {
+                        return nullptr;
+                    }
+                }
+            }
+        }
+    }
     else if (opcode == "lw" && tokens.size() >= 3) {
         // Parse: lw $rt, offset($rs)
         std::string rtStr = tokens[1];

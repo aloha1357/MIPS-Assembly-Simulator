@@ -389,6 +389,82 @@ std::string LBInstruction::getName() const {
     return "lb";
 }
 
+SBInstruction::SBInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void SBInstruction::execute(Cpu& cpu) {
+    // 1. Calculate effective address
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    int32_t signedOffset = static_cast<int32_t>(static_cast<int16_t>(m_imm));
+    uint32_t effectiveAddress = baseAddress + signedOffset;
+    
+    // 2. Read source register and extract low 8 bits
+    uint32_t sourceValue = cpu.getRegisterFile().read(m_rt);
+    uint8_t byteToStore = static_cast<uint8_t>(sourceValue & 0xFF);
+    
+    // 3. Store byte to memory
+    cpu.getMemory().writeByte(effectiveAddress, byteToStore);
+    
+    // 4. Update PC
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SBInstruction::getName() const {
+    return "sb";
+}
+
+LBUInstruction::LBUInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void LBUInstruction::execute(Cpu& cpu) {
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    uint32_t offset = signExtend16(m_imm);
+    uint32_t address = baseAddress + offset;
+    
+    // Load byte unsigned with zero extension
+    uint8_t byteValue = cpu.getMemory().readByte(address);
+    uint32_t zeroExtendedValue = static_cast<uint32_t>(byteValue);  // Automatic zero extension
+    
+    cpu.getRegisterFile().write(m_rt, zeroExtendedValue);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string LBUInstruction::getName() const {
+    return "lbu";
+}
+
+LHInstruction::LHInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void LHInstruction::execute(Cpu& cpu) {
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    uint32_t offset = signExtend16(m_imm);
+    uint32_t address = baseAddress + offset;
+    
+    // Load halfword signed with sign extension
+    uint16_t halfwordValue = cpu.getMemory().readHalfword(address);
+    uint32_t signExtendedValue;
+    
+    // Check if the high bit (bit 15) is set for sign extension
+    if (halfwordValue & 0x8000) {
+        // Negative value - sign extend with 1s
+        signExtendedValue = 0xFFFF0000 | halfwordValue;
+    } else {
+        // Positive value - sign extend with 0s
+        signExtendedValue = static_cast<uint32_t>(halfwordValue);
+    }
+    
+    cpu.getRegisterFile().write(m_rt, signExtendedValue);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string LHInstruction::getName() const {
+    return "lh";
+}
+
 SwInstruction::SwInstruction(int rt, int rs, int16_t offset)
     : ITypeInstruction(rt, rs, offset) {
 }

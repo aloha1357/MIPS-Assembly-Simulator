@@ -270,6 +270,46 @@ public:
 };
 
 /**
+ * @brief I-type SB instruction (store byte)
+ * Stores the low-order 8 bits of a register to memory
+ */
+class SBInstruction : public ITypeInstruction {
+public:
+    SBInstruction(int rt, int rs, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief I-type LBU instruction (load byte unsigned)
+ * Opcode: 0x24
+ * Format: lbu $rt, offset($rs)
+ * Operation: rt = zero_extend(memory[rs + offset][7:0])
+ */
+class LBUInstruction : public ITypeInstruction {
+public:
+    LBUInstruction(int rt, int rs, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief I-type LH instruction (load halfword)
+ * Opcode: 0x21
+ * Format: lh $rt, offset($rs)
+ * Operation: rt = sign_extend(memory[rs + offset][15:0])
+ */
+class LHInstruction : public ITypeInstruction {
+public:
+    LHInstruction(int rt, int rs, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type SW instruction (store word)
  */
 class SwInstruction : public ITypeInstruction {
