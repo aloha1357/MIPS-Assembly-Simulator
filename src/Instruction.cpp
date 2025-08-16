@@ -43,6 +43,23 @@ std::string SubInstruction::getName() const {
     return "sub";
 }
 
+SUBUInstruction::SUBUInstruction(int rd, int rs, int rt) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void SUBUInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    uint32_t result = rsValue - rtValue;  // 無符號減法，不檢查下溢
+    
+    cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SUBUInstruction::getName() const {
+    return "subu";
+}
+
 AndInstruction::AndInstruction(int rd, int rs, int rt) 
     : RTypeInstruction(rd, rs, rt) {
 }

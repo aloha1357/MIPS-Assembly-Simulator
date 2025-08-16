@@ -81,6 +81,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
             return std::make_unique<AddInstruction>(rd, rs, rt);
         case 0x22:  // SUB instruction
             return std::make_unique<SubInstruction>(rd, rs, rt);
+        case 0x23:  // SUBU instruction
+            return std::make_unique<SUBUInstruction>(rd, rs, rt);
         case 0x24:  // AND instruction
             return std::make_unique<AndInstruction>(rd, rs, rt);
         case 0x25:  // OR instruction

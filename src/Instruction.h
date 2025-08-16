@@ -62,6 +62,17 @@ public:
 };
 
 /**
+ * @brief R-type SUBU instruction (subtract unsigned)
+ */
+class SUBUInstruction : public RTypeInstruction {
+public:
+    SUBUInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief R-type AND instruction (logical AND)
  */
 class AndInstruction : public RTypeInstruction {
