@@ -150,6 +150,29 @@ public:
 };
 
 /**
+ * @brief MULT instruction (multiply signed)
+ * Function Code: 0x18
+ * Format: mult $rs, $rt
+ * Operation: HI:LO = $rs × $rt (signed 64-bit result)
+ */
+class MULTInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a MULT instruction
+     * @param rs Source register 1
+     * @param rt Source register 2
+     */
+    MULTInstruction(int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rs; // Source register 1
+    int m_rt; // Source register 2
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {

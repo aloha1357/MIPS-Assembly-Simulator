@@ -185,6 +185,34 @@ std::string SltuInstruction::getName() const {
     return "sltu";
 }
 
+MULTInstruction::MULTInstruction(int rs, int rt) 
+    : m_rs(rs), m_rt(rt) {
+}
+
+void MULTInstruction::execute(Cpu& cpu) {
+    // Read register values as signed integers for signed multiplication
+    int32_t rsValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rs));
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    
+    // Perform 64-bit signed multiplication
+    int64_t result = static_cast<int64_t>(rsValue) * static_cast<int64_t>(rtValue);
+    
+    // Split 64-bit result into HI (upper 32 bits) and LO (lower 32 bits)
+    uint32_t hi = static_cast<uint32_t>((result >> 32) & 0xFFFFFFFF);
+    uint32_t lo = static_cast<uint32_t>(result & 0xFFFFFFFF);
+    
+    // Store results in HI and LO registers
+    cpu.getRegisterFile().writeHI(hi);
+    cpu.getRegisterFile().writeLO(lo);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string MULTInstruction::getName() const {
+    return "mult";
+}
+
 SltiInstruction::SltiInstruction(int rt, int rs, int16_t imm)
     : ITypeInstruction(rt, rs, imm) {
 }
