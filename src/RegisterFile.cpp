@@ -22,6 +22,24 @@ void RegisterFile::write(int regNum, uint32_t value) {
 
 void RegisterFile::reset() {
     m_registers.fill(0);
+    m_hi = 0;
+    m_lo = 0;
+}
+
+uint32_t RegisterFile::readHI() const {
+    return m_hi;
+}
+
+void RegisterFile::writeHI(uint32_t value) {
+    m_hi = value;
+}
+
+uint32_t RegisterFile::readLO() const {
+    return m_lo;
+}
+
+void RegisterFile::writeLO(uint32_t value) {
+    m_lo = value;
 }
 
 } // namespace mips
