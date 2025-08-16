@@ -439,6 +439,27 @@ public:
 };
 
 /**
+ * @brief JAL (Jump And Link) instruction - J-type instruction
+ * Opcode: 0x03
+ * Format: jal target
+ * Operation: $ra = PC+4; PC = target (jump to immediate address and save return address)
+ */
+class JALInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a JAL instruction
+     * @param target Target address (26-bit immediate value)
+     */
+    explicit JALInstruction(uint32_t target);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    uint32_t m_target;  // 26-bit target address
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {

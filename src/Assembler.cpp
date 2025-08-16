@@ -817,6 +817,29 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<JRInstruction>(rs);
         }
     }
+    else if (opcode == "jal" && tokens.size() == 2) {  // Exactly 2 tokens: "jal" and target
+        // Parse: jal target
+        std::string targetStr = tokens[1];
+        
+        // Remove commas if present
+        if (targetStr.back() == ',') targetStr.pop_back();
+        
+        // Try to parse as numeric value (hex or decimal)
+        uint32_t target = 0;
+        try {
+            if (targetStr.size() > 2 && targetStr.substr(0, 2) == "0x") {
+                // Hexadecimal
+                target = static_cast<uint32_t>(std::stoul(targetStr, nullptr, 16));
+            } else {
+                // Decimal
+                target = static_cast<uint32_t>(std::stoul(targetStr, nullptr, 10));
+            }
+            return std::make_unique<JALInstruction>(target);
+        } catch (const std::exception&) {
+            // Failed to parse as number, return nullptr
+            return nullptr;
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();

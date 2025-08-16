@@ -166,6 +166,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeJType(uint32_t word) {
         case 0x02:  // J instruction
             // Convert jump target to label (simplified approach)
             return std::make_unique<JInstruction>("label_" + std::to_string(jumpTarget));
+        case 0x03:  // JAL instruction
+            return std::make_unique<JALInstruction>(jumpTarget);
         default:
             return nullptr; // Unknown J-type instruction
     }

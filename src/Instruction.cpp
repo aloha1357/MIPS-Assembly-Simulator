@@ -682,6 +682,25 @@ std::string JRInstruction::getName() const {
     return "jr";
 }
 
+// ===== JAL Instruction =====
+
+JALInstruction::JALInstruction(uint32_t target) 
+    : m_target(target) {
+}
+
+void JALInstruction::execute(Cpu& cpu) {
+    // Save return address in $ra (register 31)
+    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
+    cpu.getRegisterFile().write(31, returnAddress);
+    
+    // Jump to target address
+    cpu.setProgramCounter(m_target);
+}
+
+std::string JALInstruction::getName() const {
+    return "jal";
+}
+
 // ===== Syscall Instruction =====
 
 SyscallInstruction::SyscallInstruction() {
