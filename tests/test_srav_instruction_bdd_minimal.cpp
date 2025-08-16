@@ -132,6 +132,7 @@ TEST_F(SRAVInstructionBDDTest, ShiftAmountTruncationSignExtended) {
     const uint32_t rs_register = 8;  // $t7
     const uint32_t rd_register = 9;  // $t8
     const uint32_t effective_shift = rs_value & 0x1F;  // 35 & 0x1F = 3
+    (void)effective_shift;  // Suppress unused variable warning
     
     // Arithmetic right shift of -1 by any amount is still -1
     const uint32_t expected_result = 0xFFFFFFFF;
