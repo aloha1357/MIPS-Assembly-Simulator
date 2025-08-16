@@ -987,6 +987,26 @@ std::string JALRInstruction::getName() const {
     return "jalr";
 }
 
+// ===== MFHI Instruction =====
+
+MFHIInstruction::MFHIInstruction(int rd) : m_rd(rd) {
+}
+
+void MFHIInstruction::execute(Cpu& cpu) {
+    // Read the value from HI register
+    uint32_t hiValue = cpu.getRegisterFile().readHI();
+    
+    // Store the HI value in the destination register
+    cpu.getRegisterFile().write(m_rd, hiValue);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string MFHIInstruction::getName() const {
+    return "mfhi";
+}
+
 // ===== Syscall Instruction =====
 
 SyscallInstruction::SyscallInstruction() {

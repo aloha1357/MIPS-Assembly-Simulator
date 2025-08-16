@@ -1088,6 +1088,15 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return nullptr;
         }
     }
+    else if (opcode == "mfhi" && tokens.size() >= 2) {
+        // Parse: mfhi $rd
+        std::string rdStr = tokens[1];
+        
+        int rd = getRegisterNumber(rdStr);
+        if (rd >= 0) {
+            return std::make_unique<MFHIInstruction>(rd);
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();

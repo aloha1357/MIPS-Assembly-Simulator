@@ -647,6 +647,27 @@ public:
 };
 
 /**
+ * @brief MFHI instruction (Move From HI)
+ * Function Code: 0x10
+ * Format: mfhi $rd
+ * Operation: $rd = HI (將HI暫存器內容移動到通用暫存器)
+ */
+class MFHIInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a MFHI instruction
+     * @param rd Destination register to receive HI value
+     */
+    MFHIInstruction(int rd);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rd; // Destination register
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {
