@@ -710,6 +710,27 @@ private:
 };
 
 /**
+ * @brief MTLO instruction (Move To LO)
+ * Function Code: 0x13
+ * Format: mtlo $rs
+ * Operation: LO = $rs (將通用暫存器內容移動到LO暫存器)
+ */
+class MTLOInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a MTLO instruction
+     * @param rs Source register to provide value for LO
+     */
+    MTLOInstruction(int rs);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rs; // Source register
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {

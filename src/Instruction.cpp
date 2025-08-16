@@ -1047,6 +1047,26 @@ std::string MFLOInstruction::getName() const {
     return "mflo";
 }
 
+// ===== MTLO Instruction =====
+
+MTLOInstruction::MTLOInstruction(int rs) : m_rs(rs) {
+}
+
+void MTLOInstruction::execute(Cpu& cpu) {
+    // Read the value from source register
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    
+    // Store the register value in LO register
+    cpu.getRegisterFile().writeLO(rsValue);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string MTLOInstruction::getName() const {
+    return "mtlo";
+}
+
 // ===== Syscall Instruction =====
 
 SyscallInstruction::SyscallInstruction() {

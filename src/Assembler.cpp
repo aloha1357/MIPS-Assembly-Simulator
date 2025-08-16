@@ -1115,6 +1115,15 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<MFLOInstruction>(rd);
         }
     }
+    else if (opcode == "mtlo" && tokens.size() >= 2) {
+        // Parse: mtlo $rs
+        std::string rsStr = tokens[1];
+        
+        int rs = getRegisterNumber(rsStr);
+        if (rs >= 0) {
+            return std::make_unique<MTLOInstruction>(rs);
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();
