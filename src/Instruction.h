@@ -668,6 +668,48 @@ private:
 };
 
 /**
+ * @brief MTHI instruction (Move To HI)
+ * Function Code: 0x11
+ * Format: mthi $rs
+ * Operation: HI = $rs (將通用暫存器內容移動到HI暫存器)
+ */
+class MTHIInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a MTHI instruction
+     * @param rs Source register to provide value for HI
+     */
+    MTHIInstruction(int rs);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rs; // Source register
+};
+
+/**
+ * @brief MFLO instruction (Move From LO)
+ * Function Code: 0x12
+ * Format: mflo $rd
+ * Operation: $rd = LO (將LO暫存器內容移動到通用暫存器)
+ */
+class MFLOInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a MFLO instruction
+     * @param rd Destination register to receive LO value
+     */
+    MFLOInstruction(int rd);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rd; // Destination register
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {

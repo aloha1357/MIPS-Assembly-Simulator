@@ -1097,6 +1097,24 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<MFHIInstruction>(rd);
         }
     }
+    else if (opcode == "mthi" && tokens.size() >= 2) {
+        // Parse: mthi $rs
+        std::string rsStr = tokens[1];
+        
+        int rs = getRegisterNumber(rsStr);
+        if (rs >= 0) {
+            return std::make_unique<MTHIInstruction>(rs);
+        }
+    }
+    else if (opcode == "mflo" && tokens.size() >= 2) {
+        // Parse: mflo $rd
+        std::string rdStr = tokens[1];
+        
+        int rd = getRegisterNumber(rdStr);
+        if (rd >= 0) {
+            return std::make_unique<MFLOInstruction>(rd);
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();

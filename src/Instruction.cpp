@@ -1007,6 +1007,46 @@ std::string MFHIInstruction::getName() const {
     return "mfhi";
 }
 
+// ===== MTHI Instruction =====
+
+MTHIInstruction::MTHIInstruction(int rs) : m_rs(rs) {
+}
+
+void MTHIInstruction::execute(Cpu& cpu) {
+    // Read the value from source register
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    
+    // Store the register value in HI register
+    cpu.getRegisterFile().writeHI(rsValue);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string MTHIInstruction::getName() const {
+    return "mthi";
+}
+
+// ===== MFLO Instruction =====
+
+MFLOInstruction::MFLOInstruction(int rd) : m_rd(rd) {
+}
+
+void MFLOInstruction::execute(Cpu& cpu) {
+    // Read the value from LO register
+    uint32_t loValue = cpu.getRegisterFile().readLO();
+    
+    // Store the LO value in the destination register
+    cpu.getRegisterFile().write(m_rd, loValue);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string MFLOInstruction::getName() const {
+    return "mflo";
+}
+
 // ===== Syscall Instruction =====
 
 SyscallInstruction::SyscallInstruction() {

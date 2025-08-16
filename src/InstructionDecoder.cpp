@@ -123,6 +123,10 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeRType(uint32_t word) {
             return std::make_unique<DIVUInstruction>(rs, rt);
         case 0x10:  // MFHI instruction
             return std::make_unique<MFHIInstruction>(rd);
+        case 0x11:  // MTHI instruction
+            return std::make_unique<MTHIInstruction>(rs);
+        case 0x12:  // MFLO instruction
+            return std::make_unique<MFLOInstruction>(rd);
         case 0x0C:  // SYSCALL instruction
             return std::make_unique<SyscallInstruction>();
         default:
