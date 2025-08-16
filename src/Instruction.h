@@ -310,6 +310,18 @@ public:
 };
 
 /**
+ * @brief I-type SH instruction (store halfword)
+ * Stores the low 16 bits of rt to memory address computed as rs + offset
+ */
+class SHInstruction : public ITypeInstruction {
+public:
+    SHInstruction(int rt, int rs, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type SW instruction (store word)
  */
 class SwInstruction : public ITypeInstruction {

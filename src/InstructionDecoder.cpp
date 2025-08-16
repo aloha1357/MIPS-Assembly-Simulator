@@ -24,6 +24,7 @@ std::unique_ptr<Instruction> InstructionDecoder::decode(uint32_t word) {
         case 0x23:  // LW instruction
         case 0x24:  // LBU instruction
         case 0x28:  // SB instruction
+        case 0x29:  // SH instruction
         case 0x2B:  // SW instruction
         case 0x04:  // BEQ instruction
         case 0x05:  // BNE instruction
@@ -146,6 +147,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word) {
             return std::make_unique<LBUInstruction>(rt, rs, signedImmediate);
         case 0x28:  // SB instruction
             return std::make_unique<SBInstruction>(rt, rs, signedImmediate);
+        case 0x29:  // SH instruction
+            return std::make_unique<SHInstruction>(rt, rs, signedImmediate);
         case 0x2B:  // SW instruction
             return std::make_unique<SwInstruction>(rt, rs, signedImmediate);
         case 0x04:  // BEQ instruction

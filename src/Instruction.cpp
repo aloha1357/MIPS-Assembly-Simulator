@@ -465,6 +465,28 @@ std::string LHInstruction::getName() const {
     return "lh";
 }
 
+SHInstruction::SHInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void SHInstruction::execute(Cpu& cpu) {
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    uint32_t offset = signExtend16(m_imm);
+    uint32_t address = baseAddress + offset;
+    
+    // Get the low 16 bits from rt register to store
+    uint32_t registerValue = cpu.getRegisterFile().read(m_rt);
+    uint16_t halfwordValue = static_cast<uint16_t>(registerValue & 0xFFFF);
+    
+    // Store halfword to memory
+    cpu.getMemory().writeHalfword(address, halfwordValue);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SHInstruction::getName() const {
+    return "sh";
+}
+
 SwInstruction::SwInstruction(int rt, int rs, int16_t offset)
     : ITypeInstruction(rt, rs, offset) {
 }

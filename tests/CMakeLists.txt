@@ -59,6 +59,7 @@ add_executable(unit_tests
     test_sb_instruction_bdd_minimal.cpp    # SB instruction BDD tests (Phase 7.2: Red Light)
     test_lbu_instruction_bdd_minimal.cpp   # LBU instruction BDD tests (Phase 7.3: Red Light)
     test_lh_instruction_bdd_minimal.cpp    # LH instruction BDD tests (Phase 7.4: Red Light)
+    test_sh_instruction_bdd_minimal.cpp    # SH instruction BDD tests (Phase 7.5: Red Light)
     # test_gui_interface.cpp  # Temporarily commented out due to encoding issues
 )
 
