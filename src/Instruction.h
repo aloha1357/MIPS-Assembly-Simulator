@@ -322,6 +322,18 @@ public:
 };
 
 /**
+ * @brief I-type LHU instruction (load halfword unsigned)
+ * Loads halfword from memory with zero extension (unsigned load)
+ */
+class LHUInstruction : public ITypeInstruction {
+public:
+    LHUInstruction(int rt, int rs, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type SW instruction (store word)
  */
 class SwInstruction : public ITypeInstruction {

@@ -487,6 +487,27 @@ std::string SHInstruction::getName() const {
     return "sh";
 }
 
+LHUInstruction::LHUInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void LHUInstruction::execute(Cpu& cpu) {
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    uint32_t offset = signExtend16(m_imm);
+    uint32_t address = baseAddress + offset;
+    
+    // Load halfword unsigned with zero extension
+    uint16_t halfwordValue = cpu.getMemory().readHalfword(address);
+    uint32_t zeroExtendedValue = static_cast<uint32_t>(halfwordValue);
+    
+    cpu.getRegisterFile().write(m_rt, zeroExtendedValue);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string LHUInstruction::getName() const {
+    return "lhu";
+}
+
 SwInstruction::SwInstruction(int rt, int rs, int16_t offset)
     : ITypeInstruction(rt, rs, offset) {
 }
