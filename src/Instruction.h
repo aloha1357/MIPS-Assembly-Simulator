@@ -157,6 +157,19 @@ public:
 };
 
 /**
+ * @brief I-type ADDIU instruction (add immediate unsigned)
+ * Note: Despite the name "unsigned", the immediate value is sign-extended.
+ * The difference from ADDI is that ADDIU does not generate overflow exceptions.
+ */
+class ADDIUInstruction : public ITypeInstruction {
+public:
+    ADDIUInstruction(int rt, int rs, int16_t imm);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type SLTI instruction (set less than immediate)
  */
 class SltiInstruction : public ITypeInstruction {

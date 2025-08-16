@@ -292,6 +292,24 @@ std::string AddiInstruction::getName() const {
     return "addi";
 }
 
+// ADDIU instruction implementation
+ADDIUInstruction::ADDIUInstruction(int rt, int rs, int16_t imm)
+    : ITypeInstruction(rt, rs, imm) {
+}
+
+void ADDIUInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t immValue = signExtend16(m_imm); // Sign-extend despite "unsigned" name
+    uint32_t result = rsValue + immValue;     // No overflow checking - key difference from ADDI
+    
+    cpu.getRegisterFile().write(m_rt, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string ADDIUInstruction::getName() const {
+    return "addiu";
+}
+
 LwInstruction::LwInstruction(int rt, int rs, int16_t offset)
     : ITypeInstruction(rt, rs, offset) {
 }

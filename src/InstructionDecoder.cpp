@@ -13,6 +13,7 @@ std::unique_ptr<Instruction> InstructionDecoder::decode(uint32_t word) {
         case 0x03:  // JAL instruction (not implemented yet)
             return decodeJType(word);
         case 0x08:  // ADDI instruction
+        case 0x09:  // ADDIU instruction
         case 0x0A:  // SLTI instruction
         case 0x0B:  // SLTIU instruction
         case 0x0C:  // ANDI instruction
@@ -111,6 +112,8 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word) {
     switch (opcode) {
         case 0x08:  // ADDI instruction
             return std::make_unique<AddiInstruction>(rt, rs, signedImmediate);
+        case 0x09:  // ADDIU instruction
+            return std::make_unique<ADDIUInstruction>(rt, rs, signedImmediate);
         case 0x0A:  // SLTI instruction
             return std::make_unique<SltiInstruction>(rt, rs, signedImmediate);
         case 0x0B:  // SLTIU instruction
