@@ -421,6 +421,24 @@ public:
 };
 
 /**
+ * @brief JR (Jump Register) instruction - R-type instruction with special format
+ * Function Code: 0x08
+ * Format: jr $rs
+ * Operation: PC = $rs (jump to address in register)
+ */
+class JRInstruction : public RTypeInstruction {
+public:
+    /**
+     * @brief Construct a JR instruction
+     * @param rs Source register containing target address
+     */
+    explicit JRInstruction(int rs);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {

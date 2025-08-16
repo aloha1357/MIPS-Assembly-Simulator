@@ -804,6 +804,19 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<SRAVInstruction>(rd, rt, rs);
         }
     }
+    else if (opcode == "jr" && tokens.size() == 2) {  // Exactly 2 tokens: "jr" and register
+        // Parse: jr $rs
+        std::string rsStr = tokens[1];
+        
+        // Remove commas if present
+        if (rsStr.back() == ',') rsStr.pop_back();
+        
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rs >= 0) {
+            return std::make_unique<JRInstruction>(rs);
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();

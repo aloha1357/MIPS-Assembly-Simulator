@@ -664,6 +664,26 @@ std::string SRAVInstruction::getName() const {
     return "srav";
 }
 
+// ===== JR Instruction =====
+
+JRInstruction::JRInstruction(int rs) 
+    : RTypeInstruction(0, rs, 0) {  // rd=0, rt=0 (unused for JR)
+}
+
+void JRInstruction::execute(Cpu& cpu) {
+    // Read target address from source register
+    uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
+    
+    // Set PC to target address (convert to word address by dividing by 4)
+    cpu.setProgramCounter(targetAddress / 4);
+}
+
+std::string JRInstruction::getName() const {
+    return "jr";
+}
+
+// ===== Syscall Instruction =====
+
 SyscallInstruction::SyscallInstruction() {
 }
 
