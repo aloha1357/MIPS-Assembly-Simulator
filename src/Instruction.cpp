@@ -26,6 +26,23 @@ std::string AddInstruction::getName() const {
     return "add";
 }
 
+ADDUInstruction::ADDUInstruction(int rd, int rs, int rt) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void ADDUInstruction::execute(Cpu& cpu) {
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    uint32_t result = rsValue + rtValue;  // 無符號加法，不檢查溢位
+    
+    cpu.getRegisterFile().write(m_rd, result);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string ADDUInstruction::getName() const {
+    return "addu";
+}
+
 SubInstruction::SubInstruction(int rd, int rs, int rt) 
     : RTypeInstruction(rd, rs, rt) {
 }

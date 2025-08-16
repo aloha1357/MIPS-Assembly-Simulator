@@ -51,6 +51,17 @@ public:
 };
 
 /**
+ * @brief R-type ADDU instruction (add unsigned)
+ */
+class ADDUInstruction : public RTypeInstruction {
+public:
+    ADDUInstruction(int rd, int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief R-type SUB instruction
  */
 class SubInstruction : public RTypeInstruction {
