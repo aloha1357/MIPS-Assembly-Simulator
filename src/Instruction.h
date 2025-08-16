@@ -388,6 +388,17 @@ private:
 };
 
 /**
+ * @brief Shift left logical variable instruction
+ */
+class SLLVInstruction : public RTypeInstruction {
+public:
+    SLLVInstruction(int rd, int rt, int rs);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {

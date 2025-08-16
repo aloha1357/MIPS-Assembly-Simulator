@@ -747,6 +747,25 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             }
         }
     }
+    else if (opcode == "sllv" && tokens.size() >= 4) {
+        // Parse: sllv $rd, $rt, $rs
+        std::string rdStr = tokens[1];
+        std::string rtStr = tokens[2];
+        std::string rsStr = tokens[3];
+        
+        // Remove commas
+        if (rdStr.back() == ',') rdStr.pop_back();
+        if (rtStr.back() == ',') rtStr.pop_back();
+        if (rsStr.back() == ',') rsStr.pop_back();
+        
+        int rd = getRegisterNumber(rdStr);
+        int rt = getRegisterNumber(rtStr);
+        int rs = getRegisterNumber(rsStr);
+        
+        if (rd >= 0 && rt >= 0 && rs >= 0) {
+            return std::make_unique<SLLVInstruction>(rd, rt, rs);
+        }
+    }
     else if (opcode == "syscall") {
         // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();

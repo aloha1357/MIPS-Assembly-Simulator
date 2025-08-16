@@ -586,6 +586,32 @@ std::string SraInstruction::getName() const {
     return "sra";
 }
 
+SLLVInstruction::SLLVInstruction(int rd, int rt, int rs) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void SLLVInstruction::execute(Cpu& cpu) {
+    // Read source register value to be shifted
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    // Read shift amount from rs register (only use low 5 bits)
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t shiftAmount = rsValue & 0x1F; // Mask to 0-31 range
+    
+    // Perform left shift
+    uint32_t result = rtValue << shiftAmount;
+    
+    // Write result to destination register
+    cpu.getRegisterFile().write(m_rd, result);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SLLVInstruction::getName() const {
+    return "sllv";
+}
+
 SyscallInstruction::SyscallInstruction() {
 }
 
