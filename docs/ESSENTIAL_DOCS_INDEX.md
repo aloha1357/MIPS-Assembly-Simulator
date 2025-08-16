@@ -31,6 +31,8 @@ MIPS-Assembly-Simulator/
   - 所有重要資訊的統整
 
 ### 📚 保留的重要文檔
+- **`docs/DEVELOPMENT_HANDOVER_REPORT.md`** - 🏆 **專案完成總結報告** (47/47指令，346測試)
+- **`docs/NEXT_STAGE_DEVELOPMENT_GUIDE.md`** - 🚀 **下階段開發完整指南** (4個發展路徑)
 - **`docs/user-guides/GUI_USER_MANUAL.md`** - 詳細的GUI使用說明
 - **`docs/architecture/`** - 技術架構相關文檔
 - **`README.md`** - 專案快速概覽
