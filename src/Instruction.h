@@ -399,6 +399,28 @@ public:
 };
 
 /**
+ * @brief Shift right logical variable instruction
+ */
+class SRLVInstruction : public RTypeInstruction {
+public:
+    SRLVInstruction(int rd, int rt, int rs);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief Shift right arithmetic variable instruction
+ */
+class SRAVInstruction : public RTypeInstruction {
+public:
+    SRAVInstruction(int rd, int rt, int rs);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief System call instruction
  */
 class SyscallInstruction : public Instruction {

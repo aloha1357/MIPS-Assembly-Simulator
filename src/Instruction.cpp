@@ -612,6 +612,58 @@ std::string SLLVInstruction::getName() const {
     return "sllv";
 }
 
+SRLVInstruction::SRLVInstruction(int rd, int rt, int rs) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void SRLVInstruction::execute(Cpu& cpu) {
+    // Read source register value to be shifted
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    // Read shift amount from rs register (only use low 5 bits)
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t shiftAmount = rsValue & 0x1F; // Mask to 0-31 range
+    
+    // Perform logical right shift (zero extension from left)
+    uint32_t result = rtValue >> shiftAmount;
+    
+    // Write result to destination register
+    cpu.getRegisterFile().write(m_rd, result);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SRLVInstruction::getName() const {
+    return "srlv";
+}
+
+SRAVInstruction::SRAVInstruction(int rd, int rt, int rs) 
+    : RTypeInstruction(rd, rs, rt) {
+}
+
+void SRAVInstruction::execute(Cpu& cpu) {
+    // Read source register value to be shifted (treat as signed for arithmetic shift)
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    
+    // Read shift amount from rs register (only use low 5 bits)
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t shiftAmount = rsValue & 0x1F; // Mask to 0-31 range
+    
+    // Perform arithmetic right shift (sign extension from left)
+    int32_t result = rtValue >> shiftAmount;
+    
+    // Write result to destination register (convert back to unsigned)
+    cpu.getRegisterFile().write(m_rd, static_cast<uint32_t>(result));
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string SRAVInstruction::getName() const {
+    return "srav";
+}
+
 SyscallInstruction::SyscallInstruction() {
 }
 
