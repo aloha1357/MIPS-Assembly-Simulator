@@ -213,6 +213,65 @@ std::string MULTInstruction::getName() const {
     return "mult";
 }
 
+MULTUInstruction::MULTUInstruction(int rs, int rt) 
+    : m_rs(rs), m_rt(rt) {
+}
+
+void MULTUInstruction::execute(Cpu& cpu) {
+    // Read register values as unsigned integers for unsigned multiplication
+    uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
+    uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+    
+    // Perform 64-bit unsigned multiplication
+    uint64_t result = static_cast<uint64_t>(rsValue) * static_cast<uint64_t>(rtValue);
+    
+    // Split 64-bit result into HI (upper 32 bits) and LO (lower 32 bits)
+    uint32_t hi = static_cast<uint32_t>((result >> 32) & 0xFFFFFFFF);
+    uint32_t lo = static_cast<uint32_t>(result & 0xFFFFFFFF);
+    
+    // Store results in HI and LO registers
+    cpu.getRegisterFile().writeHI(hi);
+    cpu.getRegisterFile().writeLO(lo);
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string MULTUInstruction::getName() const {
+    return "multu";
+}
+
+DIVInstruction::DIVInstruction(int rs, int rt) 
+    : m_rs(rs), m_rt(rt) {
+}
+
+void DIVInstruction::execute(Cpu& cpu) {
+    // Read register values as signed integers for signed division
+    int32_t rsValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rs));
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    
+    if (rtValue == 0) {
+        // Handle divide by zero - set both HI and LO to zero (undefined behavior, but safe)
+        cpu.getRegisterFile().writeHI(0);
+        cpu.getRegisterFile().writeLO(0);
+    } else {
+        // Perform signed division
+        int32_t quotient = rsValue / rtValue;
+        int32_t remainder = rsValue % rtValue;
+        
+        // Store results: LO = quotient, HI = remainder
+        cpu.getRegisterFile().writeLO(static_cast<uint32_t>(quotient));
+        cpu.getRegisterFile().writeHI(static_cast<uint32_t>(remainder));
+    }
+    
+    // Increment program counter
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string DIVInstruction::getName() const {
+    return "div";
+}
+
 SltiInstruction::SltiInstruction(int rt, int rs, int16_t imm)
     : ITypeInstruction(rt, rs, imm) {
 }

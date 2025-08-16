@@ -173,6 +173,52 @@ private:
 };
 
 /**
+ * @brief MULTU instruction (multiply unsigned)
+ * Function Code: 0x19
+ * Format: multu $rs, $rt
+ * Operation: HI:LO = $rs × $rt (unsigned 64-bit result)
+ */
+class MULTUInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a MULTU instruction
+     * @param rs Source register 1
+     * @param rt Source register 2
+     */
+    MULTUInstruction(int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rs; // Source register 1
+    int m_rt; // Source register 2
+};
+
+/**
+ * @brief DIV instruction (divide signed)
+ * Function Code: 0x1A
+ * Format: div $rs, $rt
+ * Operation: LO = $rs ÷ $rt, HI = $rs mod $rt (signed division)
+ */
+class DIVInstruction : public Instruction {
+public:
+    /**
+     * @brief Construct a DIV instruction
+     * @param rs Source register 1 (dividend)
+     * @param rt Source register 2 (divisor)
+     */
+    DIVInstruction(int rs, int rt);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+private:
+    int m_rs; // Source register 1 (dividend)
+    int m_rt; // Source register 2 (divisor)
+};
+
+/**
  * @brief Base class for I-type instructions (immediate operand)
  */
 class ITypeInstruction : public Instruction {
