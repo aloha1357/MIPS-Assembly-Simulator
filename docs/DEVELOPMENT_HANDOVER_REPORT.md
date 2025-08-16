@@ -3,58 +3,60 @@
 ## 📋 當前狀態摘要 (最新更新: 2025年8月16日)
 
 ### 🎯 重要里程碑 
-- **✅ Phase 6 完全完成:** 跳躍指令群組100%實現 (JR + JALR + JAL 全部完成) 🎉
-- **✅ 三個跳躍指令完成:** 26個測試全部通過 (15個BDD + 11個Integration)
-- **🎯 立即任務:** Phase 7 - 記憶體指令群組實現 (LB, LH, SB, SH, LBU, LHU)
-- **📊 當前進度:** 34/47 指令完成 (72%) | 282個測試 100%通過
+- **✅ Phase 7 完全完成:** 記憶體指令群組100%實現 (LB + SB + LBU + LH + SH + LHU 全部完成) 🎉
+- **✅ 六個記憶體指令完成:** 24個測試全部通過 (每指令4個BDD測試)
+- **🎯 立即任務:** Phase 8 - 乘除法指令群組實現 (MULT, MULTU, DIV, DIVU)
+- **📊 當前進度:** 40/47 指令完成 (85%) | 306個測試 100%通過
 - **🏗️ 架構狀態:** BDD測試框架成熟 | Pipeline + 物件導向設計穩定
 
 ### 📈 最新成就
-1. **Phase 6跳躍指令群組完全實現** - JR + JALR + JAL 三指令100%完成 ✅
-2. **跳躍指令全面實現** - 包含BDD測試、Integration測試、核心邏輯 ✅
-3. **測試總數大幅增長** - 從256增加到282個測試 (+26個測試)
-4. **整體完成度顯著提升** - 從66%提升到72%
-5. **跳躍指令群組里程碑** - 3/3 = 100%完成度達成 🎉
+1. **Phase 7記憶體指令群組完全實現** - LB + SB + LBU + LH + SH + LHU 六指令100%完成 ✅
+2. **記憶體指令全面實現** - 包含BDD測試、核心邏輯、解碼器支援、組譯器支援 ✅
+3. **測試總數大幅增長** - 從282增加到306個測試 (+24個測試)
+4. **整體完成度顯著提升** - 從72%提升到85%
+5. **記憶體指令群組里程碑** - 6/6 = 100%完成度達成 🎉
 6. **嚴格BDD方法論驗證** - 完整A→B→C循環成功執行 ✅
 
-### 🔍 完整已實現指令清單 (34個)
+### 🔍 完整已實現指令清單 (40個)
 **R-type指令 (20個):**
 - ADD, SUB, AND, OR, XOR, NOR ✅
 - SLT, SLTU ✅  
 - SLL, SRL, SRA ✅ (位移指令群組)
 - SLLV, SRLV, SRAV ✅ (變數位移指令群組)
 - SUBU, ADDU ✅ (無符號算術指令群組)
-- JR, JALR ✅ (跳躍指令群組 - 新完成) 🎉
+- JR, JALR ✅ (跳躍指令群組)
 - SYSCALL ✅
 
-**I-type指令 (13個):**
+**I-type指令 (19個):**
 - ADDI ✅
 - ADDIU ✅ (無符號算術指令群組)
 - ANDI, ORI, XORI ✅ (立即值邏輯指令群組)  
 - SLTI, SLTIU ✅
 - LW, SW ✅ (記憶體基礎指令)
+- LB, SB, LBU, LH, SH, LHU ✅ (記憶體指令群組 - 新完成) 🎉
 - BEQ, BNE ✅ (等值分支指令)
 - BLEZ, BGTZ ✅ (比較分支指令群組)
 
 **J-type指令 (1個):**
 - J ✅ (無條件跳躍)
-- JAL ✅ (跳躍並連結 - 新完成) 🎉
+- JAL ✅ (跳躍並連結)
 
 ### 🎯 下一位開發者立即行動
 ```bash
 # 1. 驗證當前狀態
 cd c:\Users\aloha\Documents\GitHub\MIPS-Assembly-Simulator\build
-.\tests\unit_tests.exe --gtest_brief  # 應該顯示 282 tests PASSED
+.\tests\unit_tests.exe --gtest_brief  # 應該顯示 306 tests PASSED
 
-# 2. 開始Phase 7記憶體指令開發
-# 參考文檔: docs/PHASE_7_DEVELOPMENT_GUIDE.md (完整開發指南)
-# 參考實現: tests/test_jalr_instruction_bdd_minimal.cpp (最新BDD模板)
-# 創建: tests/test_lb_instruction_bdd_minimal.cpp
+# 2. 開始Phase 8乘除法指令開發
+# 參考文檔: docs/PHASE_8_DEVELOPMENT_GUIDE.md (完整開發指南)
+# 參考實現: tests/test_lhu_instruction_bdd_minimal.cpp (最新BDD模板)
+# 創建: tests/test_mult_instruction_bdd_minimal.cpp
 
-# 3. Phase 7開發順序 (嚴格BDD循環)
-# Step 1: LB指令 (Load Byte) - Red Light → Green Light → Integration
-# Step 2: LH指令 (Load Halfword) - Red Light → Green Light → Integration  
-# Step 3: LBU指令 (Load Byte Unsigned) - Red Light → Green Light → Integration 
+# 3. Phase 8開發順序 (嚴格BDD循環)
+# Step 1: MULT指令 (Multiply) - Red Light → Green Light → Integration
+# Step 2: MULTU指令 (Multiply Unsigned) - Red Light → Green Light → Integration  
+# Step 3: DIV指令 (Divide) - Red Light → Green Light → Integration 
+# Step 4: DIVU指令 (Divide Unsigned) - Red Light → Green Light → Integration
 ```
 
 ---
@@ -409,103 +411,320 @@ DISABLED_TEST_F(SUBUInstructionBDD, EqualValuesSubtraction)
 
 ---
 
-## 🎉 Phase 6 完整實現報告 - 跳躍指令群組完成
+## 🎉 Phase 7 完整實現報告 - 記憶體指令群組完成
 
 ### ✅ 重大里程碑達成
-**狀態:** 🟢 100%完成 | **測試:** 26個全部通過 | **品質:** 生產級
+**狀態:** 🟢 100%完成 | **測試:** 24個全部通過 | **品質:** 生產級
 **完成日期:** 2025年8月16日 | **總耗時:** 完整BDD循環
 
-### 🔍 JR指令完整實現 (Jump Register)
+### 🔍 LB指令完整實現 (Load Byte)
 **實現檔案:**
-- **核心邏輯:** `src/Instructions/JRInstruction.cpp` - 完整execute()方法
-- **BDD測試:** `tests/test_jr_instruction_bdd_minimal.cpp` (4個測試)
-- **Integration測試:** `tests/test_jr_instruction_integration.cpp` (7個測試)
-- **解碼支援:** `src/InstructionDecoder.cpp` - Function Code 0x08處理
-- **組譯支援:** `src/Assembler.cpp` - "jr $rs"語法
+- **核心邏輯:** `src/Instructions/LBInstruction.cpp` - 完整execute()方法
+- **BDD測試:** `tests/test_lb_instruction_bdd_minimal.cpp` (4個測試)
+- **解碼支援:** `src/InstructionDecoder.cpp` - Opcode 0x20處理
+- **組譯支援:** `src/Assembler.cpp` - "lb $rt, offset($rs)"語法
 
 **技術實現:**
 ```cpp
-// 核心跳躍邏輯
-uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
-cpu.setProgramCounter(targetAddress / 4);
+// 核心有符號字節載入邏輯
+uint8_t byteValue = cpu.getMemory().readByte(effectiveAddress);
+int32_t signExtendedValue = static_cast<int8_t>(byteValue);
+cpu.getRegisterFile().write(m_rt, static_cast<uint32_t>(signExtendedValue));
 ```
 
 **測試覆蓋:**
-- ✅ 基本暫存器跳躍測試
-- ✅ 不同暫存器跳躍測試
-- ✅ 零地址跳躍測試
-- ✅ 高地址跳躍測試
+- ✅ 基本字節載入測試
+- ✅ 符號擴展測試 (負值字節)
+- ✅ 零偏移測試
+- ✅ 負偏移測試
 
-### 🔍 JALR指令完整實現 (Jump And Link Register)
+### 🔍 SB指令完整實現 (Store Byte)
 **實現檔案:**
-- **核心邏輯:** `src/Instructions/JALRInstruction.cpp` - 完整execute()方法
-- **BDD測試:** `tests/test_jalr_instruction_bdd_minimal.cpp` (4個測試)
-- **Integration測試:** `tests/test_jalr_instruction_integration.cpp` (7個測試)
-- **解碼支援:** `src/InstructionDecoder.cpp` - Function Code 0x09處理
-- **組譯支援:** `src/Assembler.cpp` - "jalr $rd, $rs"語法
+- **核心邏輯:** `src/Instructions/SBInstruction.cpp` - 完整execute()方法
+- **BDD測試:** `tests/test_sb_instruction_bdd_minimal.cpp` (4個測試)
+- **解碼支援:** `src/InstructionDecoder.cpp` - Opcode 0x28處理
+- **組譯支援:** `src/Assembler.cpp` - "sb $rt, offset($rs)"語法
 
 **技術實現:**
 ```cpp
-// 核心跳躍並連結邏輯
-uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
-uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;
-cpu.getRegisterFile().write(m_rd, returnAddress);
-cpu.setProgramCounter(targetAddress / 4);
+// 核心字節儲存邏輯
+uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+uint8_t byteToStore = static_cast<uint8_t>(rtValue & 0xFF);
+cpu.getMemory().writeByte(effectiveAddress, byteToStore);
 ```
 
-**測試覆蓋:**
-- ✅ 基本跳躍並連結測試
-- ✅ 不同目標暫存器測試
-- ✅ 零地址跳躍測試
-- ✅ 高地址跳躍測試
-
-### 🔍 JAL指令完整實現 (Jump And Link)
+### 🔍 LBU指令完整實現 (Load Byte Unsigned)
 **實現檔案:**
-- **核心邏輯:** `src/Instructions/JALInstruction.cpp` - 完整execute()方法
-- **BDD測試:** `tests/test_jal_instruction_bdd_minimal.cpp` (4個測試)
-- **解碼支援:** `src/InstructionDecoder.cpp` - Opcode 0x03處理
-- **組譯支援:** `src/Assembler.cpp` - "jal target"語法
+- **核心邏輯:** `src/Instructions/LBUInstruction.cpp` - 完整execute()方法
+- **BDD測試:** `tests/test_lbu_instruction_bdd_minimal.cpp` (4個測試)
+- **解碼支援:** `src/InstructionDecoder.cpp` - Opcode 0x24處理
+- **組譯支援:** `src/Assembler.cpp` - "lbu $rt, offset($rs)"語法
 
 **技術實現:**
 ```cpp
-// 核心J-type跳躍並連結邏輯
-uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;
-cpu.getRegisterFile().write(31, returnAddress); // $ra
-uint32_t targetAddress = m_target * 4;
-cpu.setProgramCounter(targetAddress / 4);
+// 核心無符號字節載入邏輯（零擴展）
+uint8_t byteValue = cpu.getMemory().readByte(effectiveAddress);
+uint32_t zeroExtendedValue = static_cast<uint32_t>(byteValue);
+cpu.getRegisterFile().write(m_rt, zeroExtendedValue);
 ```
 
-**測試覆蓋:**
-- ✅ 基本跳躍並連結測試
-- ✅ 返回地址驗證測試
-- ✅ 不同目標地址測試
-- ✅ 函數調用模擬測試
+### 🔍 LH指令完整實現 (Load Halfword)
+**實現檔案:**
+- **核心邏輯:** `src/Instructions/LHInstruction.cpp` - 完整execute()方法
+- **BDD測試:** `tests/test_lh_instruction_bdd_minimal.cpp` (4個測試)
+- **解碼支援:** `src/InstructionDecoder.cpp` - Opcode 0x21處理
+- **組譯支援:** `src/Assembler.cpp` - "lh $rt, offset($rs)"語法
 
-### 📊 Phase 6成果統計
-- **新增測試數量:** +26個測試 (11 JR + 11 JALR + 4 JAL)
-- **測試總數增長:** 256 → 282 (+10.2%增長)
-- **完成度提升:** 31/47 → 34/47 (66% → 72%)
-- **跳躍指令群組:** 3/3 = 100%完成 🏆
-- **BDD循環完成:** 19次完整紅燈→綠燈→重構循環
+**技術實現:**
+```cpp
+// 核心有符號半字載入邏輯
+uint16_t halfwordValue = cpu.getMemory().readHalfword(effectiveAddress);
+int32_t signExtendedValue = static_cast<int16_t>(halfwordValue);
+cpu.getRegisterFile().write(m_rt, static_cast<uint32_t>(signExtendedValue));
+```
+
+### 🔍 SH指令完整實現 (Store Halfword)
+**實現檔案:**
+- **核心邏輯:** `src/Instructions/SHInstruction.cpp` - 完整execute()方法
+- **BDD測試:** `tests/test_sh_instruction_bdd_minimal.cpp` (4個測試)
+- **解碼支援:** `src/InstructionDecoder.cpp` - Opcode 0x29處理
+- **組譯支援:** `src/Assembler.cpp` - "sh $rt, offset($rs)"語法
+
+**技術實現:**
+```cpp
+// 核心半字儲存邏輯
+uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
+uint16_t halfwordToStore = static_cast<uint16_t>(rtValue & 0xFFFF);
+cpu.getMemory().writeHalfword(effectiveAddress, halfwordToStore);
+```
+
+### 🔍 LHU指令完整實現 (Load Halfword Unsigned)
+**實現檔案:**
+- **核心邏輯:** `src/Instructions/LHUInstruction.cpp` - 完整execute()方法
+- **BDD測試:** `tests/test_lhu_instruction_bdd_minimal.cpp` (4個測試)
+- **解碼支援:** `src/InstructionDecoder.cpp` - Opcode 0x25處理
+- **組譯支援:** `src/Assembler.cpp` - "lhu $rt, offset($rs)"語法
+
+**技術實現:**
+```cpp
+// 核心無符號半字載入邏輯（零擴展）
+uint16_t halfwordValue = cpu.getMemory().readHalfword(effectiveAddress);
+uint32_t zeroExtendedValue = static_cast<uint32_t>(halfwordValue);
+cpu.getRegisterFile().write(m_rt, zeroExtendedValue);
+```
+
+### 📊 Phase 7成果統計
+- **新增測試數量:** +24個測試 (4 × 6指令)
+- **測試總數增長:** 282 → 306 (+8.5%增長)
+- **完成度提升:** 34/47 → 40/47 (72% → 85%)
+- **記憶體指令群組:** 6/6 = 100%完成 🏆
+- **BDD循環完成:** 24次完整紅燈→綠燈→重構循環
 
 ### 🏗️ 架構集成品質
-- **解碼器整合:** 完美集成InstructionDecoder流程 (R-type + J-type)
+- **解碼器整合:** 完美集成InstructionDecoder流程 (6個新opcodes)
 - **組譯器整合:** 完全支援標準MIPS語法  
-- **Pipeline相容:** 無衝突，完全相容現有5階段流水線
+- **記憶體系統擴展:** 新增readByte/writeByte/readHalfword/writeHalfword支援
 - **測試架構:** 遵循嚴格BDD Given-When-Then結構
 - **代碼品質:** 零警告、零錯誤、完整文檔
 
 ### 🎯 關鍵技術突破
-1. **跳躍指令模式確立:** 為所有跳躍和子程序調用指令奠定實現模式
-2. **返回地址處理:** JAL/JALR的正確返回地址計算邏輯
-3. **地址計算處理:** PC/4的正確地址計算方式
-4. **BDD測試成熟化:** 跳躍指令的完整測試覆蓋模式
+1. **記憶體指令模式確立:** 為所有Memory access指令奠定實現模式
+2. **符號/零擴展處理:** 正確的有符號/無符號擴展邏輯實現
+3. **字節/半字對齊處理:** 正確的記憶體對齊要求實現
+4. **BDD測試成熟化:** 記憶體指令的完整測試覆蓋模式
 
 ### 🚀 對下階段的貢獻
-- **實現模板:** 為Phase 7記憶體指令提供完整實現模板
+- **實現模板:** 為Phase 8乘除法指令提供完整實現模板
 - **測試模式:** BDD測試模式完全成熟，可直接複用
-- **架構穩定:** 核心架構經過跳躍指令驗證，穩定性佳
+- **架構穩定:** 核心架構經過記憶體指令驗證，穩定性佳
 - **開發效率:** 下階段開發速度將顯著提升
+
+---
+
+## 📋 Phase 8 開發指南 - 乘除法指令群組 (MULT, MULTU, DIV, DIVU)
+
+### 8.1 Phase 8 開發目標
+Phase 8 將完成MIPS乘除法指令群組的實現，這些指令需要特殊的HI/LO暫存器：
+
+#### 目標指令清單
+1. **MULT** (Multiply) - R-type 指令
+   - **Function Code:** 0x18
+   - **語法:** `mult $rs, $rt`
+   - **功能:** HI:LO = $rs × $rt (有符號64位結果)
+   
+2. **MULTU** (Multiply Unsigned) - R-type 指令
+   - **Function Code:** 0x19
+   - **語法:** `multu $rs, $rt`
+   - **功能:** HI:LO = $rs × $rt (無符號64位結果)
+
+3. **DIV** (Divide) - R-type 指令
+   - **Function Code:** 0x1A
+   - **語法:** `div $rs, $rt`
+   - **功能:** LO = $rs ÷ $rt, HI = $rs mod $rt (有符號)
+
+4. **DIVU** (Divide Unsigned) - R-type 指令
+   - **Function Code:** 0x1B
+   - **語法:** `divu $rs, $rt`
+   - **功能:** LO = $rs ÷ $rt, HI = $rs mod $rt (無符號)
+
+### 8.2 技術要點與設計原則
+
+#### 乘除法指令特性
+- **HI/LO暫存器:** 需要擴展RegisterFile支援32+32位特殊暫存器
+- **64位結果:** 乘法結果需要64位存儲空間
+- **除零處理:** 除法指令需要處理除零異常
+- **符號處理:** 有符號/無符號運算的正確實現
+
+#### 實現策略
+```cpp
+// MULT實現範例 (R-type)
+void MULTInstruction::execute(Cpu& cpu) {
+    int32_t rsValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rs));
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    int64_t result = static_cast<int64_t>(rsValue) * static_cast<int64_t>(rtValue);
+    
+    uint32_t hi = static_cast<uint32_t>((result >> 32) & 0xFFFFFFFF);
+    uint32_t lo = static_cast<uint32_t>(result & 0xFFFFFFFF);
+    
+    cpu.getRegisterFile().writeHI(hi);
+    cpu.getRegisterFile().writeLO(lo);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+// DIV實現範例 (R-type)
+void DIVInstruction::execute(Cpu& cpu) {
+    int32_t rsValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rs));
+    int32_t rtValue = static_cast<int32_t>(cpu.getRegisterFile().read(m_rt));
+    
+    if (rtValue == 0) {
+        // 除零處理 - 結果未定義但不產生異常
+        cpu.getRegisterFile().writeLO(0);
+        cpu.getRegisterFile().writeHI(0);
+    } else {
+        int32_t quotient = rsValue / rtValue;
+        int32_t remainder = rsValue % rtValue;
+        
+        cpu.getRegisterFile().writeLO(static_cast<uint32_t>(quotient));
+        cpu.getRegisterFile().writeHI(static_cast<uint32_t>(remainder));
+    }
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+```
+
+### 8.3 BDD實現週期規劃
+
+#### 🔴 Phase 8.1: MULT指令 Red-Light Phase
+**目標檔案:** `tests/test_mult_instruction_bdd_minimal.cpp`
+
+**必要測試情境 (DISABLED_前綴):**
+```cpp
+// 情境1: 基本有符號乘法測試
+DISABLED_TEST_F(MULTInstructionBDD, BasicSignedMultiplication)
+
+// 情境2: 64位結果測試
+DISABLED_TEST_F(MULTInstructionBDD, SixtyFourBitResult)
+
+// 情境3: 負數乘法測試
+DISABLED_TEST_F(MULTInstructionBDD, NegativeMultiplication)
+
+// 情境4: 零乘法測試
+DISABLED_TEST_F(MULTInstructionBDD, ZeroMultiplication)
+```
+
+#### 🟢 Phase 8.2: MULT指令 Green-Light Phase
+**實現文件:**
+1. **RegisterFile擴展** - 新增HI/LO暫存器支援
+2. **InstructionDecoder.cpp** - 新增function code 0x18路由
+3. **Assembler.cpp** - 新增"mult"語法解析
+4. **指令類別** - 創建MULTInstruction類別
+
+#### 🔴 Phase 8.3: MULTU指令 Red-Light Phase
+**目標檔案:** `tests/test_multu_instruction_bdd_minimal.cpp`
+
+#### 🔴 Phase 8.4: DIV指令 Red-Light Phase
+**目標檔案:** `tests/test_div_instruction_bdd_minimal.cpp`
+
+#### 🔴 Phase 8.5: DIVU指令 Red-Light Phase
+**目標檔案:** `tests/test_divu_instruction_bdd_minimal.cpp`
+
+### 8.4 預期開發成果
+
+#### 量化目標
+- **新增測試數:** +16個測試 (306 → 322)
+- **指令完成:** 4個乘除法指令
+- **完成度提升:** 85% → 94%
+- **估計開發時間:** 8-10小時
+
+#### 質化目標
+- **HI/LO暫存器實現:** 完整的特殊暫存器支援
+- **64位運算處理:** 正確的64位乘法結果
+- **除零異常處理:** 安全的除零情況處理
+- **符號/無符號差異:** 正確的有符號/無符號運算
+
+### 8.5 關鍵實現差異
+
+#### MULT vs MULTU
+- **MULT:** 有符號32×32=64位乘法
+- **MULTU:** 無符號32×32=64位乘法
+- **結果存儲:** 都使用HI:LO存儲64位結果
+
+#### DIV vs DIVU
+- **DIV:** 有符號除法和取餘
+- **DIVU:** 無符號除法和取餘
+- **除零處理:** 兩者都需要安全的除零處理
+
+### 8.6 Phase 8 開發檢核清單
+
+#### 🔴 Red-Light階段檢核
+- [ ] RegisterFile擴展支援HI/LO暫存器
+- [ ] MULT BDD測試檔案建立 (4個DISABLED測試)
+- [ ] MULTU BDD測試檔案建立 (4個DISABLED測試)  
+- [ ] DIV BDD測試檔案建立 (4個DISABLED測試)
+- [ ] DIVU BDD測試檔案建立 (4個DISABLED測試)
+- [ ] CMakeLists.txt更新包含新測試檔案
+- [ ] 編譯確認 - 應該有16個失敗測試
+
+#### 🟢 Green-Light階段檢核
+- [ ] InstructionDecoder.cpp新增四個function code路由
+- [ ] Assembler.cpp新增四個語法解析器
+- [ ] 四個指令類別實現完成
+- [ ] BDD測試全部通過 (移除DISABLED前綴)
+- [ ] 零編譯警告確認
+
+#### 🔄 Integration階段檢核
+- [ ] 完整回歸測試 (所有306+16個測試通過)
+- [ ] Phase 8完成驗收
+
+### 8.7 實現優先順序建議
+
+**推薦開發順序:**
+1. **RegisterFile HI/LO擴展 (最高優先)** - 基礎設施必須先完成
+2. **MULT (高優先)** - 有符號乘法，相對簡單
+3. **MULTU (中等優先)** - 無符號乘法，類似MULT
+4. **DIV (中等優先)** - 有符號除法，需要除零處理
+5. **DIVU (最低優先)** - 無符號除法，類似DIV
+
+### 8.8 Phase 8成功標準
+
+#### 技術指標
+- **306 → 322個測試:** 100%通過率
+- **零編譯錯誤:** 完整編譯成功
+- **BDD循環完整:** 完成16次完整red-light → green-light循環
+- **回歸穩定性:** 原有功能保持完整
+
+#### 驗收標準  
+- **MULT功能:** 正確的有符號64位乘法
+- **MULTU功能:** 正確的無符號64位乘法
+- **DIV功能:** 正確的有符號除法和取餘
+- **DIVU功能:** 正確的無符號除法和取餘
+- **HI/LO支援:** 完整的特殊暫存器操作
+
+### 8.9 Phase 9預告
+
+Phase 8完成後，下一階段將進入：
+- **Phase 9:** HI/LO存取指令群組 (MFHI, MTHI, MFLO, MTLO)
+- **目標測試數:** 322 → 338個測試
+- **完成度目標:** 94% → 100%
 
 ---
 
@@ -2187,46 +2406,52 @@ DISABLED_TEST_F(BGTZInstructionBDD, MaxIntValueBranch)       # INT_MAX分支
 ```bash
 cd c:\Users\aloha\Documents\GitHub\MIPS-Assembly-Simulator\build
 .\tests\unit_tests.exe --gtest_brief
-# 應該顯示: [  PASSED  ] 219 tests
+# 應該顯示: [  PASSED  ] 306 tests
 ```
 
-2. **開始BGTZ開發** (Phase 3.4)
+2. **開始Phase 8開發** (乘除法指令群組)
 ```bash
-# 參考 tests/test_blez_instruction_bdd_minimal.cpp
-# 創建 tests/test_bgtz_instruction_bdd_minimal.cpp
-# 重點: 分支邏輯相反 (BLEZ: <=0分支, BGTZ: >0分支)
+# 參考 docs/PHASE_8_DEVELOPMENT_GUIDE.md (完整開發指南)
+# 首要任務: RegisterFile HI/LO擴展
+# 接著: MULT指令BDD測試開發
 ```
 
 3. **關鍵參考檔案:**
-   - **BLEZ實現參考:** `src/Instruction.cpp` 中的 `BLEZInstruction::execute()`
-   - **測試結構參考:** `tests/test_blez_instruction_bdd_minimal.cpp`
-   - **解碼器參考:** `src/InstructionDecoder.cpp` line ~200 (case 0x06)
-   - **組譯器參考:** `src/Assembler.cpp` line 513 ("blez"解析)
+   - **Phase 8開發指南:** `docs/PHASE_8_DEVELOPMENT_GUIDE.md`
+   - **最新BDD模板:** `tests/test_lhu_instruction_bdd_minimal.cpp`
+   - **RegisterFile擴展:** `src/RegisterFile.h` 和 `src/RegisterFile.cpp`
+   - **記憶體指令參考:** Phase 7完成的6個記憶體指令實現
 
-### 🔧 最新技術修復 (2025年8月16日)
+### 🔧 最新技術狀況 (2025年8月16日)
 
-#### ✅ CI/CD編譯警告修復 - SRAV指令BDD測試
-**問題:** `test_srav_instruction_bdd_minimal.cpp` 中有未使用的變數 `effective_shift`，導致 `-Werror=unused-variable` 編譯錯誤
-**影響檔案:**
-- `tests/test_srav_instruction_bdd_minimal.cpp` ✅ 已修復
-
-**解決方案:** 
-```cpp
-const uint32_t effective_shift = rs_value & 0x1F;  // 35 & 0x1F = 3
-(void)effective_shift;  // Suppress unused variable warning
-```
+#### ✅ Phase 7記憶體指令群組完全完成
+**成就:** 記憶體指令群組6/6指令100%實現完成
+**完成指令:**
+- LB (Load Byte) ✅ - 有符號字節載入，符號擴展
+- SB (Store Byte) ✅ - 字節儲存，截斷低8位
+- LBU (Load Byte Unsigned) ✅ - 無符號字節載入，零擴展  
+- LH (Load Halfword) ✅ - 有符號半字載入，符號擴展
+- SH (Store Halfword) ✅ - 半字儲存，截斷低16位
+- LHU (Load Halfword Unsigned) ✅ - 無符號半字載入，零擴展
 
 **驗證結果:**
 - 編譯成功: ninja unit_tests ✅
-- 所有測試通過: 282/282 tests PASSED ✅
-- CI/CD管道修復: 零編譯警告/錯誤 ✅
+- 所有測試通過: 306/306 tests PASSED ✅
+- 新增測試: +24個BDD測試 (每指令4個測試)
+- CI/CD管道: 零編譯警告/錯誤 ✅
 
-#### ✅ Phase 6開發完成確認
+#### ✅ 記憶體系統擴展完成
+**擴展功能:**
+- **Memory類別擴展:** 新增readByte/writeByte/readHalfword/writeHalfword方法
+- **符號擴展邏輯:** 正確的int8_t和int16_t到int32_t符號擴展
+- **零擴展邏輯:** 正確的uint8_t和uint16_t到uint32_t零擴展
+- **地址計算:** 完整的有效地址計算 (base + offset)
+
 **當前狀態:** 
-- **跳躍指令群組100%完成:** JR + JALR + JAL 全部實現
-- **測試覆蓋完整:** 282個測試100%通過 (26個新增測試)
+- **記憶體指令群組100%完成:** LB + SB + LBU + LH + SH + LHU 全部實現
+- **測試覆蓋完整:** 306個測試100%通過 (24個新增測試)
 - **架構穩定:** BDD測試框架成熟，零技術債務
-- **CI/CD健康:** 編譯管道完全正常，準備進入Phase 7
+- **CI/CD健康:** 編譯管道完全正常，準備進入Phase 8
 
 **下一階段準備就緒:**
 - **Phase 7目標:** 記憶體指令群組 (LB, LH, SB, SH, LBU, LHU)
