@@ -258,6 +258,18 @@ public:
 };
 
 /**
+ * @brief I-type LB instruction (load byte)
+ * Loads a byte from memory and sign-extends it to 32 bits
+ */
+class LBInstruction : public ITypeInstruction {
+public:
+    LBInstruction(int rt, int rs, int16_t offset);
+    
+    void execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
  * @brief I-type SW instruction (store word)
  */
 class SwInstruction : public ITypeInstruction {

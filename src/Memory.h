@@ -29,6 +29,34 @@ public:
     void writeWord(uint32_t address, uint32_t value);
 
     /**
+     * @brief Read byte from memory
+     * @param address Memory address (any byte address)
+     * @return Byte value
+     */
+    uint8_t readByte(uint32_t address) const;
+
+    /**
+     * @brief Write byte to memory
+     * @param address Memory address (any byte address)
+     * @param value Byte value to write
+     */
+    void writeByte(uint32_t address, uint8_t value);
+
+    /**
+     * @brief Read halfword from memory
+     * @param address Memory address (must be halfword-aligned)
+     * @return Halfword value
+     */
+    uint16_t readHalfword(uint32_t address) const;
+
+    /**
+     * @brief Write halfword to memory
+     * @param address Memory address (must be halfword-aligned)
+     * @param value Halfword value to write
+     */
+    void writeHalfword(uint32_t address, uint16_t value);
+
+    /**
      * @brief Reset memory to all zeros
      */
     void reset();

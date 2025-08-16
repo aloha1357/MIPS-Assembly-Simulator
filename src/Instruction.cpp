@@ -362,6 +362,33 @@ std::string LwInstruction::getName() const {
     return "lw";
 }
 
+LBInstruction::LBInstruction(int rt, int rs, int16_t offset)
+    : ITypeInstruction(rt, rs, offset) {
+}
+
+void LBInstruction::execute(Cpu& cpu) {
+    // 1. Calculate effective address
+    uint32_t baseAddress = cpu.getRegisterFile().read(m_rs);
+    int32_t signedOffset = static_cast<int32_t>(static_cast<int16_t>(m_imm));
+    uint32_t effectiveAddress = baseAddress + signedOffset;
+    
+    // 2. Load byte (8 bits)
+    uint8_t byteValue = cpu.getMemory().readByte(effectiveAddress);
+    
+    // 3. Sign-extend to 32 bits
+    int32_t signExtended = static_cast<int32_t>(static_cast<int8_t>(byteValue));
+    
+    // 4. Write to target register
+    cpu.getRegisterFile().write(m_rt, static_cast<uint32_t>(signExtended));
+    
+    // 5. Update PC
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string LBInstruction::getName() const {
+    return "lb";
+}
+
 SwInstruction::SwInstruction(int rt, int rs, int16_t offset)
     : ITypeInstruction(rt, rs, offset) {
 }
