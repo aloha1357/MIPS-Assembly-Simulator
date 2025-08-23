@@ -8,3 +8,4 @@ features/
 *.ps1
 docs/
 *.sh
+debug/
