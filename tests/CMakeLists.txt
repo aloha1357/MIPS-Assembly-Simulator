@@ -60,6 +60,7 @@ else()
         "${CMAKE_CURRENT_SOURCE_DIR}/test_missing_instructions_integration.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/test_cli_argument_parsing.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/test_cli_run_command.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/test_cli_assemble_command.cpp"
     )
 
     # 檢查檔案是否存在並過濾

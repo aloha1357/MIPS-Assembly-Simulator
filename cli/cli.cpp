@@ -1,5 +1,6 @@
 #include "cli.hpp"
 #include "run_executor.hpp"
+#include "assemble_executor.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -97,6 +98,54 @@ ParseResult parse_argv(const std::vector<std::string>& args) {
         return result;
     }
 
+    if (cmd == "assemble") {
+        result.cmd = Command::Assemble;
+        AssembleConfig assemble_cfg;
+        
+        // Need at least the input file
+        if (start_idx + 1 >= args.size()) {
+            result.error_code = EXIT_ARG_PARSE;
+            result.error_message = "missing input file";
+            return result;
+        }
+        
+        assemble_cfg.input = args[start_idx + 1];
+        
+        // Parse additional flags
+        for (size_t i = start_idx + 2; i < args.size(); i++) {
+            const std::string& arg = args[i];
+            
+            if (arg == "-o" || arg == "--output") {
+                if (i + 1 >= args.size()) {
+                    result.error_code = EXIT_ARG_PARSE;
+                    result.error_message = "missing value for -o";
+                    return result;
+                }
+                assemble_cfg.output = args[i + 1];
+                i++; // skip the value
+            } else if (arg == "--map") {
+                if (i + 1 >= args.size()) {
+                    result.error_code = EXIT_ARG_PARSE;
+                    result.error_message = "missing value for --map";
+                    return result;
+                }
+                assemble_cfg.map = args[i + 1];
+                i++; // skip the value
+            } else if (arg.substr(0, 2) == "--") {
+                result.error_code = EXIT_ARG_PARSE;
+                result.error_message = "unknown option " + arg + " (see 'mipsim assemble --help')";
+                return result;
+            } else {
+                result.error_code = EXIT_ARG_PARSE;
+                result.error_message = "unexpected argument: " + arg;
+                return result;
+            }
+        }
+        
+        result.config = assemble_cfg;
+        return result;
+    }
+
     // Unknown command
     result.cmd = Command::Unknown;
     result.error_code = EXIT_ARG_PARSE;
@@ -122,6 +171,11 @@ int dispatch(const ParseResult& result) {
         case Command::Run: {
             auto& run_cfg = std::get<RunConfig>(result.config);
             return execute_run_command(run_cfg);
+        }
+        
+        case Command::Assemble: {
+            auto& assemble_cfg = std::get<AssembleConfig>(result.config);
+            return execute_assemble_command(assemble_cfg);
         }
         
         default:

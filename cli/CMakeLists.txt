@@ -6,6 +6,8 @@ add_library(mips_cli_lib
     cli.hpp
     run_executor.cpp
     run_executor.hpp
+    assemble_executor.cpp
+    assemble_executor.hpp
 )
 
 target_include_directories(mips_cli_lib

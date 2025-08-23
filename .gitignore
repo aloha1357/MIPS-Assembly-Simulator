@@ -9,3 +9,5 @@ features/
 docs/
 *.sh
 debug/
+*.bin
+*.map
