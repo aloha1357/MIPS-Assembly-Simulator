@@ -7,3 +7,4 @@ cmake-*
 features/
 *.ps1
 docs/
+*.sh

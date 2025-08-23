@@ -1347,7 +1347,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         }
     }
     else if (opcode == "jr" && tokens.size() == 2)
-    { // Exactly 2 tokens: "jr" and register
+    {  // Exactly 2 tokens: "jr" and register
         // Parse: jr $rs
         std::string rsStr = tokens[1];
 
@@ -1363,7 +1363,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         }
     }
     else if (opcode == "jal" && tokens.size() == 2)
-    { // Exactly 2 tokens: "jal" and target
+    {  // Exactly 2 tokens: "jal" and target
         // Parse: jal target
         std::string targetStr = tokens[1];
 
@@ -1405,9 +1405,9 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                 int         rs    = getRegisterNumber(rsStr);
                 if (rs == -1)
                 {
-                    return nullptr; // Invalid register
+                    return nullptr;  // Invalid register
                 }
-                return std::make_unique<JALRInstruction>(31, rs); // $ra = 31
+                return std::make_unique<JALRInstruction>(31, rs);  // $ra = 31
             }
             else
             {
@@ -1415,7 +1415,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                 std::string rdStr = tokens[1];
                 if (rdStr.back() == ',')
                 {
-                    rdStr.pop_back(); // Remove comma
+                    rdStr.pop_back();  // Remove comma
                 }
                 std::string rsStr = tokens[2];
 
@@ -1423,7 +1423,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                 int rs = getRegisterNumber(rsStr);
                 if (rd == -1 || rs == -1)
                 {
-                    return nullptr; // Invalid register
+                    return nullptr;  // Invalid register
                 }
                 return std::make_unique<JALRInstruction>(rd, rs);
             }
@@ -1493,7 +1493,7 @@ int Assembler::getRegisterNumber(const std::string& regName)
     {
         return it->second;
     }
-    return -1; // Invalid register
+    return -1;  // Invalid register
 }
 
 std::string Assembler::trim(const std::string& str)
@@ -1521,4 +1521,4 @@ std::vector<std::string> Assembler::split(const std::string& str, char delimiter
     return tokens;
 }
 
-} // namespace mips
+}  // namespace mips

@@ -16,10 +16,14 @@ namespace mips
 {
 
 Cpu::Cpu()
-    : m_registerFile(std::make_unique<RegisterFile>()), m_memory(std::make_unique<Memory>()),
-      m_cycleCount(0), m_pc(0), m_pipelineMode(false) // Default to single-cycle mode
+    : m_registerFile(std::make_unique<RegisterFile>()),
+      m_memory(std::make_unique<Memory>()),
+      m_cycleCount(0),
+      m_pc(0),
+      m_pipelineMode(false)  // Default to single-cycle mode
       ,
-      m_terminated(false), m_inputPosition(0)
+      m_terminated(false),
+      m_inputPosition(0)
 {
     initializePipeline();
 }
@@ -100,7 +104,7 @@ void Cpu::loadProgramFromString(const std::string& assembly)
     Assembler assembler;
     m_instructions = assembler.assembleWithLabels(assembly, m_labelMap);
     m_pc           = 0;
-    m_terminated   = false; // Reset termination flag
+    m_terminated   = false;  // Reset termination flag
 
     // Reset pipeline state when loading new program
     if (m_ifidRegister)
@@ -123,7 +127,7 @@ void Cpu::loadProgramFromString(const std::string& assembly)
 void Cpu::loadProgram(const std::string& path)
 {
     // TODO: Implement file loading
-    (void)path; // Suppress unused parameter warning
+    (void)path;  // Suppress unused parameter warning
 }
 
 void Cpu::run(int cycles)
@@ -202,7 +206,7 @@ uint32_t Cpu::getLabelAddress(const std::string& label) const
     {
         return it->second;
     }
-    return 0; // Default to address 0 if label not found
+    return 0;  // Default to address 0 if label not found
 }
 
 void Cpu::setPipelineMode(bool enabled)
@@ -262,7 +266,7 @@ char Cpu::readChar()
     {
         return m_consoleInput[m_inputPosition++];
     }
-    return -1; // Return EOF if no more input
+    return -1;  // Return EOF if no more input
 }
 
 void Cpu::terminate()
@@ -330,4 +334,4 @@ void Cpu::updatePipelineRegisters()
         m_memwbRegister->clockUpdate();
 }
 
-} // namespace mips
+}  // namespace mips

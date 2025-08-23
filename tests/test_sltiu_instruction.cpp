@@ -55,11 +55,11 @@ class SltiuInstructionTest : public ::testing::Test
 TEST_F(SltiuInstructionTest, SltiuInstruction_BasicLessThan_ShouldSetOne)
 {
     // Arrange: 5 < 10 (unsigned) 應該回傳 1
-    cpu->getRegisterFile().write(8, 5); // $t0 = 5
+    cpu->getRegisterFile().write(8, 5);  // $t0 = 5
 
     // Act: 執行 sltiu $t1, $t0, 10
     // 這裡應該會編譯失敗，因為 SltiuInstruction 還沒宣告
-    mips::SltiuInstruction instr(9, 8, 10); // sltiu $t1, $t0, 10
+    mips::SltiuInstruction instr(9, 8, 10);  // sltiu $t1, $t0, 10
     instr.execute(*cpu);
 
     // Assert: 5 < 10 is true (unsigned), so result should be 1
@@ -76,7 +76,7 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_BasicLessThan_ShouldSetOne)
 TEST_F(SltiuInstructionTest, SltiuInstruction_BasicGreaterThan_ShouldSetZero)
 {
     // Arrange: 15 < 10 (unsigned) 應該回傳 0
-    cpu->getRegisterFile().write(8, 15); // $t0 = 15
+    cpu->getRegisterFile().write(8, 15);  // $t0 = 15
 
     // Act: 執行 sltiu $t1, $t0, 10
     mips::SltiuInstruction instr(9, 8, 10);
@@ -94,7 +94,7 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_BasicGreaterThan_ShouldSetZero)
 TEST_F(SltiuInstructionTest, SltiuInstruction_EqualValues_ShouldSetZero)
 {
     // Arrange: 42 < 42 (unsigned) 應該回傳 0
-    cpu->getRegisterFile().write(8, 42); // $t0 = 42
+    cpu->getRegisterFile().write(8, 42);  // $t0 = 42
 
     // Act: 執行 sltiu $t1, $t0, 42
     mips::SltiuInstruction instr(9, 8, 42);
@@ -115,7 +115,7 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_EqualValues_ShouldSetZero)
 TEST_F(SltiuInstructionTest, SltiuInstruction_UnsignedComparison_CriticalTest)
 {
     // Arrange: 0xFFFFFFFF vs 100 的無符號比較
-    cpu->getRegisterFile().write(8, 0xFFFFFFFF); // $t0 = 4294967295 (unsigned)
+    cpu->getRegisterFile().write(8, 0xFFFFFFFF);  // $t0 = 4294967295 (unsigned)
 
     // Act: 執行 sltiu $t1, $t0, 100
     mips::SltiuInstruction instr(9, 8, 100);
@@ -133,7 +133,7 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_UnsignedComparison_CriticalTest)
 TEST_F(SltiuInstructionTest, SltiuInstruction_ZeroComparison_ShouldWork)
 {
     // Arrange: 0 vs 1 的無符號比較
-    cpu->getRegisterFile().write(8, 0); // $t0 = 0
+    cpu->getRegisterFile().write(8, 0);  // $t0 = 0
 
     // Act: 執行 sltiu $t1, $t0, 1
     mips::SltiuInstruction instr(9, 8, 1);
@@ -151,7 +151,7 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_MaxImmediate_ShouldWork)
 {
     // Arrange: 32767 vs -1 (0xFFFF 符號擴展) 的無符號比較
     // MIPS 立即值是16位，0xFFFF 會被符號擴展為 0xFFFFFFFF (4294967295)
-    cpu->getRegisterFile().write(8, 32767); // $t0 = 32767
+    cpu->getRegisterFile().write(8, 32767);  // $t0 = 32767
 
     // Act: 執行 sltiu $t1, $t0, -1 (0xFFFF)
     // -1 會被符號擴展為 0xFFFFFFFF (4294967295)
@@ -169,8 +169,8 @@ TEST_F(SltiuInstructionTest, SltiuInstruction_MaxImmediate_ShouldWork)
 TEST_F(SltiuInstructionTest, SltiuInstruction_ProgramCounter_ShouldIncrement)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 100); // $t0 = 100
-    cpu->setProgramCounter(50);           // PC = 50
+    cpu->getRegisterFile().write(8, 100);  // $t0 = 100
+    cpu->setProgramCounter(50);            // PC = 50
 
     // Act: 執行 sltiu $t1, $t0, 200
     mips::SltiuInstruction instr(9, 8, 200);

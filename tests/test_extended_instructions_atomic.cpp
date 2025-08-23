@@ -63,11 +63,11 @@ class ExtendedInstructionsTest : public ::testing::Test
 TEST_F(ExtendedInstructionsTest, SltInstruction_PositiveNumbers_LessThan)
 {
     // Arrange
-    setRegisterValueSigned(8, 5);  // $t0 = 5
-    setRegisterValueSigned(9, 10); // $t1 = 10
+    setRegisterValueSigned(8, 5);   // $t0 = 5
+    setRegisterValueSigned(9, 10);  // $t1 = 10
 
     // Act
-    mips::SltInstruction instr(10, 8, 9); // slt $t2, $t0, $t1
+    mips::SltInstruction instr(10, 8, 9);  // slt $t2, $t0, $t1
     instr.execute(*cpu);
 
     // Assert
@@ -82,11 +82,11 @@ TEST_F(ExtendedInstructionsTest, SltInstruction_PositiveNumbers_LessThan)
 TEST_F(ExtendedInstructionsTest, SltInstruction_PositiveNumbers_GreaterThan)
 {
     // Arrange
-    setRegisterValueSigned(16, 10); // $s0 = 10
-    setRegisterValueSigned(17, 5);  // $s1 = 5
+    setRegisterValueSigned(16, 10);  // $s0 = 10
+    setRegisterValueSigned(17, 5);   // $s1 = 5
 
     // Act
-    mips::SltInstruction instr(18, 16, 17); // slt $s2, $s0, $s1
+    mips::SltInstruction instr(18, 16, 17);  // slt $s2, $s0, $s1
     instr.execute(*cpu);
 
     // Assert
@@ -101,11 +101,11 @@ TEST_F(ExtendedInstructionsTest, SltInstruction_PositiveNumbers_GreaterThan)
 TEST_F(ExtendedInstructionsTest, SltInstruction_NegativeNumbers)
 {
     // Arrange
-    setRegisterValueSigned(4, -10); // $a0 = -10
-    setRegisterValueSigned(5, -5);  // $a1 = -5
+    setRegisterValueSigned(4, -10);  // $a0 = -10
+    setRegisterValueSigned(5, -5);   // $a1 = -5
 
     // Act
-    mips::SltInstruction instr(2, 4, 5); // slt $v0, $a0, $a1
+    mips::SltInstruction instr(2, 4, 5);  // slt $v0, $a0, $a1
     instr.execute(*cpu);
 
     // Assert
@@ -120,11 +120,11 @@ TEST_F(ExtendedInstructionsTest, SltInstruction_NegativeNumbers)
 TEST_F(ExtendedInstructionsTest, SltInstruction_NegativeVsPositive)
 {
     // Arrange
-    setRegisterValueSigned(11, -5); // $t3 = -5
-    setRegisterValueSigned(12, 5);  // $t4 = 5
+    setRegisterValueSigned(11, -5);  // $t3 = -5
+    setRegisterValueSigned(12, 5);   // $t4 = 5
 
     // Act
-    mips::SltInstruction instr(13, 11, 12); // slt $t5, $t3, $t4
+    mips::SltInstruction instr(13, 11, 12);  // slt $t5, $t3, $t4
     instr.execute(*cpu);
 
     // Assert
@@ -139,11 +139,11 @@ TEST_F(ExtendedInstructionsTest, SltInstruction_NegativeVsPositive)
 TEST_F(ExtendedInstructionsTest, SltInstruction_EqualValues)
 {
     // Arrange
-    setRegisterValueSigned(14, 100); // $t6 = 100
-    setRegisterValueSigned(15, 100); // $t7 = 100
+    setRegisterValueSigned(14, 100);  // $t6 = 100
+    setRegisterValueSigned(15, 100);  // $t7 = 100
 
     // Act
-    mips::SltInstruction instr(6, 14, 15); // slt $a2, $t6, $t7
+    mips::SltInstruction instr(6, 14, 15);  // slt $a2, $t6, $t7
     instr.execute(*cpu);
 
     // Assert
@@ -164,10 +164,10 @@ TEST_F(ExtendedInstructionsTest, SltInstruction_EqualValues)
 TEST_F(ExtendedInstructionsTest, SltiInstruction_PositiveNumbers_LessThan)
 {
     // Arrange
-    setRegisterValueSigned(8, 5); // $t0 = 5
+    setRegisterValueSigned(8, 5);  // $t0 = 5
 
     // Act
-    mips::SltiInstruction instr(9, 8, 10); // slti $t1, $t0, 10
+    mips::SltiInstruction instr(9, 8, 10);  // slti $t1, $t0, 10
     instr.execute(*cpu);
 
     // Assert
@@ -183,10 +183,10 @@ TEST_F(ExtendedInstructionsTest, SltiInstruction_PositiveNumbers_LessThan)
 TEST_F(ExtendedInstructionsTest, SltiInstruction_PositiveNumbers_GreaterThan)
 {
     // Arrange
-    setRegisterValueSigned(16, 10); // $s0 = 10
+    setRegisterValueSigned(16, 10);  // $s0 = 10
 
     // Act
-    mips::SltiInstruction instr(17, 16, 5); // slti $s1, $s0, 5
+    mips::SltiInstruction instr(17, 16, 5);  // slti $s1, $s0, 5
     instr.execute(*cpu);
 
     // Assert
@@ -201,10 +201,10 @@ TEST_F(ExtendedInstructionsTest, SltiInstruction_PositiveNumbers_GreaterThan)
 TEST_F(ExtendedInstructionsTest, SltiInstruction_NegativeVsZero)
 {
     // Arrange
-    setRegisterValueSigned(4, -5); // $a0 = -5
+    setRegisterValueSigned(4, -5);  // $a0 = -5
 
     // Act
-    mips::SltiInstruction instr(2, 4, 0); // slti $v0, $a0, 0
+    mips::SltiInstruction instr(2, 4, 0);  // slti $v0, $a0, 0
     instr.execute(*cpu);
 
     // Assert
@@ -219,10 +219,10 @@ TEST_F(ExtendedInstructionsTest, SltiInstruction_NegativeVsZero)
 TEST_F(ExtendedInstructionsTest, SltiInstruction_PositiveVsNegativeImm)
 {
     // Arrange
-    setRegisterValueSigned(11, 5); // $t3 = 5
+    setRegisterValueSigned(11, 5);  // $t3 = 5
 
     // Act
-    mips::SltiInstruction instr(12, 11, -10); // slti $t4, $t3, -10
+    mips::SltiInstruction instr(12, 11, -10);  // slti $t4, $t3, -10
     instr.execute(*cpu);
 
     // Assert
@@ -237,10 +237,10 @@ TEST_F(ExtendedInstructionsTest, SltiInstruction_PositiveVsNegativeImm)
 TEST_F(ExtendedInstructionsTest, SltiInstruction_ImmediateBoundary)
 {
     // Arrange
-    setRegisterValueSigned(14, -100); // $t6 = -100
+    setRegisterValueSigned(14, -100);  // $t6 = -100
 
     // Act
-    mips::SltiInstruction instr(15, 14, 32767); // slti $t7, $t6, 32767
+    mips::SltiInstruction instr(15, 14, 32767);  // slti $t7, $t6, 32767
     instr.execute(*cpu);
 
     // Assert
@@ -270,4 +270,4 @@ TEST_F(ExtendedInstructionsTest, SltiInstruction_ImmediateBoundary)
  * 5. Run tests to achieve GREEN state
  */
 
-} // namespace
+}  // namespace

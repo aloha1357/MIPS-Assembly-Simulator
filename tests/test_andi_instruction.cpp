@@ -53,14 +53,14 @@ class AndiInstructionTest : public ::testing::Test
 TEST_F(AndiInstructionTest, AndiInstruction_BasicOperation_ShouldPass)
 {
     // Arrange: 設定初始狀態
-    cpu->getRegisterFile().write(8, 0xFFFF); // $t0 = 0xFFFF
+    cpu->getRegisterFile().write(8, 0xFFFF);  // $t0 = 0xFFFF
 
     // Act: 執行ANDI指令 - 現在應該通過
-    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0x00FF)); // andi $t1, $t0, 0x00FF
+    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0x00FF));  // andi $t1, $t0, 0x00FF
     instr.execute(*cpu);
 
     // Assert: 檢查預期結果
-    uint32_t expectedResult = 0x00FF; // 0xFFFF & 0x00FF = 0x00FF
+    uint32_t expectedResult = 0x00FF;  // 0xFFFF & 0x00FF = 0x00FF
     EXPECT_EQ(cpu->getRegisterFile().read(9), expectedResult);
 
     // 確認源暫存器未變
@@ -79,10 +79,10 @@ TEST_F(AndiInstructionTest, AndiInstruction_BasicOperation_ShouldPass)
 TEST_F(AndiInstructionTest, AndiInstruction_BitMask_ShouldPass)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 0xAAAABBBB); // $t0 = 0xAAAABBBB
+    cpu->getRegisterFile().write(8, 0xAAAABBBB);  // $t0 = 0xAAAABBBB
 
     // Act: 執行ANDI指令
-    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0xF0F0)); // andi $t1, $t0, 0xF0F0
+    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0xF0F0));  // andi $t1, $t0, 0xF0F0
     instr.execute(*cpu);
 
     // Assert: 檢查位元遮罩結果
@@ -104,10 +104,10 @@ TEST_F(AndiInstructionTest, AndiInstruction_BitMask_ShouldPass)
 TEST_F(AndiInstructionTest, AndiInstruction_ZeroImmediate_ShouldPass)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 0x12345678); // $t0 = 0x12345678
+    cpu->getRegisterFile().write(8, 0x12345678);  // $t0 = 0x12345678
 
     // Act: 執行ANDI指令
-    mips::AndiInstruction instr(9, 8, 0x0000); // andi $t1, $t0, 0x0000
+    mips::AndiInstruction instr(9, 8, 0x0000);  // andi $t1, $t0, 0x0000
     instr.execute(*cpu);
 
     // Assert: x AND 0 = 0 (zero mask)
@@ -127,10 +127,10 @@ TEST_F(AndiInstructionTest, AndiInstruction_ZeroImmediate_ShouldPass)
 TEST_F(AndiInstructionTest, AndiInstruction_AllOnesImmediate_ShouldPass)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 0x12345678); // $t0 = 0x12345678
+    cpu->getRegisterFile().write(8, 0x12345678);  // $t0 = 0x12345678
 
     // Act: 執行ANDI指令
-    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0xFFFF)); // andi $t1, $t0, 0xFFFF
+    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0xFFFF));  // andi $t1, $t0, 0xFFFF
     instr.execute(*cpu);
 
     // Assert: 0x12345678 AND 0x0000FFFF = 0x00005678 (保留低16位)
@@ -150,7 +150,7 @@ TEST_F(AndiInstructionTest, AndiInstruction_WithZeroRegister_ShouldPass)
     EXPECT_EQ(cpu->getRegisterFile().read(0), 0);
 
     // Act: 執行ANDI指令
-    mips::AndiInstruction instr(9, 0, static_cast<int16_t>(0xFFFF)); // andi $t1, $zero, 0xFFFF
+    mips::AndiInstruction instr(9, 0, static_cast<int16_t>(0xFFFF));  // andi $t1, $zero, 0xFFFF
     instr.execute(*cpu);
 
     // Assert: 0 AND 0xFFFF = 0x00000000
@@ -170,14 +170,14 @@ TEST_F(AndiInstructionTest, AndiInstruction_WithZeroRegister_ShouldPass)
 TEST_F(AndiInstructionTest, AndiInstruction_ByteExtraction_ShouldPass)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 0xDEADBEEF); // $t0 = 0xDEADBEEF
+    cpu->getRegisterFile().write(8, 0xDEADBEEF);  // $t0 = 0xDEADBEEF
 
     // Act: 執行ANDI指令
-    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0x00FF)); // andi $t1, $t0, 0x00FF
+    mips::AndiInstruction instr(9, 8, static_cast<int16_t>(0x00FF));  // andi $t1, $t0, 0x00FF
     instr.execute(*cpu);
 
     // Assert: 提取最低位元組
-    uint32_t expectedResult = 0x000000EF; // 0xDEADBEEF & 0x000000FF = 0x000000EF
+    uint32_t expectedResult = 0x000000EF;  // 0xDEADBEEF & 0x000000FF = 0x000000EF
     EXPECT_EQ(cpu->getRegisterFile().read(9), expectedResult);
 }
 
@@ -192,9 +192,9 @@ TEST_F(AndiInstructionTest, Framework_CpuInitialization_ShouldPass)
 {
     // 驗證CPU初始狀態
     EXPECT_EQ(cpu->getProgramCounter(), 0);
-    EXPECT_EQ(cpu->getRegisterFile().read(0), 0); // $zero
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 0); // $t0
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 0); // $t1
+    EXPECT_EQ(cpu->getRegisterFile().read(0), 0);  // $zero
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 0);  // $t0
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 0);  // $t1
 }
 
 /**
@@ -208,7 +208,7 @@ TEST_F(AndiInstructionTest, Framework_RegisterReadWrite_ShouldPass)
 
     // 測試$zero暫存器的不可寫特性
     cpu->getRegisterFile().write(0, 0xFFFFFFFF);
-    EXPECT_EQ(cpu->getRegisterFile().read(0), 0); // 應該仍然是0
+    EXPECT_EQ(cpu->getRegisterFile().read(0), 0);  // 應該仍然是0
 }
 
 // ============================================================================

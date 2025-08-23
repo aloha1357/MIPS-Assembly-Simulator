@@ -55,18 +55,18 @@ class DIVInstructionBDD : public ::testing::Test
 TEST_F(DIVInstructionBDD, BasicSignedDivision)
 {
     // Given: Two positive numbers
-    cpu->getRegisterFile().write(8, 100); // $t0 = 100
-    cpu->getRegisterFile().write(9, 7);   // $t1 = 7
+    cpu->getRegisterFile().write(8, 100);  // $t0 = 100
+    cpu->getRegisterFile().write(9, 7);    // $t1 = 7
 
     // When: DIV $t0, $t1
-    uint32_t div_instruction = 0x0109481A; // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
+    uint32_t div_instruction = 0x0109481A;  // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
     auto     instruction     = decoder->decode(div_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
 
     // Then: LO should contain quotient (100 / 7 = 14), HI should contain remainder (100 % 7 = 2)
-    int32_t expected_quotient  = 100 / 7; // 14
-    int32_t expected_remainder = 100 % 7; // 2
+    int32_t expected_quotient  = 100 / 7;  // 14
+    int32_t expected_remainder = 100 % 7;  // 2
 
     EXPECT_EQ(cpu->getRegisterFile().readLO(), static_cast<uint32_t>(expected_quotient));
     EXPECT_EQ(cpu->getRegisterFile().readHI(), static_cast<uint32_t>(expected_remainder));
@@ -82,11 +82,11 @@ TEST_F(DIVInstructionBDD, BasicSignedDivision)
 TEST_F(DIVInstructionBDD, DivideByZeroHandling)
 {
     // Given: Non-zero dividend, zero divisor
-    cpu->getRegisterFile().write(8, 100); // $t0 = 100
-    cpu->getRegisterFile().write(9, 0);   // $t1 = 0
+    cpu->getRegisterFile().write(8, 100);  // $t0 = 100
+    cpu->getRegisterFile().write(9, 0);    // $t1 = 0
 
     // When: DIV $t0, $t1
-    uint32_t div_instruction = 0x0109481A; // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
+    uint32_t div_instruction = 0x0109481A;  // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
     auto     instruction     = decoder->decode(div_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
@@ -106,18 +106,18 @@ TEST_F(DIVInstructionBDD, DivideByZeroHandling)
 TEST_F(DIVInstructionBDD, NegativeDivision)
 {
     // Given: Positive dividend, negative divisor
-    cpu->getRegisterFile().write(8, 100);        // $t0 = 100
-    cpu->getRegisterFile().write(9, 0xFFFFFFF9); // $t1 = -7 (signed)
+    cpu->getRegisterFile().write(8, 100);         // $t0 = 100
+    cpu->getRegisterFile().write(9, 0xFFFFFFF9);  // $t1 = -7 (signed)
 
     // When: DIV $t0, $t1
-    uint32_t div_instruction = 0x0109481A; // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
+    uint32_t div_instruction = 0x0109481A;  // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
     auto     instruction     = decoder->decode(div_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
 
     // Then: LO should contain quotient (100 / -7 = -14), HI should contain remainder (100 % -7 = 2)
-    int32_t expected_quotient  = 100 / (-7); // -14
-    int32_t expected_remainder = 100 % (-7); // 2
+    int32_t expected_quotient  = 100 / (-7);  // -14
+    int32_t expected_remainder = 100 % (-7);  // 2
 
     EXPECT_EQ(cpu->getRegisterFile().readLO(), static_cast<uint32_t>(expected_quotient));
     EXPECT_EQ(cpu->getRegisterFile().readHI(), static_cast<uint32_t>(expected_remainder));
@@ -133,11 +133,11 @@ TEST_F(DIVInstructionBDD, NegativeDivision)
 TEST_F(DIVInstructionBDD, RemainderVerification)
 {
     // Given: Numbers that don't divide evenly
-    cpu->getRegisterFile().write(8, 123); // $t0 = 123
-    cpu->getRegisterFile().write(9, 10);  // $t1 = 10
+    cpu->getRegisterFile().write(8, 123);  // $t0 = 123
+    cpu->getRegisterFile().write(9, 10);   // $t1 = 10
 
     // When: DIV $t0, $t1
-    uint32_t div_instruction = 0x0109481A; // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
+    uint32_t div_instruction = 0x0109481A;  // DIV opcode, rs=$t0(8), rt=$t1(9), function=0x1A
     auto     instruction     = decoder->decode(div_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);

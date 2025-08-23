@@ -68,9 +68,9 @@ TEST_F(SRAVInstructionBDDTest, BasicVariableArithmeticRightShiftNegative)
     // Given: rt = 0x80000000 (negative number), rs = 4
     const uint32_t rt_value    = 0x80000000;
     const uint32_t rs_value    = 4;
-    const uint32_t rt_register = 1; // $t0 (source value)
-    const uint32_t rs_register = 2; // $t1 (shift amount)
-    const uint32_t rd_register = 3; // $t2 (destination)
+    const uint32_t rt_register = 1;  // $t0 (source value)
+    const uint32_t rs_register = 2;  // $t1 (shift amount)
+    const uint32_t rd_register = 3;  // $t2 (destination)
 
     // For arithmetic right shift: sign-extend from left
     // 0x80000000 >> 4 = 0xF8000000 (arithmetic)
@@ -102,9 +102,9 @@ TEST_F(SRAVInstructionBDDTest, ArithmeticRightShiftPositive)
     // Given: rt = 0x70000000 (positive number), rs = 4
     const uint32_t rt_value    = 0x70000000;
     const uint32_t rs_value    = 4;
-    const uint32_t rt_register = 4; // $t3
-    const uint32_t rs_register = 5; // $t4
-    const uint32_t rd_register = 6; // $t5
+    const uint32_t rt_register = 4;  // $t3
+    const uint32_t rs_register = 5;  // $t4
+    const uint32_t rd_register = 6;  // $t5
 
     // For positive numbers, arithmetic and logical shifts are the same
     const uint32_t expected_result = 0x07000000;
@@ -132,12 +132,12 @@ TEST_F(SRAVInstructionBDDTest, ShiftAmountTruncationSignExtended)
 {
     // Given: rt = 0xFFFFFFFF (negative -1), rs = 35 (0x23)
     const uint32_t rt_value        = 0xFFFFFFFF;
-    const uint32_t rs_value        = 35;              // 0x23, but only low 5 bits (3) will be used
-    const uint32_t rt_register     = 7;               // $t6
-    const uint32_t rs_register     = 8;               // $t7
-    const uint32_t rd_register     = 9;               // $t8
-    const uint32_t effective_shift = rs_value & 0x1F; // 35 & 0x1F = 3
-    (void)effective_shift;                            // Suppress unused variable warning
+    const uint32_t rs_value        = 35;               // 0x23, but only low 5 bits (3) will be used
+    const uint32_t rt_register     = 7;                // $t6
+    const uint32_t rs_register     = 8;                // $t7
+    const uint32_t rd_register     = 9;                // $t8
+    const uint32_t effective_shift = rs_value & 0x1F;  // 35 & 0x1F = 3
+    (void)effective_shift;                             // Suppress unused variable warning
 
     // Arithmetic right shift of -1 by any amount is still -1
     const uint32_t expected_result = 0xFFFFFFFF;
@@ -165,10 +165,10 @@ TEST_F(SRAVInstructionBDDTest, MaximumShiftSignExtension)
 {
     // Given: rt = 0x80000001 (negative number), rs = 31
     const uint32_t rt_value    = 0x80000001;
-    const uint32_t rs_value    = 31; // Maximum shift amount
-    const uint32_t rt_register = 10; // $t9
-    const uint32_t rs_register = 11; // $s0
-    const uint32_t rd_register = 12; // $s1
+    const uint32_t rs_value    = 31;  // Maximum shift amount
+    const uint32_t rt_register = 10;  // $t9
+    const uint32_t rs_register = 11;  // $s0
+    const uint32_t rd_register = 12;  // $s1
 
     // Arithmetic right shift by 31 of negative number results in all 1s (0xFFFFFFFF)
     const uint32_t expected_result = 0xFFFFFFFF;

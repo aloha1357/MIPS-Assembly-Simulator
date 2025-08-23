@@ -101,7 +101,7 @@ int MipsSimulatorAPI::run(int maxCycles)
         if (maxCycles <= 0)
         {
             // Run until termination
-            m_cpu->run(-1); // Assuming -1 means run until completion
+            m_cpu->run(-1);  // Assuming -1 means run until completion
         }
         else
         {
@@ -125,7 +125,7 @@ bool MipsSimulatorAPI::isTerminated() const
     }
     catch (...)
     {
-        return true; // If we can't check, assume terminated
+        return true;  // If we can't check, assume terminated
     }
 }
 
@@ -162,7 +162,7 @@ uint32_t MipsSimulatorAPI::loadWord(uint32_t address) const
     }
     catch (const std::exception& e)
     {
-        return 0; // For test compatibility
+        return 0;  // For test compatibility
     }
 }
 
@@ -186,7 +186,7 @@ uint8_t MipsSimulatorAPI::loadByte(uint32_t address) const
     }
     catch (const std::exception& e)
     {
-        return 0; // For test compatibility
+        return 0;  // For test compatibility
     }
 }
 
@@ -279,4 +279,4 @@ void MipsSimulatorAPI::clearError()
     m_lastError.clear();
 }
 
-} // namespace mips
+}  // namespace mips

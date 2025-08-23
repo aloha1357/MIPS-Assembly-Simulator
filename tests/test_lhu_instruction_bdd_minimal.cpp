@@ -32,8 +32,8 @@ class LHUInstructionBDDTest : public ::testing::Test
         cpu->getMemory().reset();
 
         // Initialize test data in memory
-        cpu->getMemory().writeWord(1000, 0x12345678); // Test data at address 1000
-        cpu->getMemory().writeWord(1004, 0x9ABCDEF0); // Test data at address 1004
+        cpu->getMemory().writeWord(1000, 0x12345678);  // Test data at address 1000
+        cpu->getMemory().writeWord(1004, 0x9ABCDEF0);  // Test data at address 1004
     }
 
     void TearDown() override
@@ -49,11 +49,11 @@ TEST_F(LHUInstructionBDDTest, LHU_BasicLoadUnsigned_ShouldZeroExtend)
 {
     // Given: Memory contains 0x5678 at halfword address 1000 (little-endian: LSB halfword of
     // 0x12345678)
-    cpu->getRegisterFile().write(1, 1000); // Base address
+    cpu->getRegisterFile().write(1, 1000);  // Base address
 
     // When: LHU $t0, 0($t1) - Load halfword unsigned from address 1000+0 into $t0
     mips::InstructionDecoder decoder;
-    uint32_t lhu_instruction = 0x94280000; // LHU opcode=0x25, rs=$t1(9), rt=$t0(8), offset=0
+    uint32_t lhu_instruction = 0x94280000;  // LHU opcode=0x25, rs=$t1(9), rt=$t0(8), offset=0
     auto     instruction     = decoder.decode(lhu_instruction);
 
     // Then: $t0 should contain 0x00005678 (zero-extended, unsigned value)
@@ -64,11 +64,11 @@ TEST_F(LHUInstructionBDDTest, LHU_BasicLoadUnsigned_ShouldZeroExtend)
 TEST_F(LHUInstructionBDDTest, LHU_NegativeHalfword_ShouldZeroExtend)
 {
     // Given: Memory contains 0x9ABC at halfword address 1006 (MSB halfword has high bit set)
-    cpu->getRegisterFile().write(1, 1006); // Base address
+    cpu->getRegisterFile().write(1, 1006);  // Base address
 
     // When: LHU $t0, 0($t1) - Load halfword unsigned from address 1006+0
     mips::InstructionDecoder decoder;
-    uint32_t                 lhu_instruction = 0x94280000; // LHU rs=$t1(9), rt=$t0(8), offset=0
+    uint32_t                 lhu_instruction = 0x94280000;  // LHU rs=$t1(9), rt=$t0(8), offset=0
     auto                     instruction     = decoder.decode(lhu_instruction);
 
     // Then: $t0 should contain 0x00009ABC (zero-extended, unsigned value - no sign extension)
@@ -79,11 +79,11 @@ TEST_F(LHUInstructionBDDTest, LHU_NegativeHalfword_ShouldZeroExtend)
 TEST_F(LHUInstructionBDDTest, LHU_PositiveOffset_ShouldCalculateAddress)
 {
     // Given: Memory setup with test data
-    cpu->getRegisterFile().write(1, 1000); // Base address
+    cpu->getRegisterFile().write(1, 1000);  // Base address
 
     // When: LHU $t0, 4($t1) - Load halfword unsigned from address 1000+4=1004
     mips::InstructionDecoder decoder;
-    uint32_t                 lhu_instruction = 0x94280004; // LHU rs=$t1(9), rt=$t0(8), offset=4
+    uint32_t                 lhu_instruction = 0x94280004;  // LHU rs=$t1(9), rt=$t0(8), offset=4
     auto                     instruction     = decoder.decode(lhu_instruction);
 
     // Then: $t0 should contain 0x0000DEF0 (zero-extended halfword from address 1004)
@@ -94,11 +94,11 @@ TEST_F(LHUInstructionBDDTest, LHU_PositiveOffset_ShouldCalculateAddress)
 TEST_F(LHUInstructionBDDTest, LHU_NegativeOffset_ShouldCalculateAddress)
 {
     // Given: Memory location with negative offset contains a halfword
-    cpu->getRegisterFile().write(1, 1008); // Base address
+    cpu->getRegisterFile().write(1, 1008);  // Base address
 
     // When: LHU $t0, -4($t1) - Load halfword unsigned from address 1008-4=1004
     mips::InstructionDecoder decoder;
-    uint32_t lhu_instruction = 0x9428FFFC; // LHU rs=$t1(9), rt=$t0(8), offset=-4 (0xFFFC)
+    uint32_t lhu_instruction = 0x9428FFFC;  // LHU rs=$t1(9), rt=$t0(8), offset=-4 (0xFFFC)
     auto     instruction     = decoder.decode(lhu_instruction);
 
     // Then: $t0 should contain 0x0000DEF0 (zero-extended halfword)

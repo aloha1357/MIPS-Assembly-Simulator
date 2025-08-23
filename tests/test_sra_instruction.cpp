@@ -54,12 +54,12 @@ TEST_F(SraInstructionIntegrationTest, SraInstruction_DecoderIntegration_ShouldDe
 
     // When: 解碼 SRA 指令機器碼
     // SRA $t1, $t0, 4 => R-type: op=0, rs=0, rt=8($t0), rd=9($t1), shamt=4, funct=0x03
-    uint32_t machineCode = (0x00 << 26) | // opcode = 0 (R-type)
-                           (0 << 21) |    // rs = 0 (not used in shift)
-                           (8 << 16) |    // rt = 8 ($t0)
-                           (9 << 11) |    // rd = 9 ($t1)
-                           (4 << 6) |     // shamt = 4
-                           0x03;          // function code for SRA
+    uint32_t machineCode = (0x00 << 26) |  // opcode = 0 (R-type)
+                           (0 << 21) |     // rs = 0 (not used in shift)
+                           (8 << 16) |     // rt = 8 ($t0)
+                           (9 << 11) |     // rd = 9 ($t1)
+                           (4 << 6) |      // shamt = 4
+                           0x03;           // function code for SRA
 
     auto instruction = decoder->decode(machineCode);
 
@@ -88,4 +88,4 @@ TEST_F(SraInstructionIntegrationTest, SraInstruction_AssemblerIntegration_Should
     EXPECT_EQ(instructions[0]->getName(), "sra") << "指令名稱應該是 'sra'";
 }
 
-} // namespace
+}  // namespace

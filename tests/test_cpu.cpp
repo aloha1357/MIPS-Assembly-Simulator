@@ -87,8 +87,8 @@ TEST(MemoryTest, WordAlignment)
 
     EXPECT_TRUE(memory.isValidAddress(0x1000));
     EXPECT_TRUE(memory.isValidAddress(0x1004));
-    EXPECT_FALSE(memory.isValidAddress(0x1001)); // Not word-aligned
-    EXPECT_FALSE(memory.isValidAddress(0x1002)); // Not word-aligned
+    EXPECT_FALSE(memory.isValidAddress(0x1001));  // Not word-aligned
+    EXPECT_FALSE(memory.isValidAddress(0x1002));  // Not word-aligned
 }
 
 // Instruction execution tests
@@ -97,8 +97,8 @@ TEST(InstructionTest, AddInstructionBasic)
     mips::Cpu cpu;
 
     // Set up registers: $t0 = 3, $t1 = 5
-    cpu.getRegisterFile().write(8, 3); // $t0
-    cpu.getRegisterFile().write(9, 5); // $t1
+    cpu.getRegisterFile().write(8, 3);  // $t0
+    cpu.getRegisterFile().write(9, 5);  // $t1
 
     // Execute: add $t2, $t0, $t1
     cpu.loadProgramFromString("add $t2, $t0, $t1");
@@ -113,8 +113,8 @@ TEST(InstructionTest, AddInstructionWithNegative)
     mips::Cpu cpu;
 
     // Set up registers: $s0 = -1, $s1 = 1
-    cpu.getRegisterFile().write(16, static_cast<uint32_t>(-1)); // $s0
-    cpu.getRegisterFile().write(17, 1);                         // $s1
+    cpu.getRegisterFile().write(16, static_cast<uint32_t>(-1));  // $s0
+    cpu.getRegisterFile().write(17, 1);                          // $s1
 
     // Execute: add $s2, $s0, $s1
     cpu.loadProgramFromString("add $s2, $s0, $s1");
@@ -144,7 +144,7 @@ TEST(InstructionTest, AddiInstructionPositiveImmediate)
     mips::Cpu cpu;
 
     // Set up register: $t0 = 5
-    cpu.getRegisterFile().write(8, 5); // $t0
+    cpu.getRegisterFile().write(8, 5);  // $t0
 
     // Execute: addi $t1, $t0, 10
     cpu.loadProgramFromString("addi $t1, $t0, 10");
@@ -159,7 +159,7 @@ TEST(InstructionTest, AddiInstructionNegativeImmediate)
     mips::Cpu cpu;
 
     // Set up register: $s0 = 3
-    cpu.getRegisterFile().write(16, 3); // $s0
+    cpu.getRegisterFile().write(16, 3);  // $s0
 
     // Execute: addi $s1, $s0, -4
     cpu.loadProgramFromString("addi $s1, $s0, -4");
@@ -175,7 +175,7 @@ TEST(InstructionTest, AddiInstructionZeroImmediate)
     mips::Cpu cpu;
 
     // Set up register: $t2 = 42
-    cpu.getRegisterFile().write(10, 42); // $t2
+    cpu.getRegisterFile().write(10, 42);  // $t2
 
     // Execute: addi $t3, $t2, 0
     cpu.loadProgramFromString("addi $t3, $t2, 0");
@@ -206,7 +206,7 @@ TEST(InstructionTest, SwInstructionBasic)
     mips::Cpu cpu;
 
     // Set up register: $t1 = 0xCAFEBABE
-    cpu.getRegisterFile().write(9, 0xCAFEBABE); // $t1
+    cpu.getRegisterFile().write(9, 0xCAFEBABE);  // $t1
 
     // Execute: sw $t1, 0x2000($zero)
     cpu.loadProgramFromString("sw $t1, 0x2000($zero)");
@@ -221,10 +221,10 @@ TEST(InstructionTest, LwSwWithOffset)
     mips::Cpu cpu;
 
     // Set up base register: $s0 = 0x1000
-    cpu.getRegisterFile().write(16, 0x1000); // $s0
+    cpu.getRegisterFile().write(16, 0x1000);  // $s0
 
     // Set up register: $t0 = 0x12345678
-    cpu.getRegisterFile().write(8, 0x12345678); // $t0
+    cpu.getRegisterFile().write(8, 0x12345678);  // $t0
 
     // Execute: sw $t0, 4($s0)  (store at 0x1004)
     cpu.loadProgramFromString("sw $t0, 4($s0)");
@@ -245,8 +245,8 @@ TEST(InstructionTest, BeqInstructionTaken)
     mips::Cpu cpu;
 
     // Set up registers: $t0 = $t1 = 5 (equal values)
-    cpu.getRegisterFile().write(8, 5); // $t0
-    cpu.getRegisterFile().write(9, 5); // $t1
+    cpu.getRegisterFile().write(8, 5);  // $t0
+    cpu.getRegisterFile().write(9, 5);  // $t1
 
     // Execute program with branch taken
     std::string program = R"(
@@ -257,7 +257,7 @@ TEST(InstructionTest, BeqInstructionTaken)
     )";
 
     cpu.loadProgramFromString(program);
-    cpu.run(10); // Run enough cycles to complete
+    cpu.run(10);  // Run enough cycles to complete
 
     // Check result: $v0 should be 42 (branch was taken)
     EXPECT_EQ(cpu.getRegisterFile().read(2), 42) << "$v0 should be 42 (branch taken)";
@@ -268,8 +268,8 @@ TEST(InstructionTest, BeqInstructionNotTaken)
     mips::Cpu cpu;
 
     // Set up registers: $t0 = 5, $t1 = 3 (not equal)
-    cpu.getRegisterFile().write(8, 5); // $t0
-    cpu.getRegisterFile().write(9, 3); // $t1
+    cpu.getRegisterFile().write(8, 5);  // $t0
+    cpu.getRegisterFile().write(9, 3);  // $t1
 
     // Execute program with branch not taken
     std::string program = R"(
@@ -280,7 +280,7 @@ TEST(InstructionTest, BeqInstructionNotTaken)
     )";
 
     cpu.loadProgramFromString(program);
-    cpu.run(10); // Run enough cycles to complete
+    cpu.run(10);  // Run enough cycles to complete
 
     // Check result: $v0 should be 42 (both instructions executed)
     EXPECT_EQ(cpu.getRegisterFile().read(2), 42) << "$v0 should be 42 (both instructions executed)";
@@ -299,7 +299,7 @@ TEST(InstructionTest, JInstructionUnconditional)
     )";
 
     cpu.loadProgramFromString(program);
-    cpu.run(10); // Run enough cycles to complete
+    cpu.run(10);  // Run enough cycles to complete
 
     // Check result: $v0 should be 7 (jump was taken, middle instruction skipped)
     EXPECT_EQ(cpu.getRegisterFile().read(2), 7) << "$v0 should be 7 (jump taken)";

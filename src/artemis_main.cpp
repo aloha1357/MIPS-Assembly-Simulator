@@ -57,7 +57,7 @@ bool runInteractiveMode(mips::MipsSimulatorAPI& api)
             }
 
             std::cout << "Running program...\n";
-            int cycles = api.run(1000); // Max 1000 cycles
+            int cycles = api.run(1000);  // Max 1000 cycles
             std::cout << "Program completed in " << cycles << " cycles.\n";
 
             // Show console output if any

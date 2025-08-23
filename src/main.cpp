@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     {
         // Load program if provided
         cpu.loadProgram(argv[1]);
-        cpu.run(10); // Run for 10 cycles as default
+        cpu.run(10);  // Run for 10 cycles as default
         std::cout << "Executed " << cpu.getCycleCount() << " cycles\n";
     }
     else

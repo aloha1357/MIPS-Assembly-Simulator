@@ -24,7 +24,7 @@ TEST_F(SyscallDebugTest, DetailedStringMemoryTest)
     auto& memory = cpu->getMemory();
 
     // Test 1: Store simple "Hi" string
-    uint32_t hiString = 0x6948; // H=0x48 at byte 0, i=0x69 at byte 1, rest zeros
+    uint32_t hiString = 0x6948;  // H=0x48 at byte 0, i=0x69 at byte 1, rest zeros
     memory.writeWord(0x1000, hiString);
 
     // Read back and verify
@@ -33,10 +33,10 @@ TEST_F(SyscallDebugTest, DetailedStringMemoryTest)
 
     // Test manual byte extraction (same as syscall)
     std::string extractedString;
-    char        byte0 = (stored >> 0) & 0xFF;  // Should be 'H' = 0x48
-    char        byte1 = (stored >> 8) & 0xFF;  // Should be 'i' = 0x69
-    char        byte2 = (stored >> 16) & 0xFF; // Should be 0x00
-    char        byte3 = (stored >> 24) & 0xFF; // Should be 0x00
+    char        byte0 = (stored >> 0) & 0xFF;   // Should be 'H' = 0x48
+    char        byte1 = (stored >> 8) & 0xFF;   // Should be 'i' = 0x69
+    char        byte2 = (stored >> 16) & 0xFF;  // Should be 0x00
+    char        byte3 = (stored >> 24) & 0xFF;  // Should be 0x00
 
     std::cout << "Extracted bytes: " << std::hex << (int)(unsigned char)byte0 << " " << std::hex
               << (int)(unsigned char)byte1 << " " << std::hex << (int)(unsigned char)byte2 << " "
@@ -51,7 +51,7 @@ TEST_F(SyscallDebugTest, DetailedStringMemoryTest)
     EXPECT_EQ(extractedString, "Hi") << "Manual extraction should produce 'Hi'";
 
     // Test 2: Try single character string
-    memory.writeWord(0x2000, 0x48); // Just 'H'
+    memory.writeWord(0x2000, 0x48);  // Just 'H'
     uint32_t singleChar = memory.readWord(0x2000);
     char     sc         = singleChar & 0xFF;
     EXPECT_EQ(sc, 'H') << "Single character should work";
@@ -62,11 +62,11 @@ TEST_F(SyscallDebugTest, DirectSyscall4Test)
 {
     // Set up memory with simple string
     auto& memory = cpu->getMemory();
-    memory.writeWord(0x1000, 0x48); // Just 'H' + null terminator
+    memory.writeWord(0x1000, 0x48);  // Just 'H' + null terminator
 
     // Set up registers for syscall 4
-    cpu->getRegisterFile().write(2, 4);      // $v0 = 4 (print_string)
-    cpu->getRegisterFile().write(4, 0x1000); // $a0 = string address
+    cpu->getRegisterFile().write(2, 4);       // $v0 = 4 (print_string)
+    cpu->getRegisterFile().write(4, 0x1000);  // $a0 = string address
 
     // Clear console output
     std::string initialOutput = cpu->getConsoleOutput();
@@ -103,4 +103,4 @@ TEST_F(SyscallDebugTest, DirectSyscall4Test)
     EXPECT_EQ(str, "H") << "Should extract 'H'";
 }
 
-} // namespace mips
+}  // namespace mips

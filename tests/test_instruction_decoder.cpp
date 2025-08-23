@@ -29,11 +29,11 @@ TEST_F(InstructionDecoderTest, DecodeRTypeAddInstruction)
     EXPECT_EQ(instruction->getName(), "add");
 
     // Test execution
-    cpu->getRegisterFile().write(8, 5); // $t0 = 5
-    cpu->getRegisterFile().write(9, 3); // $t1 = 3
+    cpu->getRegisterFile().write(8, 5);  // $t0 = 5
+    cpu->getRegisterFile().write(9, 3);  // $t1 = 3
 
     instruction->execute(*cpu);
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 8); // $t0 should be 5 + 3 = 8
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 8);  // $t0 should be 5 + 3 = 8
 }
 
 TEST_F(InstructionDecoderTest, DecodeRTypeSubInstruction)
@@ -47,11 +47,11 @@ TEST_F(InstructionDecoderTest, DecodeRTypeSubInstruction)
     EXPECT_EQ(instruction->getName(), "sub");
 
     // Test execution
-    cpu->getRegisterFile().write(8, 7); // $t0 = 7
-    cpu->getRegisterFile().write(9, 3); // $t1 = 3
+    cpu->getRegisterFile().write(8, 7);  // $t0 = 7
+    cpu->getRegisterFile().write(9, 3);  // $t1 = 3
 
     instruction->execute(*cpu);
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 4); // $t2 should be 7 - 3 = 4
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 4);  // $t2 should be 7 - 3 = 4
 }
 
 TEST_F(InstructionDecoderTest, DecodeITypeAddiInstruction)
@@ -65,10 +65,10 @@ TEST_F(InstructionDecoderTest, DecodeITypeAddiInstruction)
     EXPECT_EQ(instruction->getName(), "addi");
 
     // Test execution
-    cpu->getRegisterFile().write(8, 5); // $t0 = 5
+    cpu->getRegisterFile().write(8, 5);  // $t0 = 5
 
     instruction->execute(*cpu);
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 15); // $t1 should be 5 + 10 = 15
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 15);  // $t1 should be 5 + 10 = 15
 }
 
 TEST_F(InstructionDecoderTest, DecodeITypeLwInstruction)
@@ -85,7 +85,7 @@ TEST_F(InstructionDecoderTest, DecodeITypeLwInstruction)
     cpu->getMemory().writeWord(4, 0xDEADBEEF);
 
     instruction->execute(*cpu);
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 0xDEADBEEF); // $t0 should contain loaded value
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 0xDEADBEEF);  // $t0 should contain loaded value
 }
 
 TEST_F(InstructionDecoderTest, DecodeITypeSwInstruction)
@@ -99,10 +99,10 @@ TEST_F(InstructionDecoderTest, DecodeITypeSwInstruction)
     EXPECT_EQ(instruction->getName(), "sw");
 
     // Test execution
-    cpu->getRegisterFile().write(9, 0xCAFEBABE); // $t1 = test value
+    cpu->getRegisterFile().write(9, 0xCAFEBABE);  // $t1 = test value
 
     instruction->execute(*cpu);
-    EXPECT_EQ(cpu->getMemory().readWord(8), 0xCAFEBABE); // Memory should contain stored value
+    EXPECT_EQ(cpu->getMemory().readWord(8), 0xCAFEBABE);  // Memory should contain stored value
 }
 
 TEST_F(InstructionDecoderTest, DecodeJTypeJInstruction)
@@ -130,8 +130,8 @@ TEST_F(InstructionDecoderTest, DecodeSyscallInstruction)
     EXPECT_EQ(instruction->getName(), "syscall");
 
     // Test syscall execution
-    cpu->getRegisterFile().write(2, 1);  // $v0 = 1 (print_int)
-    cpu->getRegisterFile().write(4, 42); // $a0 = 42
+    cpu->getRegisterFile().write(2, 1);   // $v0 = 1 (print_int)
+    cpu->getRegisterFile().write(4, 42);  // $a0 = 42
 
     instruction->execute(*cpu);
     EXPECT_EQ(cpu->getConsoleOutput(), "42");
@@ -148,25 +148,25 @@ TEST_F(InstructionDecoderTest, DecodeNegativeImmediate)
     EXPECT_EQ(instruction->getName(), "addi");
 
     // Test execution
-    cpu->getRegisterFile().write(8, 5); // $t0 = 5
+    cpu->getRegisterFile().write(8, 5);  // $t0 = 5
 
     instruction->execute(*cpu);
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 4); // $t1 should be 5 + (-1) = 4
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 4);  // $t1 should be 5 + (-1) = 4
 }
 
 TEST_F(InstructionDecoderTest, DecodeUnknownInstruction)
 {
     // Test decoding unknown instruction
-    uint32_t word = 0xFFFFFFFF; // Invalid instruction
+    uint32_t word = 0xFFFFFFFF;  // Invalid instruction
 
     auto instruction = InstructionDecoder::decode(word);
-    EXPECT_EQ(instruction, nullptr); // Should return nullptr for unknown instructions
+    EXPECT_EQ(instruction, nullptr);  // Should return nullptr for unknown instructions
 }
 
 TEST_F(InstructionDecoderTest, DecodeFieldExtraction)
 {
     // Test field extraction manually for verification
-    uint32_t word = 0x01094020; // add $t0, $t0, $t1
+    uint32_t word = 0x01094020;  // add $t0, $t0, $t1
 
     // Use a static method access pattern (though these are private)
     // We'll test through the decode function instead
@@ -181,10 +181,10 @@ TEST_F(InstructionDecoderTest, DecodeComplexProgram)
 {
     // Test decoding a sequence of instructions
     std::vector<uint32_t> program = {
-        0x20080005, // addi $t0, $zero, 5
-        0x20090003, // addi $t1, $zero, 3
-        0x01095020, // add $t2, $t0, $t1
-        0x0000000C  // syscall
+        0x20080005,  // addi $t0, $zero, 5
+        0x20090003,  // addi $t1, $zero, 3
+        0x01095020,  // add $t2, $t0, $t1
+        0x0000000C   // syscall
     };
 
     std::vector<std::unique_ptr<Instruction>> instructions;
@@ -203,8 +203,8 @@ TEST_F(InstructionDecoderTest, DecodeComplexProgram)
     EXPECT_EQ(instructions[3]->getName(), "syscall");
 
     // Test execution of the program
-    cpu->getRegisterFile().write(2, 1);  // $v0 = 1 (print_int) for syscall
-    cpu->getRegisterFile().write(4, 10); // $a0 = 10 (value to print)
+    cpu->getRegisterFile().write(2, 1);   // $v0 = 1 (print_int) for syscall
+    cpu->getRegisterFile().write(4, 10);  // $a0 = 10 (value to print)
 
     for (auto& instr : instructions)
     {
@@ -213,8 +213,8 @@ TEST_F(InstructionDecoderTest, DecodeComplexProgram)
             break;
     }
 
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 5);  // $t0 = 5
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 3);  // $t1 = 3
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 8); // $t2 = 8 (5+3)
-    EXPECT_EQ(cpu->getConsoleOutput(), "10");      // syscall output
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 5);   // $t0 = 5
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 3);   // $t1 = 3
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 8);  // $t2 = 8 (5+3)
+    EXPECT_EQ(cpu->getConsoleOutput(), "10");       // syscall output
 }

@@ -159,7 +159,7 @@ class MipsSimulatorAPI
     void clearError();
 };
 
-} // namespace mips
+}  // namespace mips
 
 // ===== Compatibility aliases for legacy test code =====
 // These are in the global namespace to match test expectations
@@ -241,7 +241,7 @@ class Assembler
         if (api.loadProgram(assembly))
         {
             // Return dummy instruction count for test compatibility
-            return {0x12345678}; // Dummy instruction
+            return {0x12345678};  // Dummy instruction
         }
         return {};
     }

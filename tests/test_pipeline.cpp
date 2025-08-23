@@ -44,11 +44,11 @@ TEST_F(PipelineTest, SingleCycleModeStillWorks)
     cpu->setPipelineMode(false);
 
     cpu->loadProgramFromString("add $t0, $t1, $t2");
-    cpu->getRegisterFile().write(9, 3);  // $t1 = 3
-    cpu->getRegisterFile().write(10, 5); // $t2 = 5
+    cpu->getRegisterFile().write(9, 3);   // $t1 = 3
+    cpu->getRegisterFile().write(10, 5);  // $t2 = 5
 
     cpu->run(1);
 
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 8); // $t0 should be 3 + 5 = 8
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 8);  // $t0 should be 3 + 5 = 8
     EXPECT_EQ(cpu->getCycleCount(), 1);
 }

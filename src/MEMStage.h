@@ -47,4 +47,4 @@ class MEMStage : public Stage
     PipelineRegister* m_outputRegister;
 };
 
-} // namespace mips
+}  // namespace mips

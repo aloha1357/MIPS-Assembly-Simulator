@@ -73,13 +73,13 @@ class BneInstructionTest : public ::testing::Test
 TEST_F(BneInstructionTest, BneInstruction_NotEqual_ShouldBranch)
 {
     // Arrange: $t0 != $t1 應該執行分支
-    cpu->getRegisterFile().write(8, 5);  // $t0 = 5
-    cpu->getRegisterFile().write(9, 10); // $t1 = 10
-    cpu->setProgramCounter(100);         // PC = 100
+    cpu->getRegisterFile().write(8, 5);   // $t0 = 5
+    cpu->getRegisterFile().write(9, 10);  // $t1 = 10
+    cpu->setProgramCounter(100);          // PC = 100
 
     // Act: 執行 bne $t0, $t1, 4 (跳躍4個指令)
     // 這裡應該會編譯失敗，因為 BneInstruction 還沒宣告
-    mips::BneInstruction instr(8, 9, 4); // bne $t0, $t1, 4
+    mips::BneInstruction instr(8, 9, 4);  // bne $t0, $t1, 4
     instr.execute(*cpu);
 
     // Assert: 5 != 10 is true, 所以應該分支
@@ -98,9 +98,9 @@ TEST_F(BneInstructionTest, BneInstruction_NotEqual_ShouldBranch)
 TEST_F(BneInstructionTest, BneInstruction_Equal_ShouldNotBranch)
 {
     // Arrange: $t0 == $t1 不應該執行分支
-    cpu->getRegisterFile().write(8, 42); // $t0 = 42
-    cpu->getRegisterFile().write(9, 42); // $t1 = 42
-    cpu->setProgramCounter(100);         // PC = 100
+    cpu->getRegisterFile().write(8, 42);  // $t0 = 42
+    cpu->getRegisterFile().write(9, 42);  // $t1 = 42
+    cpu->setProgramCounter(100);          // PC = 100
 
     // Act: 執行 bne $t0, $t1, 10
     mips::BneInstruction instr(8, 9, 10);
@@ -118,9 +118,9 @@ TEST_F(BneInstructionTest, BneInstruction_Equal_ShouldNotBranch)
 TEST_F(BneInstructionTest, BneInstruction_NegativeOffset_ShouldBranchBackward)
 {
     // Arrange: 測試向後分支
-    cpu->getRegisterFile().write(8, 1); // $t0 = 1
-    cpu->getRegisterFile().write(9, 2); // $t1 = 2
-    cpu->setProgramCounter(100);        // PC = 100
+    cpu->getRegisterFile().write(8, 1);  // $t0 = 1
+    cpu->getRegisterFile().write(9, 2);  // $t1 = 2
+    cpu->setProgramCounter(100);         // PC = 100
 
     // Act: 執行 bne $t0, $t1, -5 (向後跳躍)
     mips::BneInstruction instr(8, 9, -5);
@@ -138,9 +138,9 @@ TEST_F(BneInstructionTest, BneInstruction_NegativeOffset_ShouldBranchBackward)
 TEST_F(BneInstructionTest, BneInstruction_ZeroOffset_ShouldBranchToNextInstruction)
 {
     // Arrange: 測試零偏移量分支
-    cpu->getRegisterFile().write(8, 100); // $t0 = 100
-    cpu->getRegisterFile().write(9, 200); // $t1 = 200
-    cpu->setProgramCounter(50);           // PC = 50
+    cpu->getRegisterFile().write(8, 100);  // $t0 = 100
+    cpu->getRegisterFile().write(9, 200);  // $t1 = 200
+    cpu->setProgramCounter(50);            // PC = 50
 
     // Act: 執行 bne $t0, $t1, 0
     mips::BneInstruction instr(8, 9, 0);
@@ -158,9 +158,9 @@ TEST_F(BneInstructionTest, BneInstruction_ZeroOffset_ShouldBranchToNextInstructi
 TEST_F(BneInstructionTest, BneInstruction_WithZeroRegister_ShouldWork)
 {
     // Arrange: 與 $zero 暫存器比較
-    cpu->getRegisterFile().write(8, 0); // $t0 = 0 (與 $zero 相同)
-    cpu->getRegisterFile().write(0, 0); // $zero = 0 (永遠是0)
-    cpu->setProgramCounter(200);        // PC = 200
+    cpu->getRegisterFile().write(8, 0);  // $t0 = 0 (與 $zero 相同)
+    cpu->getRegisterFile().write(0, 0);  // $zero = 0 (永遠是0)
+    cpu->setProgramCounter(200);         // PC = 200
 
     // Act: 執行 bne $t0, $zero, 3
     mips::BneInstruction instr(8, 0, 3);
@@ -178,8 +178,8 @@ TEST_F(BneInstructionTest, BneInstruction_WithZeroRegister_ShouldWork)
 TEST_F(BneInstructionTest, BneInstruction_SameRegister_ShouldNotBranch)
 {
     // Arrange: 同一個暫存器與自己比較
-    cpu->getRegisterFile().write(8, 999); // $t0 = 999
-    cpu->setProgramCounter(300);          // PC = 300
+    cpu->getRegisterFile().write(8, 999);  // $t0 = 999
+    cpu->setProgramCounter(300);           // PC = 300
 
     // Act: 執行 bne $t0, $t0, 100
     mips::BneInstruction instr(8, 8, 100);
@@ -197,9 +197,9 @@ TEST_F(BneInstructionTest, BneInstruction_SameRegister_ShouldNotBranch)
 TEST_F(BneInstructionTest, BneInstruction_LargeOffset_ShouldWork)
 {
     // Arrange: 測試大偏移量
-    cpu->getRegisterFile().write(8, 1000); // $t0 = 1000
-    cpu->getRegisterFile().write(9, 2000); // $t1 = 2000
-    cpu->setProgramCounter(1000);          // PC = 1000
+    cpu->getRegisterFile().write(8, 1000);  // $t0 = 1000
+    cpu->getRegisterFile().write(9, 2000);  // $t1 = 2000
+    cpu->setProgramCounter(1000);           // PC = 1000
 
     // Act: 執行 bne $t0, $t1, 1000 (大偏移量)
     mips::BneInstruction instr(8, 9, 1000);

@@ -6,7 +6,7 @@
 namespace mips
 {
 
-class Cpu; // Forward declaration
+class Cpu;  // Forward declaration
 
 /**
  * @brief Base class for all MIPS instructions
@@ -37,9 +37,9 @@ class RTypeInstruction : public Instruction
     RTypeInstruction(int rd, int rs, int rt);
 
   protected:
-    int m_rd; // Destination register
-    int m_rs; // Source register 1
-    int m_rt; // Source register 2
+    int m_rd;  // Destination register
+    int m_rs;  // Source register 1
+    int m_rt;  // Source register 2
 };
 
 /**
@@ -182,8 +182,8 @@ class MULTInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rs; // Source register 1
-    int m_rt; // Source register 2
+    int m_rs;  // Source register 1
+    int m_rt;  // Source register 2
 };
 
 /**
@@ -206,8 +206,8 @@ class MULTUInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rs; // Source register 1
-    int m_rt; // Source register 2
+    int m_rs;  // Source register 1
+    int m_rt;  // Source register 2
 };
 
 /**
@@ -230,8 +230,8 @@ class DIVInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rs; // Source register 1 (dividend)
-    int m_rt; // Source register 2 (divisor)
+    int m_rs;  // Source register 1 (dividend)
+    int m_rt;  // Source register 2 (divisor)
 };
 
 /**
@@ -254,8 +254,8 @@ class DIVUInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rs; // Source register 1 (dividend)
-    int m_rt; // Source register 2 (divisor)
+    int m_rs;  // Source register 1 (dividend)
+    int m_rt;  // Source register 2 (divisor)
 };
 
 /**
@@ -267,9 +267,9 @@ class ITypeInstruction : public Instruction
     ITypeInstruction(int rt, int rs, int16_t imm);
 
   protected:
-    int     m_rt;  // Target register
-    int     m_rs;  // Source register
-    int16_t m_imm; // 16-bit immediate value
+    int     m_rt;   // Target register
+    int     m_rs;   // Source register
+    int16_t m_imm;  // 16-bit immediate value
 
     /**
      * @brief Sign-extend 16-bit immediate to 32-bit
@@ -478,9 +478,9 @@ class BranchInstruction : public Instruction
     BranchInstruction(int rs, int rt, const std::string& label);
 
   protected:
-    int         m_rs;    // Source register 1
-    int         m_rt;    // Source register 2
-    std::string m_label; // Branch target label
+    int         m_rs;     // Source register 1
+    int         m_rt;     // Source register 2
+    std::string m_label;  // Branch target label
 };
 
 /**
@@ -543,7 +543,7 @@ class JInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    std::string m_label; // Jump target label
+    std::string m_label;  // Jump target label
 };
 
 /**
@@ -558,9 +558,9 @@ class SllInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    uint32_t m_rd;    // Destination register
-    uint32_t m_rt;    // Source register
-    uint32_t m_shamt; // Shift amount
+    uint32_t m_rd;     // Destination register
+    uint32_t m_rt;     // Source register
+    uint32_t m_shamt;  // Shift amount
 };
 
 /**
@@ -575,9 +575,9 @@ class SrlInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    uint32_t m_rd;    // Destination register
-    uint32_t m_rt;    // Source register
-    uint32_t m_shamt; // Shift amount
+    uint32_t m_rd;     // Destination register
+    uint32_t m_rt;     // Source register
+    uint32_t m_shamt;  // Shift amount
 };
 
 /**
@@ -592,9 +592,9 @@ class SraInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    uint32_t m_rd;    // Destination register
-    uint32_t m_rt;    // Source register
-    uint32_t m_shamt; // Shift amount
+    uint32_t m_rd;     // Destination register
+    uint32_t m_rt;     // Source register
+    uint32_t m_shamt;  // Shift amount
 };
 
 /**
@@ -671,7 +671,7 @@ class JALInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    uint32_t m_target; // 26-bit target address
+    uint32_t m_target;  // 26-bit target address
 };
 
 /**
@@ -713,7 +713,7 @@ class MFHIInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rd; // Destination register
+    int m_rd;  // Destination register
 };
 
 /**
@@ -735,7 +735,7 @@ class MTHIInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rs; // Source register
+    int m_rs;  // Source register
 };
 
 /**
@@ -757,7 +757,7 @@ class MFLOInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rd; // Destination register
+    int m_rd;  // Destination register
 };
 
 /**
@@ -779,7 +779,7 @@ class MTLOInstruction : public Instruction
     std::string getName() const override;
 
   private:
-    int m_rs; // Source register
+    int m_rs;  // Source register
 };
 
 /**
@@ -850,4 +850,4 @@ class TrapInstruction : public Instruction
     uint32_t m_trapCode;
 };
 
-} // namespace mips
+}  // namespace mips

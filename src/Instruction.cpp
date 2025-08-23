@@ -31,7 +31,7 @@ void ADDUInstruction::execute(Cpu& cpu)
 {
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t result  = rsValue + rtValue; // 無符號加法，不檢查溢位
+    uint32_t result  = rsValue + rtValue;  // 無符號加法，不檢查溢位
 
     cpu.getRegisterFile().write(m_rd, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -65,7 +65,7 @@ void SUBUInstruction::execute(Cpu& cpu)
 {
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t result  = rsValue - rtValue; // 無符號減法，不檢查下溢
+    uint32_t result  = rsValue - rtValue;  // 無符號減法，不檢查下溢
 
     cpu.getRegisterFile().write(m_rd, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -82,7 +82,7 @@ void AndInstruction::execute(Cpu& cpu)
 {
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t result  = rsValue & rtValue; // Bitwise AND operation
+    uint32_t result  = rsValue & rtValue;  // Bitwise AND operation
 
     cpu.getRegisterFile().write(m_rd, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -99,7 +99,7 @@ void OrInstruction::execute(Cpu& cpu)
 {
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t result  = rsValue | rtValue; // Bitwise OR operation
+    uint32_t result  = rsValue | rtValue;  // Bitwise OR operation
 
     cpu.getRegisterFile().write(m_rd, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -116,7 +116,7 @@ void XorInstruction::execute(Cpu& cpu)
 {
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t result  = rsValue ^ rtValue; // Bitwise XOR operation
+    uint32_t result  = rsValue ^ rtValue;  // Bitwise XOR operation
 
     cpu.getRegisterFile().write(m_rd, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -133,7 +133,7 @@ void NorInstruction::execute(Cpu& cpu)
 {
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t result  = ~(rsValue | rtValue); // Bitwise NOR operation (NOT OR)
+    uint32_t result  = ~(rsValue | rtValue);  // Bitwise NOR operation (NOT OR)
 
     cpu.getRegisterFile().write(m_rd, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -454,8 +454,8 @@ ADDIUInstruction::ADDIUInstruction(int rt, int rs, int16_t imm) : ITypeInstructi
 void ADDIUInstruction::execute(Cpu& cpu)
 {
     uint32_t rsValue  = cpu.getRegisterFile().read(m_rs);
-    uint32_t immValue = signExtend16(m_imm); // Sign-extend despite "unsigned" name
-    uint32_t result   = rsValue + immValue;  // No overflow checking - key difference from ADDI
+    uint32_t immValue = signExtend16(m_imm);  // Sign-extend despite "unsigned" name
+    uint32_t result   = rsValue + immValue;   // No overflow checking - key difference from ADDI
 
     cpu.getRegisterFile().write(m_rt, result);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -546,7 +546,7 @@ void LBUInstruction::execute(Cpu& cpu)
 
     // Load byte unsigned with zero extension
     uint8_t  byteValue         = cpu.getMemory().readByte(address);
-    uint32_t zeroExtendedValue = static_cast<uint32_t>(byteValue); // Automatic zero extension
+    uint32_t zeroExtendedValue = static_cast<uint32_t>(byteValue);  // Automatic zero extension
 
     cpu.getRegisterFile().write(m_rt, zeroExtendedValue);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
@@ -685,7 +685,7 @@ std::string BeqInstruction::getName() const
 }
 
 BneInstruction::BneInstruction(int rs, int rt, int16_t offset) : ITypeInstruction(0, 0, offset)
-{ // 暫時設定 rt=0, rs=0
+{  // 暫時設定 rt=0, rs=0
     // BNE 指令的格式是 bne $rs, $rt, offset
     // 正確設定暫存器編號
     m_rs = rs;
@@ -705,7 +705,7 @@ void BneInstruction::execute(Cpu& cpu)
         // 計算分支目標地址
         // PC = PC + 4 + (sign_extend(offset) << 2)
         uint32_t currentPC          = cpu.getProgramCounter();
-        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm); // 符號擴展
+        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
         uint32_t targetPC           = currentPC + 4 + (signExtendedOffset << 2);
 
         cpu.setProgramCounter(targetPC);
@@ -743,7 +743,7 @@ void BLEZInstruction::execute(Cpu& cpu)
         // 計算分支目標地址
         // PC = PC + 4 + (sign_extend(offset) << 2)
         uint32_t currentPC          = cpu.getProgramCounter();
-        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm); // 符號擴展
+        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
         uint32_t targetPC           = currentPC + 4 + (signExtendedOffset << 2);
 
         cpu.setProgramCounter(targetPC);
@@ -781,7 +781,7 @@ void BGTZInstruction::execute(Cpu& cpu)
         // 計算分支目標地址
         // PC = PC + 4 + (sign_extend(offset) << 2)
         uint32_t currentPC          = cpu.getProgramCounter();
-        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm); // 符號擴展
+        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
         uint32_t targetPC           = currentPC + 4 + (signExtendedOffset << 2);
 
         cpu.setProgramCounter(targetPC);
@@ -897,7 +897,7 @@ void SLLVInstruction::execute(Cpu& cpu)
 
     // Read shift amount from rs register (only use low 5 bits)
     uint32_t rsValue     = cpu.getRegisterFile().read(m_rs);
-    uint32_t shiftAmount = rsValue & 0x1F; // Mask to 0-31 range
+    uint32_t shiftAmount = rsValue & 0x1F;  // Mask to 0-31 range
 
     // Perform left shift
     uint32_t result = rtValue << shiftAmount;
@@ -923,7 +923,7 @@ void SRLVInstruction::execute(Cpu& cpu)
 
     // Read shift amount from rs register (only use low 5 bits)
     uint32_t rsValue     = cpu.getRegisterFile().read(m_rs);
-    uint32_t shiftAmount = rsValue & 0x1F; // Mask to 0-31 range
+    uint32_t shiftAmount = rsValue & 0x1F;  // Mask to 0-31 range
 
     // Perform logical right shift (zero extension from left)
     uint32_t result = rtValue >> shiftAmount;
@@ -949,7 +949,7 @@ void SRAVInstruction::execute(Cpu& cpu)
 
     // Read shift amount from rs register (only use low 5 bits)
     uint32_t rsValue     = cpu.getRegisterFile().read(m_rs);
-    uint32_t shiftAmount = rsValue & 0x1F; // Mask to 0-31 range
+    uint32_t shiftAmount = rsValue & 0x1F;  // Mask to 0-31 range
 
     // Perform arithmetic right shift (sign extension from left)
     int32_t result = rtValue >> shiftAmount;
@@ -969,7 +969,7 @@ std::string SRAVInstruction::getName() const
 // ===== JR Instruction =====
 
 JRInstruction::JRInstruction(int rs) : RTypeInstruction(0, rs, 0)
-{ // rd=0, rt=0 (unused for JR)
+{  // rd=0, rt=0 (unused for JR)
 }
 
 void JRInstruction::execute(Cpu& cpu)
@@ -993,7 +993,7 @@ JALInstruction::JALInstruction(uint32_t target) : m_target(target) {}
 void JALInstruction::execute(Cpu& cpu)
 {
     // Save return address in $ra (register 31)
-    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4; // Next instruction address
+    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
     cpu.getRegisterFile().write(31, returnAddress);
 
     // Jump to target address
@@ -1008,7 +1008,7 @@ std::string JALInstruction::getName() const
 // ===== JALR Instruction =====
 
 JALRInstruction::JALRInstruction(int rd, int rs) : RTypeInstruction(rd, rs, 0)
-{ // rt=0 (unused for JALR)
+{  // rt=0 (unused for JALR)
 }
 
 void JALRInstruction::execute(Cpu& cpu)
@@ -1017,7 +1017,7 @@ void JALRInstruction::execute(Cpu& cpu)
     uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
 
     // Save return address in destination register
-    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4; // Next instruction address
+    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
     cpu.getRegisterFile().write(m_rd, returnAddress);
 
     // Jump to target address (convert to word address by dividing by 4)
@@ -1120,7 +1120,7 @@ SyscallInstruction::SyscallInstruction() {}
 void SyscallInstruction::execute(Cpu& cpu)
 {
     // System call number is in $v0 (register 2)
-    uint32_t syscallNumber = cpu.getRegisterFile().read(2); // $v0
+    uint32_t syscallNumber = cpu.getRegisterFile().read(2);  // $v0
 
     switch (syscallNumber)
     {
@@ -1136,10 +1136,10 @@ void SyscallInstruction::execute(Cpu& cpu)
     case 10:
         handleExit(cpu);
         break;
-    case 11: // print_character (avoiding conflict with original syscall 1)
+    case 11:  // print_character (avoiding conflict with original syscall 1)
         handlePrintCharacter(cpu);
         break;
-    case 12: // read_character (avoiding conflict with original syscall 4)
+    case 12:  // read_character (avoiding conflict with original syscall 4)
         handleReadCharacter(cpu);
         break;
     default:
@@ -1153,14 +1153,14 @@ void SyscallInstruction::execute(Cpu& cpu)
 void SyscallInstruction::handlePrintInt(Cpu& cpu)
 {
     // Integer to print is in $a0 (register 4)
-    uint32_t value = cpu.getRegisterFile().read(4); // $a0
+    uint32_t value = cpu.getRegisterFile().read(4);  // $a0
     cpu.printInt(value);
 }
 
 void SyscallInstruction::handlePrintString(Cpu& cpu)
 {
     // String address is in $a0 (register 4)
-    uint32_t stringAddress = cpu.getRegisterFile().read(4); // $a0
+    uint32_t stringAddress = cpu.getRegisterFile().read(4);  // $a0
 
     // Read string from memory character by character until null terminator
     std::string str;
@@ -1197,7 +1197,7 @@ void SyscallInstruction::handleReadInt(Cpu& cpu)
 {
     // Read integer from input and store in $v0
     uint32_t value = cpu.readInt();
-    cpu.getRegisterFile().write(2, value); // $v0
+    cpu.getRegisterFile().write(2, value);  // $v0
 }
 
 void SyscallInstruction::handleExit(Cpu& cpu)
@@ -1209,15 +1209,15 @@ void SyscallInstruction::handleExit(Cpu& cpu)
 void SyscallInstruction::handlePrintCharacter(Cpu& cpu)
 {
     // Character code to print is in $a0 (register 4)
-    uint32_t charCode = cpu.getRegisterFile().read(4); // $a0
-    char character = static_cast<char>(charCode & 0xFF); // Use only lower 8 bits
+    uint32_t charCode  = cpu.getRegisterFile().read(4);       // $a0
+    char     character = static_cast<char>(charCode & 0xFF);  // Use only lower 8 bits
     cpu.printChar(character);
 }
 
 void SyscallInstruction::handleReadCharacter(Cpu& cpu)
 {
     char character = cpu.readChar();
-    cpu.getRegisterFile().write(2, static_cast<uint32_t>(character)); // $v0 = character
+    cpu.getRegisterFile().write(2, static_cast<uint32_t>(character));  // $v0 = character
 }
 
 std::string SyscallInstruction::getName() const
@@ -1235,7 +1235,7 @@ LLOInstruction::LLOInstruction(int rt, uint16_t immediate)
 void LLOInstruction::execute(Cpu& cpu)
 {
     uint32_t currentValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t newValue = (currentValue & 0xFFFF0000u) | (static_cast<uint32_t>(m_imm) & 0xFFFF);
+    uint32_t newValue     = (currentValue & 0xFFFF0000u) | (static_cast<uint32_t>(m_imm) & 0xFFFF);
     cpu.getRegisterFile().write(m_rt, newValue);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
@@ -1255,7 +1255,8 @@ LHIInstruction::LHIInstruction(int rt, uint16_t immediate)
 void LHIInstruction::execute(Cpu& cpu)
 {
     uint32_t currentValue = cpu.getRegisterFile().read(m_rt);
-    uint32_t newValue = (currentValue & 0x0000FFFFu) | ((static_cast<uint32_t>(m_imm) & 0xFFFF) << 16);
+    uint32_t newValue =
+        (currentValue & 0x0000FFFFu) | ((static_cast<uint32_t>(m_imm) & 0xFFFF) << 16);
     cpu.getRegisterFile().write(m_rt, newValue);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
@@ -1267,9 +1268,7 @@ std::string LHIInstruction::getName() const
 
 // ===== TRAP Instruction =====
 
-TrapInstruction::TrapInstruction(uint32_t trapCode) : m_trapCode(trapCode)
-{
-}
+TrapInstruction::TrapInstruction(uint32_t trapCode) : m_trapCode(trapCode) {}
 
 void TrapInstruction::execute(Cpu& cpu)
 {
@@ -1283,4 +1282,4 @@ std::string TrapInstruction::getName() const
     return "trap";
 }
 
-} // namespace mips
+}  // namespace mips

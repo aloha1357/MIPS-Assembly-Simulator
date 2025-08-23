@@ -113,7 +113,7 @@ TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_DecoderIntegration_Should
     EXPECT_EQ(instruction->getName(), "bgtz");
 
     // 驗證指令執行功能
-    cpu->getRegisterFile().write(8, 10); // $t0 = 10 (正數)
+    cpu->getRegisterFile().write(8, 10);  // $t0 = 10 (正數)
     cpu->setProgramCounter(0x1000);
 
     instruction->execute(*cpu);
@@ -139,10 +139,10 @@ TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_DecoderVariants_ShouldDec
     };
 
     std::vector<TestCase> testCases = {
-        {9, 4, 1, true},                            // $t1=1, offset=4, 應分支
-        {10, -2, 0, false},                         // $t2=0, offset=-2, 不應分支
-        {16, 16, static_cast<uint32_t>(-5), false}, // $s0=-5, offset=16, 不應分支
-        {8, 12, INT_MAX, true}                      // $t0=INT_MAX, offset=12, 應分支
+        {9, 4, 1, true},                             // $t1=1, offset=4, 應分支
+        {10, -2, 0, false},                          // $t2=0, offset=-2, 不應分支
+        {16, 16, static_cast<uint32_t>(-5), false},  // $s0=-5, offset=16, 不應分支
+        {8, 12, INT_MAX, true}                       // $t0=INT_MAX, offset=12, 應分支
     };
 
     for (const auto& testCase : testCases)
@@ -189,7 +189,7 @@ TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_AssemblerIntegration_Shou
     EXPECT_EQ(instructions[0]->getName(), "bgtz");
 
     // 驗證組譯後的指令功能
-    cpu->getRegisterFile().write(8, 5); // $t0 = 5
+    cpu->getRegisterFile().write(8, 5);  // $t0 = 5
     cpu->setProgramCounter(0x3000);
 
     instructions[0]->execute(*cpu);
@@ -206,10 +206,10 @@ TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_AssemblerIntegration_Shou
 TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_AssemblerVariants_ShouldParseCorrectly)
 {
     std::vector<std::string> syntaxVariants = {
-        "bgtz $t1, 8",    // 基本語法
-        "bgtz $t2, -4",   // 負偏移
-        "bgtz $s0, 0x10", // 十六進制偏移
-        "bgtz $t0, 4"     // 正偏移 (改為非零偏移)
+        "bgtz $t1, 8",     // 基本語法
+        "bgtz $t2, -4",    // 負偏移
+        "bgtz $s0, 0x10",  // 十六進制偏移
+        "bgtz $t0, 4"      // 正偏移 (改為非零偏移)
     };
 
     for (const auto& syntax : syntaxVariants)
@@ -241,10 +241,10 @@ TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_AssemblerVariants_ShouldP
 TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_AssemblerInvalidSyntax_ShouldReturnEmpty)
 {
     std::vector<std::string> invalidSyntax = {
-        "bgtz",       // 缺少參數
-        "bgtz $t0",   // 缺少偏移
-        "bgtz 5, 8",  // 無效暫存器格式
-        "bgtz $32, 4" // 無效暫存器編號
+        "bgtz",        // 缺少參數
+        "bgtz $t0",    // 缺少偏移
+        "bgtz 5, 8",   // 無效暫存器格式
+        "bgtz $32, 4"  // 無效暫存器編號
         // 注意: "bgtz $t0, $t1" 會被當作標籤處理，所以不是真正的錯誤
     };
 
@@ -269,7 +269,7 @@ TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_EndToEndIntegration_Shoul
 
     // 模擬機器碼生成與解碼 (在實際環境中會由組譯器生成機器碼)
     // 這裡手動構造對應的機器碼進行解碼驗證
-    uint32_t machineCode        = encodeITypeInstruction(0x07, 10, 0, -8); // $t2, offset=-8
+    uint32_t machineCode        = encodeITypeInstruction(0x07, 10, 0, -8);  // $t2, offset=-8
     auto     decodedInstruction = decoder->decode(machineCode);
 
     ASSERT_NE(decodedInstruction, nullptr);
@@ -277,14 +277,14 @@ TEST_F(BGTZInstructionIntegrationTest, BGTZInstruction_EndToEndIntegration_Shoul
 
     // 測試兩種路徑的執行結果一致性
     // 路徑1: 組譯器生成的指令
-    cpu->getRegisterFile().write(10, 3); // $t2 = 3 (正數)
+    cpu->getRegisterFile().write(10, 3);  // $t2 = 3 (正數)
     cpu->setProgramCounter(0x5000);
 
     instructions[0]->execute(*cpu);
     uint32_t pc1 = cpu->getProgramCounter();
 
     // 路徑2: 解碼器生成的指令
-    cpu->getRegisterFile().write(10, 3); // $t2 = 3 (正數)
+    cpu->getRegisterFile().write(10, 3);  // $t2 = 3 (正數)
     cpu->setProgramCounter(0x5000);
 
     decodedInstruction->execute(*cpu);

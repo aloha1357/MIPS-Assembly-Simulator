@@ -164,9 +164,9 @@ TEST_F(OriInstructionBDDTest, Framework_BddHelpers_ShouldWork)
 TEST_F(OriInstructionBDDTest, Framework_CpuInitialization_ShouldBeClean)
 {
     EXPECT_EQ(cpu->getProgramCounter(), 0);
-    EXPECT_EQ(cpu->getRegisterFile().read(0), 0); // $zero
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 0); // $t0
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 0); // $t1
+    EXPECT_EQ(cpu->getRegisterFile().read(0), 0);  // $zero
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 0);  // $t0
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 0);  // $t1
 }
 
 // ============================================================================

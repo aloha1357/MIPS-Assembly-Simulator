@@ -16,7 +16,7 @@ TEST_CASE("MIPS Simulator - CPU Initialization")
 
 TEST_CASE("MIPS Simulator - Memory Operations")
 {
-    mips::Memory memory(4096); // 4KB memory
+    mips::Memory memory(4096);  // 4KB memory
 
     SECTION("Word-aligned memory access")
     {

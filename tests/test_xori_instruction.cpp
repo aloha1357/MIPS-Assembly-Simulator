@@ -67,10 +67,10 @@ class XoriInstructionTest : public ::testing::Test
 TEST_F(XoriInstructionTest, XoriInstruction_BasicXorOperation)
 {
     // Arrange
-    setRegisterValue(8, 0x0000FFFF); // $t0 = 0x0000FFFF
+    setRegisterValue(8, 0x0000FFFF);  // $t0 = 0x0000FFFF
 
     // Act
-    mips::XoriInstruction instr(9, 8, 0x00FF); // xori $t1, $t0, 0x00FF
+    mips::XoriInstruction instr(9, 8, 0x00FF);  // xori $t1, $t0, 0x00FF
     instr.execute(*cpu);
 
     // Assert
@@ -87,10 +87,10 @@ TEST_F(XoriInstructionTest, XoriInstruction_BasicXorOperation)
 TEST_F(XoriInstructionTest, XoriInstruction_ZeroImmediateIdentity)
 {
     // Arrange
-    setRegisterValue(12, 0x12345678); // $t4
+    setRegisterValue(12, 0x12345678);  // $t4
 
     // Act
-    mips::XoriInstruction instr(13, 12, 0x0000); // xori $t5, $t4, 0x0000
+    mips::XoriInstruction instr(13, 12, 0x0000);  // xori $t5, $t4, 0x0000
     instr.execute(*cpu);
 
     // Assert
@@ -106,10 +106,10 @@ TEST_F(XoriInstructionTest, XoriInstruction_ZeroImmediateIdentity)
 TEST_F(XoriInstructionTest, XoriInstruction_AllOnesImmediate)
 {
     // Arrange
-    setRegisterValue(14, 0x12345678); // $t6
+    setRegisterValue(14, 0x12345678);  // $t6
 
     // Act
-    mips::XoriInstruction instr(15, 14, static_cast<int16_t>(0xFFFF)); // xori $t7, $t6, 0xFFFF
+    mips::XoriInstruction instr(15, 14, static_cast<int16_t>(0xFFFF));  // xori $t7, $t6, 0xFFFF
     instr.execute(*cpu);
 
     // Assert
@@ -125,10 +125,10 @@ TEST_F(XoriInstructionTest, XoriInstruction_AllOnesImmediate)
 TEST_F(XoriInstructionTest, XoriInstruction_BitMask)
 {
     // Arrange
-    setRegisterValue(16, 0xAAAABBBB); // $s0
+    setRegisterValue(16, 0xAAAABBBB);  // $s0
 
     // Act
-    mips::XoriInstruction instr(17, 16, 0x0F0F); // xori $s1, $s0, 0x0F0F
+    mips::XoriInstruction instr(17, 16, 0x0F0F);  // xori $s1, $s0, 0x0F0F
     instr.execute(*cpu);
 
     // Assert
@@ -144,10 +144,10 @@ TEST_F(XoriInstructionTest, XoriInstruction_BitMask)
 TEST_F(XoriInstructionTest, XoriInstruction_WithZeroRegister)
 {
     // Arrange
-    setRegisterValue(0, 0x00000000); // $zero (實際上總是0)
+    setRegisterValue(0, 0x00000000);  // $zero (實際上總是0)
 
     // Act
-    mips::XoriInstruction instr(18, 0, 0x1234); // xori $s2, $zero, 0x1234
+    mips::XoriInstruction instr(18, 0, 0x1234);  // xori $s2, $zero, 0x1234
     instr.execute(*cpu);
 
     // Assert
@@ -163,10 +163,10 @@ TEST_F(XoriInstructionTest, XoriInstruction_WithZeroRegister)
 TEST_F(XoriInstructionTest, XoriInstruction_BitFlipping)
 {
     // Arrange
-    setRegisterValue(19, 0xDEADBEEF); // $s3
+    setRegisterValue(19, 0xDEADBEEF);  // $s3
 
     // Act
-    mips::XoriInstruction instr(20, 19, 0x00FF); // xori $s4, $s3, 0x00FF
+    mips::XoriInstruction instr(20, 19, 0x00FF);  // xori $s4, $s3, 0x00FF
     instr.execute(*cpu);
 
     // Assert
@@ -206,5 +206,5 @@ TEST_F(XoriInstructionTest, XoriInstruction_FrameworkTest_ProgramCounterIncremen
     EXPECT_EQ(101, cpu->getProgramCounter()) << "程式計數器應該遞增1";
 }
 
-} // namespace test
-} // namespace mips
+}  // namespace test
+}  // namespace mips

@@ -55,11 +55,11 @@ class MULTInstructionBDD : public ::testing::Test
 TEST_F(MULTInstructionBDD, BasicSignedMultiplication)
 {
     // Given: Two positive numbers
-    cpu->getRegisterFile().write(8, 123); // $t0 = 123
-    cpu->getRegisterFile().write(9, 456); // $t1 = 456
+    cpu->getRegisterFile().write(8, 123);  // $t0 = 123
+    cpu->getRegisterFile().write(9, 456);  // $t1 = 456
 
     // When: MULT $t0, $t1
-    uint32_t mult_instruction = 0x01094818; // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
+    uint32_t mult_instruction = 0x01094818;  // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
     auto     instruction      = decoder->decode(mult_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
@@ -83,11 +83,11 @@ TEST_F(MULTInstructionBDD, BasicSignedMultiplication)
 TEST_F(MULTInstructionBDD, SixtyFourBitResult)
 {
     // Given: Two large numbers
-    cpu->getRegisterFile().write(8, 0x7FFFFFFF); // $t0 = max positive int32
-    cpu->getRegisterFile().write(9, 2);          // $t1 = 2
+    cpu->getRegisterFile().write(8, 0x7FFFFFFF);  // $t0 = max positive int32
+    cpu->getRegisterFile().write(9, 2);           // $t1 = 2
 
     // When: MULT $t0, $t1
-    uint32_t mult_instruction = 0x01094818; // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
+    uint32_t mult_instruction = 0x01094818;  // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
     auto     instruction      = decoder->decode(mult_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
@@ -111,11 +111,11 @@ TEST_F(MULTInstructionBDD, SixtyFourBitResult)
 TEST_F(MULTInstructionBDD, NegativeMultiplication)
 {
     // Given: One positive, one negative number
-    cpu->getRegisterFile().write(8, 100);        // $t0 = 100
-    cpu->getRegisterFile().write(9, 0xFFFFFFFF); // $t1 = -1 (signed)
+    cpu->getRegisterFile().write(8, 100);         // $t0 = 100
+    cpu->getRegisterFile().write(9, 0xFFFFFFFF);  // $t1 = -1 (signed)
 
     // When: MULT $t0, $t1
-    uint32_t mult_instruction = 0x01094818; // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
+    uint32_t mult_instruction = 0x01094818;  // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
     auto     instruction      = decoder->decode(mult_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
@@ -139,11 +139,11 @@ TEST_F(MULTInstructionBDD, NegativeMultiplication)
 TEST_F(MULTInstructionBDD, ZeroMultiplication)
 {
     // Given: One operand is zero
-    cpu->getRegisterFile().write(8, 0);     // $t0 = 0
-    cpu->getRegisterFile().write(9, 12345); // $t1 = 12345
+    cpu->getRegisterFile().write(8, 0);      // $t0 = 0
+    cpu->getRegisterFile().write(9, 12345);  // $t1 = 12345
 
     // When: MULT $t0, $t1
-    uint32_t mult_instruction = 0x01094818; // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
+    uint32_t mult_instruction = 0x01094818;  // MULT opcode, rs=$t0(8), rt=$t1(9), function=0x18
     auto     instruction      = decoder->decode(mult_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);

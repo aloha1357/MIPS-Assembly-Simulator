@@ -21,8 +21,8 @@ TEST_F(SyscallTest, PrintIntSyscall)
 {
     // Test syscall 1: print_int
     // Set up registers: $v0 = 1 (print_int), $a0 = 42 (value to print)
-    cpu->getRegisterFile().write(2, 1);  // $v0
-    cpu->getRegisterFile().write(4, 42); // $a0
+    cpu->getRegisterFile().write(2, 1);   // $v0
+    cpu->getRegisterFile().write(4, 42);  // $a0
 
     // Create and execute syscall instruction
     std::string program = "syscall";
@@ -46,8 +46,8 @@ TEST_F(SyscallTest, PrintStringBasic)
     cpu->getMemory().writeWord(stringAddr, stringWord);
 
     // Set up registers: $v0 = 4 (print_string), $a0 = string address
-    cpu->getRegisterFile().write(2, 4);          // $v0
-    cpu->getRegisterFile().write(4, stringAddr); // $a0
+    cpu->getRegisterFile().write(2, 4);           // $v0
+    cpu->getRegisterFile().write(4, stringAddr);  // $a0
 
     // Execute syscall
     std::string program = "syscall";
@@ -65,7 +65,7 @@ TEST_F(SyscallTest, ReadIntSyscall)
     cpu->setConsoleInput("123");
 
     // Set up registers: $v0 = 5 (read_int)
-    cpu->getRegisterFile().write(2, 5); // $v0
+    cpu->getRegisterFile().write(2, 5);  // $v0
 
     // Execute syscall
     std::string program = "syscall";
@@ -80,7 +80,7 @@ TEST_F(SyscallTest, ExitSyscall)
 {
     // Test syscall 10: exit
     // Set up registers: $v0 = 10 (exit)
-    cpu->getRegisterFile().write(2, 10); // $v0
+    cpu->getRegisterFile().write(2, 10);  // $v0
 
     // Check initial state
     EXPECT_FALSE(cpu->shouldTerminate());
@@ -107,7 +107,7 @@ TEST_F(SyscallTest, TerminationStopsExecution)
 
     // Execute first instruction (sets $v0 to 10)
     cpu->tick();
-    EXPECT_EQ(cpu->getRegisterFile().read(2), 10); // $v0 should be 10
+    EXPECT_EQ(cpu->getRegisterFile().read(2), 10);  // $v0 should be 10
     EXPECT_FALSE(cpu->shouldTerminate());
 
     // Execute syscall (should terminate)
@@ -116,7 +116,7 @@ TEST_F(SyscallTest, TerminationStopsExecution)
 
     // Try to execute next instruction (should not execute)
     cpu->tick();
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 0); // $t0 should still be 0
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 0);  // $t0 should still be 0
 }
 
 TEST_F(SyscallTest, ComplexPrintIntProgram)
@@ -152,7 +152,7 @@ TEST_F(SyscallTest, ComplexPrintIntProgram)
 TEST_F(SyscallTest, UnknownSyscallIgnored)
 {
     // Test unknown syscall number (should be ignored)
-    cpu->getRegisterFile().write(2, 999); // $v0 = unknown syscall
+    cpu->getRegisterFile().write(2, 999);  // $v0 = unknown syscall
 
     std::string program = "syscall";
     cpu->loadProgramFromString(program);

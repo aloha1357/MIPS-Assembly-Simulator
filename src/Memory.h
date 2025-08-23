@@ -12,7 +12,7 @@ namespace mips
 class Memory
 {
   public:
-    static constexpr uint32_t MEMORY_SIZE = 0x100000; // 1MB
+    static constexpr uint32_t MEMORY_SIZE = 0x100000;  // 1MB
 
     Memory();
 
@@ -72,4 +72,4 @@ class Memory
     std::vector<uint8_t> m_data;
 };
 
-} // namespace mips
+}  // namespace mips

@@ -65,9 +65,9 @@ class JRInstructionBDD : public ::testing::Test
 TEST_F(JRInstructionBDD, BasicRegisterJump)
 {
     // Given: rs register contains target address
-    const uint32_t rs_register    = 8; // $t0
+    const uint32_t rs_register    = 8;  // $t0
     const uint32_t target_address = 0x00001000;
-    const uint32_t expected_pc    = target_address / 4; // Word address
+    const uint32_t expected_pc    = target_address / 4;  // Word address
 
     cpu->getRegisterFile().write(rs_register, target_address);
 
@@ -89,12 +89,12 @@ TEST_F(JRInstructionBDD, BasicRegisterJump)
 TEST_F(JRInstructionBDD, DifferentRegisterJump)
 {
     // Given: different source register with target address
-    const uint32_t rs_register    = 16; // $s0
+    const uint32_t rs_register    = 16;  // $s0
     const uint32_t target_address = 0x00002000;
     const uint32_t expected_pc    = target_address / 4;
 
     cpu->getRegisterFile().write(rs_register, target_address);
-    cpu->setProgramCounter(0x00000100 / 4); // Set initial PC
+    cpu->setProgramCounter(0x00000100 / 4);  // Set initial PC
 
     // When: Execute JR instruction
     auto jr_instruction = std::make_unique<mips::JRInstruction>(rs_register);
@@ -114,7 +114,7 @@ TEST_F(JRInstructionBDD, DifferentRegisterJump)
 TEST_F(JRInstructionBDD, ZeroAddressJump)
 {
     // Given: rs register contains zero address
-    const uint32_t rs_register    = 8; // $t0
+    const uint32_t rs_register    = 8;  // $t0
     const uint32_t target_address = 0x00000000;
     const uint32_t expected_pc    = 0;
 
@@ -138,7 +138,7 @@ TEST_F(JRInstructionBDD, ZeroAddressJump)
 TEST_F(JRInstructionBDD, HighAddressJump)
 {
     // Given: rs register contains high address
-    const uint32_t rs_register    = 8; // $t0
+    const uint32_t rs_register    = 8;  // $t0
     const uint32_t target_address = 0x7FFFF000;
     const uint32_t expected_pc    = target_address / 4;
 

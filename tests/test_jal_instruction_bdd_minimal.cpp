@@ -65,9 +65,9 @@ class JALInstructionBDD : public ::testing::Test
 TEST_F(JALInstructionBDD, BasicJumpAndLink)
 {
     // Given: PC at specific address
-    const uint32_t initial_pc              = 0x00000100 / 4;       // Word address
-    const uint32_t target_address          = 0x2000;               // Word address
-    const uint32_t expected_return_address = (initial_pc + 1) * 4; // Byte address
+    const uint32_t initial_pc              = 0x00000100 / 4;        // Word address
+    const uint32_t target_address          = 0x2000;                // Word address
+    const uint32_t expected_return_address = (initial_pc + 1) * 4;  // Byte address
 
     cpu->setProgramCounter(initial_pc);
 
@@ -77,7 +77,7 @@ TEST_F(JALInstructionBDD, BasicJumpAndLink)
 
     // Then: PC should jump to target and $ra should contain return address
     uint32_t actual_pc             = cpu->getProgramCounter();
-    uint32_t actual_return_address = cpu->getRegisterFile().read(31); // $ra = 31
+    uint32_t actual_return_address = cpu->getRegisterFile().read(31);  // $ra = 31
 
     EXPECT_EQ(target_address, actual_pc);
     EXPECT_EQ(expected_return_address, actual_return_address);

@@ -93,4 +93,4 @@ void WBStage::setInputRegister(PipelineRegister* inputReg)
     m_inputRegister = inputReg;
 }
 
-} // namespace mips
+}  // namespace mips

@@ -62,7 +62,7 @@ TEST_F(JALRInstructionIntegration, DecoderCreatesJALRInstruction)
     // Given: Machine code for JALR $ra, $t0
     // Format: R-type, rs=$t0(8), rt=0, rd=$ra(31), shamt=0, function=0x09
     // Binary: 000000 01000 00000 11111 00000 001001
-    const uint32_t machine_code = 0x01000009 | (31 << 11); // JALR $ra, $t0
+    const uint32_t machine_code = 0x01000009 | (31 << 11);  // JALR $ra, $t0
 
     // When: Decode machine code
     auto instruction = decoder->decode(machine_code);
@@ -75,12 +75,12 @@ TEST_F(JALRInstructionIntegration, DecoderCreatesJALRInstruction)
     const uint32_t initial_pc     = 100;
     const uint32_t target_address = 0x2000;
     cpu->setProgramCounter(initial_pc);
-    cpu->getRegisterFile().write(8, target_address); // $t0 = target
+    cpu->getRegisterFile().write(8, target_address);  // $t0 = target
 
     instruction->execute(*cpu);
 
     EXPECT_EQ(cpu->getProgramCounter(), target_address / 4);
-    EXPECT_EQ(cpu->getRegisterFile().read(31), (initial_pc + 1) * 4); // $ra
+    EXPECT_EQ(cpu->getRegisterFile().read(31), (initial_pc + 1) * 4);  // $ra
 }
 
 /**
@@ -103,12 +103,12 @@ TEST_F(JALRInstructionIntegration, AssemblerParsesJALRTwoOperands)
     const uint32_t initial_pc     = 200;
     const uint32_t target_address = 0x3000;
     cpu->setProgramCounter(initial_pc);
-    cpu->getRegisterFile().write(16, target_address); // $s0 = target
+    cpu->getRegisterFile().write(16, target_address);  // $s0 = target
 
     instructions[0]->execute(*cpu);
 
     EXPECT_EQ(cpu->getProgramCounter(), target_address / 4);
-    EXPECT_EQ(cpu->getRegisterFile().read(17), (initial_pc + 1) * 4); // $s1
+    EXPECT_EQ(cpu->getRegisterFile().read(17), (initial_pc + 1) * 4);  // $s1
 }
 
 /**
@@ -131,12 +131,12 @@ TEST_F(JALRInstructionIntegration, AssemblerParsesJALRSingleOperand)
     const uint32_t initial_pc     = 300;
     const uint32_t target_address = 0x4000;
     cpu->setProgramCounter(initial_pc);
-    cpu->getRegisterFile().write(10, target_address); // $t2 = target
+    cpu->getRegisterFile().write(10, target_address);  // $t2 = target
 
     instructions[0]->execute(*cpu);
 
     EXPECT_EQ(cpu->getProgramCounter(), target_address / 4);
-    EXPECT_EQ(cpu->getRegisterFile().read(31), (initial_pc + 1) * 4); // $ra (default)
+    EXPECT_EQ(cpu->getRegisterFile().read(31), (initial_pc + 1) * 4);  // $ra (default)
 }
 
 /**
@@ -178,13 +178,13 @@ TEST_F(JALRInstructionIntegration, AssemblerRejectsInvalidSyntax)
 TEST_F(JALRInstructionIntegration, EndToEndFunctionCallScenario)
 {
     // Given: Simulated function call scenario
-    const uint32_t main_function_pc     = 0x1000 / 4; // Main function at 0x1000
-    const uint32_t target_function_addr = 0x2000;     // Target function at 0x2000
+    const uint32_t main_function_pc     = 0x1000 / 4;  // Main function at 0x1000
+    const uint32_t target_function_addr = 0x2000;      // Target function at 0x2000
     const uint32_t expected_return_addr = (main_function_pc + 1) * 4;
 
     // Setup: Main function calls target function
     cpu->setProgramCounter(main_function_pc);
-    cpu->getRegisterFile().write(8, target_function_addr); // $t0 = function address
+    cpu->getRegisterFile().write(8, target_function_addr);  // $t0 = function address
 
     // When: Execute JALR for function call
     const std::string call_assembly     = "jalr $ra, $t0";
@@ -195,10 +195,10 @@ TEST_F(JALRInstructionIntegration, EndToEndFunctionCallScenario)
 
     // Then: Should jump to function and save return address
     EXPECT_EQ(cpu->getProgramCounter(), target_function_addr / 4);
-    EXPECT_EQ(cpu->getRegisterFile().read(31), expected_return_addr); // $ra
+    EXPECT_EQ(cpu->getRegisterFile().read(31), expected_return_addr);  // $ra
 
     // Simulate function return using JR $ra (if available)
-    cpu->setProgramCounter(expected_return_addr / 4); // Simulate return
+    cpu->setProgramCounter(expected_return_addr / 4);  // Simulate return
 
     // Verify we're back at the expected return location
     EXPECT_EQ(cpu->getProgramCounter(), expected_return_addr / 4);
@@ -231,7 +231,7 @@ TEST_F(JALRInstructionIntegration, DecoderAssemblerConsistency)
 
     // Test decoded instruction
     cpu->setProgramCounter(initial_pc);
-    cpu->getRegisterFile().write(15, target_address); // $t7 = target
+    cpu->getRegisterFile().write(15, target_address);  // $t7 = target
     decoded_instruction->execute(*cpu);
 
     uint32_t decoded_pc = cpu->getProgramCounter();
@@ -239,8 +239,8 @@ TEST_F(JALRInstructionIntegration, DecoderAssemblerConsistency)
 
     // Reset and test assembled instruction
     cpu->setProgramCounter(initial_pc);
-    cpu->getRegisterFile().write(15, target_address); // $t7 = target
-    cpu->getRegisterFile().write(31, 0);              // Clear $ra
+    cpu->getRegisterFile().write(15, target_address);  // $t7 = target
+    cpu->getRegisterFile().write(31, 0);               // Clear $ra
     assembled_instructions[0]->execute(*cpu);
 
     uint32_t assembled_pc = cpu->getProgramCounter();

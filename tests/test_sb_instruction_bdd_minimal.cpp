@@ -68,11 +68,11 @@ TEST_F(SBInstructionBDD, BasicByteStore_Low8Bits)
 {
     // Given: Register contains value with specific low byte
     const uint32_t base_address   = 0x1000;
-    const uint32_t rs_register    = 8; // $t0 (base address register)
-    const uint32_t rt_register    = 9; // $t1 (source register)
+    const uint32_t rs_register    = 8;  // $t0 (base address register)
+    const uint32_t rt_register    = 9;  // $t1 (source register)
     const int16_t  offset         = 0;
     const uint32_t register_value = 0x12345678;
-    const uint8_t  expected_byte  = 0x78; // Low 8 bits
+    const uint8_t  expected_byte  = 0x78;  // Low 8 bits
 
     cpu->getRegisterFile().write(rs_register, base_address);
     cpu->getRegisterFile().write(rt_register, register_value);
@@ -100,11 +100,11 @@ TEST_F(SBInstructionBDD, ByteTruncation_HighBitsIgnored)
 {
     // Given: Register contains value with high bits set
     const uint32_t base_address   = 0x2000;
-    const uint32_t rs_register    = 10; // $t2 (base address register)
-    const uint32_t rt_register    = 11; // $t3 (source register)
+    const uint32_t rs_register    = 10;  // $t2 (base address register)
+    const uint32_t rt_register    = 11;  // $t3 (source register)
     const int16_t  offset         = 0;
     const uint32_t register_value = 0xABCDEF42;
-    const uint8_t  expected_byte  = 0x42; // Only low 8 bits matter
+    const uint8_t  expected_byte  = 0x42;  // Only low 8 bits matter
 
     cpu->getRegisterFile().write(rs_register, base_address);
     cpu->getRegisterFile().write(rt_register, register_value);
@@ -131,10 +131,10 @@ TEST_F(SBInstructionBDD, PositiveOffset_CalculateAddress)
 {
     // Given: Positive offset for address calculation
     const uint32_t base_address      = 0x3000;
-    const uint32_t rs_register       = 12; // $t4 (base address register)
-    const uint32_t rt_register       = 13; // $t5 (source register)
+    const uint32_t rs_register       = 12;  // $t4 (base address register)
+    const uint32_t rt_register       = 13;  // $t5 (source register)
     const int16_t  offset            = 8;
-    const uint32_t effective_address = base_address + offset; // 0x3008
+    const uint32_t effective_address = base_address + offset;  // 0x3008
     const uint32_t register_value    = 0x000000AA;
     const uint8_t  expected_byte     = 0xAA;
 
@@ -151,7 +151,7 @@ TEST_F(SBInstructionBDD, PositiveOffset_CalculateAddress)
 
     // Verify byte was not stored at base address
     uint8_t base_byte = cpu->getMemory().readByte(base_address);
-    EXPECT_EQ(0, base_byte); // Should remain zero
+    EXPECT_EQ(0, base_byte);  // Should remain zero
 
     // PC should increment
     EXPECT_EQ(1, cpu->getProgramCounter());
@@ -167,12 +167,12 @@ TEST_F(SBInstructionBDD, NegativeOffset_CalculateAddress)
 {
     // Given: Negative offset for address calculation
     const uint32_t base_address      = 0x4000;
-    const uint32_t rs_register       = 14; // $t6 (base address register)
-    const uint32_t rt_register       = 15; // $t7 (source register)
+    const uint32_t rs_register       = 14;  // $t6 (base address register)
+    const uint32_t rt_register       = 15;  // $t7 (source register)
     const int16_t  offset            = -4;
-    const uint32_t effective_address = base_address + offset; // 0x3FFC
+    const uint32_t effective_address = base_address + offset;  // 0x3FFC
     const uint32_t register_value    = 0xFFFFFF55;
-    const uint8_t  expected_byte     = 0x55; // Low 8 bits
+    const uint8_t  expected_byte     = 0x55;  // Low 8 bits
 
     cpu->getRegisterFile().write(rs_register, base_address);
     cpu->getRegisterFile().write(rt_register, register_value);

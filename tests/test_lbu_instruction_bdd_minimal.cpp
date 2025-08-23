@@ -30,8 +30,8 @@ class LBUInstructionBDDTest : public ::testing::Test
         cpu->getMemory().reset();
 
         // Initialize test data in memory
-        cpu->getMemory().writeWord(1000, 0x12345678); // Test data at address 1000
-        cpu->getMemory().writeWord(1004, 0x9ABCDEF0); // Test data at address 1004
+        cpu->getMemory().writeWord(1000, 0x12345678);  // Test data at address 1000
+        cpu->getMemory().writeWord(1004, 0x9ABCDEF0);  // Test data at address 1004
     }
 
     void TearDown() override
@@ -46,11 +46,11 @@ class LBUInstructionBDDTest : public ::testing::Test
 TEST_F(LBUInstructionBDDTest, LBU_BasicLoadUnsigned_ShouldZeroExtend)
 {
     // Given: Memory contains 0x78 at byte address 1000 (little-endian: LSB of 0x12345678)
-    cpu->getRegisterFile().write(1, 1000); // Base address
+    cpu->getRegisterFile().write(1, 1000);  // Base address
 
     // When: LBU $t0, 0($t1) - Load byte unsigned from address 1000+0 into $t0
     mips::InstructionDecoder decoder;
-    uint32_t lbu_instruction = 0x90280000; // LBU opcode=0x24, rs=$t1(9), rt=$t0(8), offset=0
+    uint32_t lbu_instruction = 0x90280000;  // LBU opcode=0x24, rs=$t1(9), rt=$t0(8), offset=0
     auto     instruction     = decoder.decode(lbu_instruction);
 
     // Then: $t0 should contain 0x00000078 (zero-extended)
@@ -61,11 +61,11 @@ TEST_F(LBUInstructionBDDTest, LBU_BasicLoadUnsigned_ShouldZeroExtend)
 TEST_F(LBUInstructionBDDTest, LBU_HighBitSet_ShouldZeroExtend)
 {
     // Given: Memory contains 0x90 at byte address 1004 (MSB has high bit set)
-    cpu->getRegisterFile().write(1, 1004); // Base address
+    cpu->getRegisterFile().write(1, 1004);  // Base address
 
     // When: LBU $t0, 0($t1) - Load byte unsigned from address 1004+0
     mips::InstructionDecoder decoder;
-    uint32_t                 lbu_instruction = 0x90280000; // LBU rs=$t1(9), rt=$t0(8), offset=0
+    uint32_t                 lbu_instruction = 0x90280000;  // LBU rs=$t1(9), rt=$t0(8), offset=0
     auto                     instruction     = decoder.decode(lbu_instruction);
 
     // Then: $t0 should contain 0x000000F0 (zero-extended, NOT sign-extended)
@@ -76,11 +76,11 @@ TEST_F(LBUInstructionBDDTest, LBU_HighBitSet_ShouldZeroExtend)
 TEST_F(LBUInstructionBDDTest, LBU_PositiveOffset_ShouldCalculateAddress)
 {
     // Given: Memory setup with test data
-    cpu->getRegisterFile().write(1, 996); // Base address
+    cpu->getRegisterFile().write(1, 996);  // Base address
 
     // When: LBU $t0, 4($t1) - Load from address 996+4=1000
     mips::InstructionDecoder decoder;
-    uint32_t                 lbu_instruction = 0x90280004; // LBU rs=$t1(9), rt=$t0(8), offset=4
+    uint32_t                 lbu_instruction = 0x90280004;  // LBU rs=$t1(9), rt=$t0(8), offset=4
     auto                     instruction     = decoder.decode(lbu_instruction);
 
     // Then: Should load byte from correct calculated address
@@ -91,12 +91,12 @@ TEST_F(LBUInstructionBDDTest, LBU_PositiveOffset_ShouldCalculateAddress)
 TEST_F(LBUInstructionBDDTest, LBU_NegativeOffset_ShouldCalculateAddress)
 {
     // Given: Memory setup with test data
-    cpu->getRegisterFile().write(1, 1008); // Base address
+    cpu->getRegisterFile().write(1, 1008);  // Base address
 
     // When: LBU $t0, -8($t1) - Load from address 1008-8=1000
     mips::InstructionDecoder decoder;
-    uint32_t                 lbu_instruction = 0x90280000 | (0xFFF8 & 0xFFFF); // LBU with offset=-8
-    auto                     instruction     = decoder.decode(lbu_instruction);
+    uint32_t lbu_instruction = 0x90280000 | (0xFFF8 & 0xFFFF);  // LBU with offset=-8
+    auto     instruction     = decoder.decode(lbu_instruction);
 
     // Then: Should load byte from correct calculated address
     instruction->execute(*cpu);

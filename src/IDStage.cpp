@@ -95,7 +95,7 @@ void IDStage::decodeInstruction(PipelineData& data)
     if (name == "add" || name == "sub")
     {
         // R-type instruction format
-        data.opcode = 0; // R-type has opcode 0
+        data.opcode = 0;  // R-type has opcode 0
         // Note: Real implementation would decode from 32-bit instruction word
         // For now, we'll extract info from our instruction objects
     }
@@ -134,31 +134,31 @@ void IDStage::generateControlSignals(PipelineData& data)
     {
         // R-type arithmetic
         data.regWrite = true;
-        data.regDst   = 1; // Write to rd
-        data.memToReg = 0; // Use ALU result
+        data.regDst   = 1;  // Write to rd
+        data.memToReg = 0;  // Use ALU result
     }
     else if (name == "addi")
     {
         // I-type arithmetic
         data.regWrite = true;
-        data.aluSrc   = true; // Use immediate
-        data.regDst   = 0;    // Write to rt
-        data.memToReg = 0;    // Use ALU result
+        data.aluSrc   = true;  // Use immediate
+        data.regDst   = 0;     // Write to rt
+        data.memToReg = 0;     // Use ALU result
     }
     else if (name == "lw")
     {
         // Load word
         data.regWrite = true;
         data.memRead  = true;
-        data.aluSrc   = true; // Use immediate for address calculation
-        data.regDst   = 0;    // Write to rt
-        data.memToReg = 1;    // Use memory data
+        data.aluSrc   = true;  // Use immediate for address calculation
+        data.regDst   = 0;     // Write to rt
+        data.memToReg = 1;     // Use memory data
     }
     else if (name == "sw")
     {
         // Store word
         data.memWrite = true;
-        data.aluSrc   = true; // Use immediate for address calculation
+        data.aluSrc   = true;  // Use immediate for address calculation
     }
     else if (name == "beq")
     {
@@ -194,24 +194,24 @@ void IDStage::readRegisters(PipelineData& data)
     if (name == "add" || name == "sub")
     {
         // R-type: rs and rt are source registers
-        data.rsValue = 0;  // Would read from register rs
-        data.rtValue = 0;  // Would read from register rt
-        data.rd      = 10; // Destination register (example: $t2)
+        data.rsValue = 0;   // Would read from register rs
+        data.rtValue = 0;   // Would read from register rt
+        data.rd      = 10;  // Destination register (example: $t2)
     }
     else if (name == "addi")
     {
         // I-type: rs is source, rt is destination
-        data.rsValue   = 0;  // Would read from register rs
-        data.immediate = 10; // Example immediate value
-        data.rt        = 8;  // Destination register (example: $t0)
+        data.rsValue   = 0;   // Would read from register rs
+        data.immediate = 10;  // Example immediate value
+        data.rt        = 8;   // Destination register (example: $t0)
     }
     else if (name == "lw" || name == "sw")
     {
         // Memory operations
-        data.rsValue   = 0;   // Base register value
-        data.rtValue   = 100; // Data to store (for sw)
-        data.immediate = 0;   // Offset
-        data.rt        = 9;   // Target register
+        data.rsValue   = 0;    // Base register value
+        data.rtValue   = 100;  // Data to store (for sw)
+        data.immediate = 0;    // Offset
+        data.rt        = 9;    // Target register
     }
 }
 
@@ -220,8 +220,8 @@ bool IDStage::detectLoadUseHazard(const PipelineData& data)
     // Simplified hazard detection
     // TODO: Implement proper load-use hazard detection
     // This would check if the previous instruction is a load and this instruction uses its result
-    (void)data; // Suppress unused parameter warning
+    (void)data;  // Suppress unused parameter warning
     return false;
 }
 
-} // namespace mips
+}  // namespace mips

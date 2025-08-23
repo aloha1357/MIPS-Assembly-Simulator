@@ -19,7 +19,7 @@ class GUIInterfaceTest : public ::testing::Test
     void SetUp() override
     {
         // Initialize GUI application (headless mode for testing)
-        gui = std::make_unique<MipsSimulatorGUI>(true); // headless = true
+        gui = std::make_unique<MipsSimulatorGUI>(true);  // headless = true
         cpu = std::make_unique<Cpu>();
     }
 
@@ -133,9 +133,9 @@ TEST_F(GUIInterfaceTest, RegisterViewerDisplaysAllMIPSRegisters)
     for (int i = 0; i < 32; ++i)
     {
         auto regInfo = gui->getRegisterInfo(i);
-        EXPECT_FALSE(regInfo.name.empty());   // Name should not be empty
-        EXPECT_TRUE(regInfo.hasDecimalValue); // Should show decimal
-        EXPECT_TRUE(regInfo.hasHexValue);     // Should show hex
+        EXPECT_FALSE(regInfo.name.empty());    // Name should not be empty
+        EXPECT_TRUE(regInfo.hasDecimalValue);  // Should show decimal
+        EXPECT_TRUE(regInfo.hasHexValue);      // Should show hex
     }
 
     // And: PC should be displayed separately
@@ -156,17 +156,17 @@ add $t2, $t0, $t1)";
     gui->stepExecution();
 
     // Then: register $t0 should show value 5
-    EXPECT_EQ(gui->getRegisterValue(8), 5u); // $t0 is register 8
+    EXPECT_EQ(gui->getRegisterValue(8), 5u);  // $t0 is register 8
 
     gui->stepExecution();
 
     // Then: register $t1 should show value 10
-    EXPECT_EQ(gui->getRegisterValue(9), 10u); // $t1 is register 9
+    EXPECT_EQ(gui->getRegisterValue(9), 10u);  // $t1 is register 9
 
     gui->stepExecution();
 
     // Then: register $t2 should show value 15
-    EXPECT_EQ(gui->getRegisterValue(10), 15u); // $t2 is register 10
+    EXPECT_EQ(gui->getRegisterValue(10), 15u);  // $t2 is register 10
 }
 
 TEST_F(GUIInterfaceTest, RegisterViewerHighlightsChangedRegisters)
@@ -218,8 +218,8 @@ lw $t1, 0($zero))";
     gui->loadProgram(program);
 
     // When: I execute step by step
-    gui->stepExecution(); // addi $t0, $zero, 100
-    gui->stepExecution(); // sw $t0, 0($zero)
+    gui->stepExecution();  // addi $t0, $zero, 100
+    gui->stepExecution();  // sw $t0, 0($zero)
 
     // Then: memory address 0 should show value 100
     EXPECT_EQ(gui->getMemoryValue(0), 100u);
@@ -316,7 +316,7 @@ addi $t1, $zero, 10)";
 
     // Then: exactly one instruction should execute
     EXPECT_EQ(gui->getPCValue(), initialPC + 1);
-    EXPECT_EQ(gui->getRegisterValue(8), 5u); // $t0 = 5
+    EXPECT_EQ(gui->getRegisterValue(8), 5u);  // $t0 = 5
 }
 
 TEST_F(GUIInterfaceTest, ResetFunctionalityWorks)
@@ -475,7 +475,7 @@ addi $t3, $zero, 4)";
     EXPECT_TRUE(gui->isExecutionPaused());
 
     // And: I should be able to inspect state
-    EXPECT_EQ(gui->getRegisterValue(8), 1u);  // $t0 = 1
-    EXPECT_EQ(gui->getRegisterValue(9), 2u);  // $t1 = 2
-    EXPECT_EQ(gui->getRegisterValue(10), 0u); // $t2 not executed yet
+    EXPECT_EQ(gui->getRegisterValue(8), 1u);   // $t0 = 1
+    EXPECT_EQ(gui->getRegisterValue(9), 2u);   // $t1 = 2
+    EXPECT_EQ(gui->getRegisterValue(10), 0u);  // $t2 not executed yet
 }

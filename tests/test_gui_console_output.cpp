@@ -1,4 +1,4 @@
-#include "gui/MipsSimulatorGUI.h" // Use base class instead of ImGui for testing
+#include "gui/MipsSimulatorGUI.h"  // Use base class instead of ImGui for testing
 #include <gtest/gtest.h>
 #include <memory>
 
@@ -64,7 +64,7 @@ syscall
     EXPECT_TRUE(loaded) << "Program should load successfully";
 
     // When: Execute the program
-    gui->runProgram(); // This method should execute the program and capture syscall output
+    gui->runProgram();  // This method should execute the program and capture syscall output
 
     // Then: GUI console should contain "42" from the syscall 1 output
     std::string consoleOutput = gui->getConsoleOutput();
@@ -72,4 +72,4 @@ syscall
         << "Console output should contain '42' from syscall 1 but was: '" << consoleOutput << "'";
 }
 
-} // namespace mips
+}  // namespace mips

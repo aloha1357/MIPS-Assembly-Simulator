@@ -1,10 +1,81 @@
+# MIPS 模擬器 clang-format 配置
+# 基於 LLVM 風格，適合 C++20 和學術專案
+
 BasedOnStyle: LLVM
+
+# 基本設置
+Language: Cpp
+Standard: c++20
+
+# 縮排設置
 IndentWidth: 4
+TabWidth: 4
 UseTab: Never
+AccessModifierOffset: -2
+
+# 換行設置
 ColumnLimit: 100
 BreakBeforeBraces: Allman
-AllowShortFunctionsOnASingleLine: Empty
-PointerAlignment: Left
-SortIncludes: CaseSensitive
+AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
+
+# 空格設置
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: false
+SpacesInContainerLiterals: true
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# 對齊設置
+AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: Consecutive
 AlignConsecutiveDeclarations: Consecutive
+AlignEscapedNewlines: Left
+AlignOperands: true
+AlignTrailingComments: true
+
+# 排序和組織
+SortIncludes: CaseSensitive
+SortUsingDeclarations: true
+
+# 函數和類格式
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+
+# 構造函數格式
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+
+# 註釋格式
+ReflowComments: true
+
+# 指針和引用對齊
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# 二進制運算符換行
+BreakBeforeBinaryOperators: None
+
+# 模板格式
+AlwaysBreakTemplateDeclarations: Yes
+
+# 命名空間格式
+NamespaceIndentation: None
+
+# 其他設置
+MaxEmptyLinesToKeep: 2
+KeepEmptyLinesAtTheStartOfBlocks: false

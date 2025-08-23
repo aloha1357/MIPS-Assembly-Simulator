@@ -66,9 +66,9 @@ TEST_F(ADDIUInstructionBDDTest, BasicImmediateAddition)
 {
     // Given: rs register contains 0x12345678
     const uint32_t rs_value        = 0x12345678;
-    const uint32_t rs_register     = 1;      // $t0
-    const uint32_t rt_register     = 2;      // $t1
-    const uint16_t immediate       = 0x1000; // Positive immediate
+    const uint32_t rs_register     = 1;       // $t0
+    const uint32_t rt_register     = 2;       // $t1
+    const uint16_t immediate       = 0x1000;  // Positive immediate
     const uint32_t expected_result = rs_value + immediate;
 
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -78,7 +78,7 @@ TEST_F(ADDIUInstructionBDDTest, BasicImmediateAddition)
     // Encoding: 0x09 (opcode) | rs (5 bits) | rt (5 bits) | immediate (16 bits)
     uint32_t instruction_encoding =
         (0x09 << 26) | (rs_register << 21) | (rt_register << 16) | immediate;
-    (void)instruction_encoding; // Suppress unused variable warning
+    (void)instruction_encoding;  // Suppress unused variable warning
 
     // Create ADDIU instruction and execute
     // Note: This will fail initially as ADDIUInstruction class doesn't exist
@@ -101,9 +101,9 @@ TEST_F(ADDIUInstructionBDDTest, NegativeImmediateAddition)
 {
     // Given: rs register contains 0x10000000
     const uint32_t rs_value    = 0x10000000;
-    const uint32_t rs_register = 3;      // $t2
-    const uint32_t rt_register = 4;      // $t3
-    const uint16_t immediate   = 0xFFFF; // -1 when sign-extended
+    const uint32_t rs_register = 3;       // $t2
+    const uint32_t rt_register = 4;       // $t3
+    const uint16_t immediate   = 0xFFFF;  // -1 when sign-extended
     const uint32_t expected_result =
         rs_value + static_cast<uint32_t>(static_cast<int32_t>(static_cast<int16_t>(immediate)));
 
@@ -128,11 +128,11 @@ TEST_F(ADDIUInstructionBDDTest, NegativeImmediateAddition)
 TEST_F(ADDIUInstructionBDDTest, OverflowNoException)
 {
     // Given: rs register contains maximum positive value
-    const uint32_t rs_value        = 0xFFFFFFFF;           // Maximum 32-bit value
-    const uint32_t rs_register     = 5;                    // $t4
-    const uint32_t rt_register     = 6;                    // $t5
-    const uint16_t immediate       = 0x0001;               // Small positive immediate
-    const uint32_t expected_result = rs_value + immediate; // Should wrap to 0x00000000
+    const uint32_t rs_value        = 0xFFFFFFFF;            // Maximum 32-bit value
+    const uint32_t rs_register     = 5;                     // $t4
+    const uint32_t rt_register     = 6;                     // $t5
+    const uint16_t immediate       = 0x0001;                // Small positive immediate
+    const uint32_t expected_result = rs_value + immediate;  // Should wrap to 0x00000000
 
     cpu->getRegisterFile().write(rs_register, rs_value);
 
@@ -158,10 +158,10 @@ TEST_F(ADDIUInstructionBDDTest, ZeroImmediateIdentity)
 {
     // Given: rs register contains test value
     const uint32_t rs_value        = 0xABCDEF12;
-    const uint32_t rs_register     = 7;        // $t6
-    const uint32_t rt_register     = 8;        // $t7
-    const uint16_t immediate       = 0x0000;   // Zero immediate
-    const uint32_t expected_result = rs_value; // Should be identical
+    const uint32_t rs_register     = 7;         // $t6
+    const uint32_t rt_register     = 8;         // $t7
+    const uint16_t immediate       = 0x0000;    // Zero immediate
+    const uint32_t expected_result = rs_value;  // Should be identical
 
     cpu->getRegisterFile().write(rs_register, rs_value);
 

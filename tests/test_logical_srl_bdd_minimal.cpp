@@ -81,26 +81,26 @@ TEST_F(SrlInstructionBDDTest, Srl_BasicShift_ShouldShiftRightCorrectly)
 {
     // Scenario: Basic right logical shift operation
     // Given: 暫存器包含要右移的值
-    given_register_contains("$t0", 0x80000000); // MSB set
+    given_register_contains("$t0", 0x80000000);  // MSB set
 
     // When: 執行SRL指令進行右位移4位
     when_program_executed_for_cycles("srl $t1, $t0, 4", 1);
 
     // Then: 結果應該是右位移後的值(左側補零)
-    then_register_should_equal("$t1", 0x08000000); // 邏輯右移，左側補零
+    then_register_should_equal("$t1", 0x08000000);  // 邏輯右移，左側補零
 }
 
 TEST_F(SrlInstructionBDDTest, Srl_ZeroFillShift_ShouldFillWithZeros)
 {
     // Scenario: Verify zero-fill behavior during right shift
     // Given: 暫存器包含負數(MSB為1)
-    given_register_contains("$t0", 0xFF000000); // High bits set
+    given_register_contains("$t0", 0xFF000000);  // High bits set
 
     // When: 執行SRL指令進行右位移8位
     when_program_executed_for_cycles("srl $t1, $t0, 8", 1);
 
     // Then: 應該從左側補零而非符號位延展
-    then_register_should_equal("$t1", 0x00FF0000); // 邏輯右移，左側補零
+    then_register_should_equal("$t1", 0x00FF0000);  // 邏輯右移，左側補零
 }
 
 /**

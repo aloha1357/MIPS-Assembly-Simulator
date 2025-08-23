@@ -75,11 +75,11 @@ class LogicalInstructionsTest : public ::testing::Test
 TEST_F(LogicalInstructionsTest, AndInstruction_BasicOperation_ComplementaryBitPattern)
 {
     // Arrange - 設定測試資料
-    setRegisterValue(8, 0xF0F0F0F0); // $t0 = 0xF0F0F0F0
-    setRegisterValue(9, 0x0F0F0F0F); // $t1 = 0x0F0F0F0F
+    setRegisterValue(8, 0xF0F0F0F0);  // $t0 = 0xF0F0F0F0
+    setRegisterValue(9, 0x0F0F0F0F);  // $t1 = 0x0F0F0F0F
 
     // Act - 執行AND指令: and $t2, $t0, $t1
-    mips::AndInstruction instr(10, 8, 9); // $t2 = $t0 & $t1
+    mips::AndInstruction instr(10, 8, 9);  // $t2 = $t0 & $t1
     instr.execute(*cpu);
 
     // Assert - 驗證結果
@@ -97,11 +97,11 @@ TEST_F(LogicalInstructionsTest, AndInstruction_BasicOperation_ComplementaryBitPa
 TEST_F(LogicalInstructionsTest, AndInstruction_AlternatingBitPattern)
 {
     // Arrange
-    setRegisterValue(16, 0xAAAAAAAA); // $s0
-    setRegisterValue(17, 0x55555555); // $s1
+    setRegisterValue(16, 0xAAAAAAAA);  // $s0
+    setRegisterValue(17, 0x55555555);  // $s1
 
     // Act
-    mips::AndInstruction instr(18, 16, 17); // and $s2, $s0, $s1
+    mips::AndInstruction instr(18, 16, 17);  // and $s2, $s0, $s1
     instr.execute(*cpu);
 
     // Assert
@@ -117,11 +117,11 @@ TEST_F(LogicalInstructionsTest, AndInstruction_AlternatingBitPattern)
 TEST_F(LogicalInstructionsTest, AndInstruction_AllOnesPattern)
 {
     // Arrange
-    setRegisterValue(11, 0xFFFFFFFF); // $t3
-    setRegisterValue(12, 0xFFFFFFFF); // $t4
+    setRegisterValue(11, 0xFFFFFFFF);  // $t3
+    setRegisterValue(12, 0xFFFFFFFF);  // $t4
 
     // Act
-    mips::AndInstruction instr(13, 11, 12); // and $t5, $t3, $t4
+    mips::AndInstruction instr(13, 11, 12);  // and $t5, $t3, $t4
     instr.execute(*cpu);
 
     // Assert
@@ -137,11 +137,11 @@ TEST_F(LogicalInstructionsTest, AndInstruction_AllOnesPattern)
 TEST_F(LogicalInstructionsTest, AndInstruction_PracticalMasking)
 {
     // Arrange
-    setRegisterValue(4, 0x12345678); // $a0 = 原始資料
-    setRegisterValue(5, 0xFFFFF000); // $a1 = 遮罩 (保留高20位)
+    setRegisterValue(4, 0x12345678);  // $a0 = 原始資料
+    setRegisterValue(5, 0xFFFFF000);  // $a1 = 遮罩 (保留高20位)
 
     // Act
-    mips::AndInstruction instr(2, 4, 5); // and $v0, $a0, $a1
+    mips::AndInstruction instr(2, 4, 5);  // and $v0, $a0, $a1
     instr.execute(*cpu);
 
     // Assert
@@ -157,11 +157,11 @@ TEST_F(LogicalInstructionsTest, AndInstruction_PracticalMasking)
 TEST_F(LogicalInstructionsTest, AndInstruction_WithZero)
 {
     // Arrange
-    setRegisterValue(14, 0xDEADBEEF); // $t6 = 任意值
-    setRegisterValue(15, 0x00000000); // $t7 = 0
+    setRegisterValue(14, 0xDEADBEEF);  // $t6 = 任意值
+    setRegisterValue(15, 0x00000000);  // $t7 = 0
 
     // Act
-    mips::AndInstruction instr(24, 14, 15); // and $t8, $t6, $t7
+    mips::AndInstruction instr(24, 14, 15);  // and $t8, $t6, $t7
     instr.execute(*cpu);
 
     // Assert
@@ -177,10 +177,10 @@ TEST_F(LogicalInstructionsTest, AndInstruction_WithZero)
 TEST_F(LogicalInstructionsTest, AndInstruction_RegisterAliasing)
 {
     // Arrange
-    setRegisterValue(8, 0xDEADBEEF); // $t0 = 測試值
+    setRegisterValue(8, 0xDEADBEEF);  // $t0 = 測試值
 
     // Act
-    mips::AndInstruction instr(8, 8, 8); // and $t0, $t0, $t0
+    mips::AndInstruction instr(8, 8, 8);  // and $t0, $t0, $t0
     instr.execute(*cpu);
 
     // Assert
@@ -200,11 +200,11 @@ TEST_F(LogicalInstructionsTest, AndInstruction_RegisterAliasing)
 TEST_F(LogicalInstructionsTest, OrInstruction_BasicOperation_ComplementaryBitPattern)
 {
     // Arrange
-    setRegisterValue(8, 0xF0F0F0F0); // $t0
-    setRegisterValue(9, 0x0F0F0F0F); // $t1
+    setRegisterValue(8, 0xF0F0F0F0);  // $t0
+    setRegisterValue(9, 0x0F0F0F0F);  // $t1
 
     // Act
-    mips::OrInstruction instr(10, 8, 9); // or $t2, $t0, $t1
+    mips::OrInstruction instr(10, 8, 9);  // or $t2, $t0, $t1
     instr.execute(*cpu);
 
     // Assert
@@ -219,11 +219,11 @@ TEST_F(LogicalInstructionsTest, OrInstruction_BasicOperation_ComplementaryBitPat
 TEST_F(LogicalInstructionsTest, OrInstruction_AlternatingBitPattern)
 {
     // Arrange
-    setRegisterValue(16, 0xAAAAAAAA); // $s0
-    setRegisterValue(17, 0x55555555); // $s1
+    setRegisterValue(16, 0xAAAAAAAA);  // $s0
+    setRegisterValue(17, 0x55555555);  // $s1
 
     // Act
-    mips::OrInstruction instr(18, 16, 17); // or $s2, $s0, $s1
+    mips::OrInstruction instr(18, 16, 17);  // or $s2, $s0, $s1
     instr.execute(*cpu);
 
     // Assert
@@ -236,11 +236,11 @@ TEST_F(LogicalInstructionsTest, OrInstruction_AlternatingBitPattern)
 TEST_F(LogicalInstructionsTest, OrInstruction_AllZeros)
 {
     // Arrange
-    setRegisterValue(11, 0x00000000); // $t3
-    setRegisterValue(12, 0x00000000); // $t4
+    setRegisterValue(11, 0x00000000);  // $t3
+    setRegisterValue(12, 0x00000000);  // $t4
 
     // Act
-    mips::OrInstruction instr(13, 11, 12); // or $t5, $t3, $t4
+    mips::OrInstruction instr(13, 11, 12);  // or $t5, $t3, $t4
     instr.execute(*cpu);
 
     // Assert
@@ -253,11 +253,11 @@ TEST_F(LogicalInstructionsTest, OrInstruction_AllZeros)
 TEST_F(LogicalInstructionsTest, OrInstruction_BitCombination)
 {
     // Arrange
-    setRegisterValue(4, 0x12340000); // $a0 = 高16位資料
-    setRegisterValue(5, 0x00005678); // $a1 = 低16位資料
+    setRegisterValue(4, 0x12340000);  // $a0 = 高16位資料
+    setRegisterValue(5, 0x00005678);  // $a1 = 低16位資料
 
     // Act
-    mips::OrInstruction instr(2, 4, 5); // or $v0, $a0, $a1
+    mips::OrInstruction instr(2, 4, 5);  // or $v0, $a0, $a1
     instr.execute(*cpu);
 
     // Assert
@@ -270,11 +270,11 @@ TEST_F(LogicalInstructionsTest, OrInstruction_BitCombination)
 TEST_F(LogicalInstructionsTest, OrInstruction_IdentityWithZero)
 {
     // Arrange
-    setRegisterValue(14, 0xDEADBEEF); // $t6
-    setRegisterValue(15, 0x00000000); // $t7 = 0
+    setRegisterValue(14, 0xDEADBEEF);  // $t6
+    setRegisterValue(15, 0x00000000);  // $t7 = 0
 
     // Act
-    mips::OrInstruction instr(24, 14, 15); // or $t8, $t6, $t7
+    mips::OrInstruction instr(24, 14, 15);  // or $t8, $t6, $t7
     instr.execute(*cpu);
 
     // Assert
@@ -291,11 +291,11 @@ TEST_F(LogicalInstructionsTest, OrInstruction_IdentityWithZero)
 TEST_F(LogicalInstructionsTest, XorInstruction_AlternatingBits)
 {
     // Arrange
-    setRegisterValue(8, 0xAAAAAAAA); // $t0
-    setRegisterValue(9, 0x55555555); // $t1
+    setRegisterValue(8, 0xAAAAAAAA);  // $t0
+    setRegisterValue(9, 0x55555555);  // $t1
 
     // Act
-    mips::XorInstruction instr(10, 8, 9); // xor $t2, $t0, $t1
+    mips::XorInstruction instr(10, 8, 9);  // xor $t2, $t0, $t1
     instr.execute(*cpu);
 
     // Assert
@@ -308,10 +308,10 @@ TEST_F(LogicalInstructionsTest, XorInstruction_AlternatingBits)
 TEST_F(LogicalInstructionsTest, XorInstruction_SelfXorZero)
 {
     // Arrange
-    setRegisterValue(16, 0x12345678); // $s0
+    setRegisterValue(16, 0x12345678);  // $s0
 
     // Act
-    mips::XorInstruction instr(18, 16, 16); // xor $s2, $s0, $s0
+    mips::XorInstruction instr(18, 16, 16);  // xor $s2, $s0, $s0
     instr.execute(*cpu);
 
     // Assert
@@ -324,11 +324,11 @@ TEST_F(LogicalInstructionsTest, XorInstruction_SelfXorZero)
 TEST_F(LogicalInstructionsTest, XorInstruction_IdentityWithZero)
 {
     // Arrange
-    setRegisterValue(11, 0xDEADBEEF); // $t3
-    setRegisterValue(12, 0x00000000); // $t4 = 0
+    setRegisterValue(11, 0xDEADBEEF);  // $t3
+    setRegisterValue(12, 0x00000000);  // $t4 = 0
 
     // Act
-    mips::XorInstruction instr(13, 11, 12); // xor $t5, $t3, $t4
+    mips::XorInstruction instr(13, 11, 12);  // xor $t5, $t3, $t4
     instr.execute(*cpu);
 
     // Assert
@@ -341,11 +341,11 @@ TEST_F(LogicalInstructionsTest, XorInstruction_IdentityWithZero)
 TEST_F(LogicalInstructionsTest, XorInstruction_BitFlipping)
 {
     // Arrange
-    setRegisterValue(4, 0xFFFFFFFF); // $a0 = 全1
-    setRegisterValue(5, 0xAAAAAAAA); // $a1 = 交替位元
+    setRegisterValue(4, 0xFFFFFFFF);  // $a0 = 全1
+    setRegisterValue(5, 0xAAAAAAAA);  // $a1 = 交替位元
 
     // Act
-    mips::XorInstruction instr(2, 4, 5); // xor $v0, $a0, $a1
+    mips::XorInstruction instr(2, 4, 5);  // xor $v0, $a0, $a1
     instr.execute(*cpu);
 
     // Assert
@@ -358,11 +358,11 @@ TEST_F(LogicalInstructionsTest, XorInstruction_BitFlipping)
 TEST_F(LogicalInstructionsTest, XorInstruction_CompleteComplement)
 {
     // Arrange
-    setRegisterValue(14, 0x0F0F0F0F); // $t6
-    setRegisterValue(15, 0xF0F0F0F0); // $t7 = 完全互補
+    setRegisterValue(14, 0x0F0F0F0F);  // $t6
+    setRegisterValue(15, 0xF0F0F0F0);  // $t7 = 完全互補
 
     // Act
-    mips::XorInstruction instr(24, 14, 15); // xor $t8, $t6, $t7
+    mips::XorInstruction instr(24, 14, 15);  // xor $t8, $t6, $t7
     instr.execute(*cpu);
 
     // Assert
@@ -375,15 +375,15 @@ TEST_F(LogicalInstructionsTest, XorInstruction_CompleteComplement)
 TEST_F(LogicalInstructionsTest, XorInstruction_ReversibilityEncryption)
 {
     // Arrange
-    setRegisterValue(8, 0x12345678); // $t0 = 原始資料
-    setRegisterValue(9, 0xABCDEF00); // $t1 = 金鑰
+    setRegisterValue(8, 0x12345678);  // $t0 = 原始資料
+    setRegisterValue(9, 0xABCDEF00);  // $t1 = 金鑰
 
     // Act - 加密
-    mips::XorInstruction encrypt(10, 8, 9); // xor $t2, $t0, $t1 (加密)
+    mips::XorInstruction encrypt(10, 8, 9);  // xor $t2, $t0, $t1 (加密)
     encrypt.execute(*cpu);
 
     // Act - 解密
-    mips::XorInstruction decrypt(11, 10, 9); // xor $t3, $t2, $t1 (解密)
+    mips::XorInstruction decrypt(11, 10, 9);  // xor $t3, $t2, $t1 (解密)
     decrypt.execute(*cpu);
 
     // Assert
@@ -401,11 +401,11 @@ TEST_F(LogicalInstructionsTest, XorInstruction_ReversibilityEncryption)
 TEST_F(LogicalInstructionsTest, NorInstruction_ComplementaryPattern)
 {
     // Arrange
-    setRegisterValue(8, 0xF0F0F0F0); // $t0
-    setRegisterValue(9, 0x0F0F0F0F); // $t1
+    setRegisterValue(8, 0xF0F0F0F0);  // $t0
+    setRegisterValue(9, 0x0F0F0F0F);  // $t1
 
     // Act
-    mips::NorInstruction instr(10, 8, 9); // nor $t2, $t0, $t1
+    mips::NorInstruction instr(10, 8, 9);  // nor $t2, $t0, $t1
     instr.execute(*cpu);
 
     // Assert
@@ -418,11 +418,11 @@ TEST_F(LogicalInstructionsTest, NorInstruction_ComplementaryPattern)
 TEST_F(LogicalInstructionsTest, NorInstruction_AllZerosAsNot)
 {
     // Arrange
-    setRegisterValue(16, 0x00000000); // $s0 = 0
-    setRegisterValue(17, 0x00000000); // $s1 = 0
+    setRegisterValue(16, 0x00000000);  // $s0 = 0
+    setRegisterValue(17, 0x00000000);  // $s1 = 0
 
     // Act
-    mips::NorInstruction instr(18, 16, 17); // nor $s2, $s0, $s1
+    mips::NorInstruction instr(18, 16, 17);  // nor $s2, $s0, $s1
     instr.execute(*cpu);
 
     // Assert
@@ -435,11 +435,11 @@ TEST_F(LogicalInstructionsTest, NorInstruction_AllZerosAsNot)
 TEST_F(LogicalInstructionsTest, NorInstruction_AsNotOperation)
 {
     // Arrange
-    setRegisterValue(11, 0xAAAAAAAA); // $t3
-    setRegisterValue(0, 0x00000000);  // $zero (應該永遠為0)
+    setRegisterValue(11, 0xAAAAAAAA);  // $t3
+    setRegisterValue(0, 0x00000000);   // $zero (應該永遠為0)
 
     // Act
-    mips::NorInstruction instr(13, 11, 0); // nor $t5, $t3, $zero
+    mips::NorInstruction instr(13, 11, 0);  // nor $t5, $t3, $zero
     instr.execute(*cpu);
 
     // Assert
@@ -452,11 +452,11 @@ TEST_F(LogicalInstructionsTest, NorInstruction_AsNotOperation)
 TEST_F(LogicalInstructionsTest, NorInstruction_AllOnes)
 {
     // Arrange
-    setRegisterValue(4, 0xFFFFFFFF); // $a0
-    setRegisterValue(5, 0xFFFFFFFF); // $a1
+    setRegisterValue(4, 0xFFFFFFFF);  // $a0
+    setRegisterValue(5, 0xFFFFFFFF);  // $a1
 
     // Act
-    mips::NorInstruction instr(2, 4, 5); // nor $v0, $a0, $a1
+    mips::NorInstruction instr(2, 4, 5);  // nor $v0, $a0, $a1
     instr.execute(*cpu);
 
     // Assert
@@ -469,11 +469,11 @@ TEST_F(LogicalInstructionsTest, NorInstruction_AllOnes)
 TEST_F(LogicalInstructionsTest, NorInstruction_UniversalNotVerification)
 {
     // Arrange
-    setRegisterValue(8, 0xDEADBEEF); // $t0 = 測試值
-    setRegisterValue(0, 0x00000000); // $zero
+    setRegisterValue(8, 0xDEADBEEF);  // $t0 = 測試值
+    setRegisterValue(0, 0x00000000);  // $zero
 
     // Act
-    mips::NorInstruction instr(9, 8, 0); // nor $t1, $t0, $zero
+    mips::NorInstruction instr(9, 8, 0);  // nor $t1, $t0, $zero
     instr.execute(*cpu);
 
     // Assert
@@ -493,14 +493,14 @@ TEST_F(LogicalInstructionsTest, NorInstruction_UniversalNotVerification)
 TEST_F(LogicalInstructionsTest, ComplexLogicalSequence)
 {
     // Arrange
-    setRegisterValue(8, 0x12345678); // $t0
-    setRegisterValue(9, 0x87654321); // $t1
+    setRegisterValue(8, 0x12345678);  // $t0
+    setRegisterValue(9, 0x87654321);  // $t1
 
     // Act - 執行複雜邏輯運算序列
-    mips::AndInstruction and_instr(10, 8, 9); // and $t2, $t0, $t1
-    mips::OrInstruction  or_instr(11, 8, 9);  // or  $t3, $t0, $t1
-    mips::XorInstruction xor_instr(12, 8, 9); // xor $t4, $t0, $t1
-    mips::NorInstruction nor_instr(13, 8, 9); // nor $t5, $t0, $t1
+    mips::AndInstruction and_instr(10, 8, 9);  // and $t2, $t0, $t1
+    mips::OrInstruction  or_instr(11, 8, 9);   // or  $t3, $t0, $t1
+    mips::XorInstruction xor_instr(12, 8, 9);  // xor $t4, $t0, $t1
+    mips::NorInstruction nor_instr(13, 8, 9);  // nor $t5, $t0, $t1
 
     and_instr.execute(*cpu);
     or_instr.execute(*cpu);
@@ -524,14 +524,14 @@ TEST_F(LogicalInstructionsTest, ComplexLogicalSequence)
 TEST_F(LogicalInstructionsTest, BoundaryValueTest)
 {
     // Arrange - 設定邊界值：最大負數和最大正數
-    setRegisterValue(8, 0x80000000); // $t0 = 最大負數
-    setRegisterValue(9, 0x7FFFFFFF); // $t1 = 最大正數
+    setRegisterValue(8, 0x80000000);  // $t0 = 最大負數
+    setRegisterValue(9, 0x7FFFFFFF);  // $t1 = 最大正數
 
     // Act
-    mips::AndInstruction and_instr(16, 8, 9); // and $s0, $t0, $t1
-    mips::OrInstruction  or_instr(17, 8, 9);  // or  $s1, $t0, $t1
-    mips::XorInstruction xor_instr(18, 8, 9); // xor $s2, $t0, $t1
-    mips::NorInstruction nor_instr(19, 8, 9); // nor $s3, $t0, $t1
+    mips::AndInstruction and_instr(16, 8, 9);  // and $s0, $t0, $t1
+    mips::OrInstruction  or_instr(17, 8, 9);   // or  $s1, $t0, $t1
+    mips::XorInstruction xor_instr(18, 8, 9);  // xor $s2, $t0, $t1
+    mips::NorInstruction nor_instr(19, 8, 9);  // nor $s3, $t0, $t1
 
     and_instr.execute(*cpu);
     or_instr.execute(*cpu);
@@ -551,10 +551,10 @@ TEST_F(LogicalInstructionsTest, BoundaryValueTest)
 TEST_F(LogicalInstructionsTest, ZeroRegisterProtectionTest)
 {
     // Arrange
-    setRegisterValue(8, 0xFFFFFFFF); // $t0 = 全1
+    setRegisterValue(8, 0xFFFFFFFF);  // $t0 = 全1
 
     // Act - 嘗試寫入$zero暫存器
-    mips::OrInstruction instr(0, 8, 8); // or $zero, $t0, $t0
+    mips::OrInstruction instr(0, 8, 8);  // or $zero, $t0, $t0
     instr.execute(*cpu);
 
     // Assert - $zero暫存器應該保持0
@@ -607,7 +607,7 @@ TEST_F(LogicalInstructionsTest, PerformanceBenchmark)
 TEST_F(LogicalInstructionsTest, MemoryStabilityTest)
 {
     // Arrange - 記錄初始記憶體狀態
-    size_t initial_memory = 0; // 在實際實作中應該測量實際記憶體使用量
+    size_t initial_memory = 0;  // 在實際實作中應該測量實際記憶體使用量
 
     // Act - 執行大量運算
     for (int i = 0; i < 100000; i++)
@@ -620,9 +620,9 @@ TEST_F(LogicalInstructionsTest, MemoryStabilityTest)
     }
 
     // Assert - 記憶體使用量不應該增加
-    size_t final_memory = 0; // 在實際實作中應該測量實際記憶體使用量
+    size_t final_memory = 0;  // 在實際實作中應該測量實際記憶體使用量
     EXPECT_EQ(initial_memory, final_memory) << "Memory usage should not increase during operations";
 }
 
-} // namespace test
-} // namespace mips
+}  // namespace test
+}  // namespace mips

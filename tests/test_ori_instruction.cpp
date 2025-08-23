@@ -53,14 +53,14 @@ class OriInstructionTest : public ::testing::Test
 TEST_F(OriInstructionTest, OriInstruction_BasicOperation_ShouldPass)
 {
     // Arrange: 設定初始狀態
-    cpu->getRegisterFile().write(8, 0xFF00); // $t0 = 0xFF00
+    cpu->getRegisterFile().write(8, 0xFF00);  // $t0 = 0xFF00
 
     // Act: 執行ORI指令 - 現在應該通過
-    mips::OriInstruction instr(9, 8, 0x00FF); // ori $t1, $t0, 0x00FF
+    mips::OriInstruction instr(9, 8, 0x00FF);  // ori $t1, $t0, 0x00FF
     instr.execute(*cpu);
 
     // Assert: 檢查預期結果
-    uint32_t expectedResult = 0xFFFF; // 0xFF00 | 0x00FF = 0xFFFF
+    uint32_t expectedResult = 0xFFFF;  // 0xFF00 | 0x00FF = 0xFFFF
     EXPECT_EQ(cpu->getRegisterFile().read(9), expectedResult);
 
     // 確認源暫存器未變
@@ -79,10 +79,10 @@ TEST_F(OriInstructionTest, OriInstruction_BasicOperation_ShouldPass)
 TEST_F(OriInstructionTest, OriInstruction_ZeroImmediate_ShouldPass)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 0x12345678); // $t0 = 0x12345678
+    cpu->getRegisterFile().write(8, 0x12345678);  // $t0 = 0x12345678
 
     // Act: 執行ORI指令
-    mips::OriInstruction instr(9, 8, 0x0000); // ori $t1, $t0, 0x0000
+    mips::OriInstruction instr(9, 8, 0x0000);  // ori $t1, $t0, 0x0000
     instr.execute(*cpu);
 
     // Assert: x OR 0 = x (identity)
@@ -102,10 +102,10 @@ TEST_F(OriInstructionTest, OriInstruction_ZeroImmediate_ShouldPass)
 TEST_F(OriInstructionTest, OriInstruction_AllOnesImmediate_ShouldPass)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 0x00000000); // $t0 = 0x00000000
+    cpu->getRegisterFile().write(8, 0x00000000);  // $t0 = 0x00000000
 
     // Act: 執行ORI指令
-    mips::OriInstruction instr(9, 8, static_cast<int16_t>(0xFFFF)); // ori $t1, $t0, 0xFFFF
+    mips::OriInstruction instr(9, 8, static_cast<int16_t>(0xFFFF));  // ori $t1, $t0, 0xFFFF
     instr.execute(*cpu);
 
     // Assert: 0 OR 0xFFFF = 0x0000FFFF (16位立即值零擴展)
@@ -122,14 +122,14 @@ TEST_F(OriInstructionTest, OriInstruction_AllOnesImmediate_ShouldPass)
 TEST_F(OriInstructionTest, OriInstruction_BitMask_ShouldPass)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 0xF0F0F0F0); // $t0 = 0xF0F0F0F0
+    cpu->getRegisterFile().write(8, 0xF0F0F0F0);  // $t0 = 0xF0F0F0F0
 
     // Act: 執行ORI指令
-    mips::OriInstruction instr(9, 8, static_cast<int16_t>(0x0F0F)); // ori $t1, $t0, 0x0F0F
+    mips::OriInstruction instr(9, 8, static_cast<int16_t>(0x0F0F));  // ori $t1, $t0, 0x0F0F
     instr.execute(*cpu);
 
     // Assert: 檢查位元遮罩結果
-    uint32_t expectedResult = 0xF0F0FFFF; // 0xF0F0F0F0 | 0x00000F0F = 0xF0F0FFFF
+    uint32_t expectedResult = 0xF0F0FFFF;  // 0xF0F0F0F0 | 0x00000F0F = 0xF0F0FFFF
     EXPECT_EQ(cpu->getRegisterFile().read(9), expectedResult);
 }
 
@@ -145,7 +145,7 @@ TEST_F(OriInstructionTest, OriInstruction_WithZeroRegister_ShouldPass)
     EXPECT_EQ(cpu->getRegisterFile().read(0), 0);
 
     // Act: 執行ORI指令
-    mips::OriInstruction instr(9, 0, static_cast<int16_t>(0x1234)); // ori $t1, $zero, 0x1234
+    mips::OriInstruction instr(9, 0, static_cast<int16_t>(0x1234));  // ori $t1, $zero, 0x1234
     instr.execute(*cpu);
 
     // Assert: 0 OR 0x1234 = 0x00001234
@@ -167,9 +167,9 @@ TEST_F(OriInstructionTest, Framework_CpuInitialization_ShouldPass)
 {
     // 驗證CPU初始狀態
     EXPECT_EQ(cpu->getProgramCounter(), 0);
-    EXPECT_EQ(cpu->getRegisterFile().read(0), 0); // $zero
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 0); // $t0
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 0); // $t1
+    EXPECT_EQ(cpu->getRegisterFile().read(0), 0);  // $zero
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 0);  // $t0
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 0);  // $t1
 }
 
 /**
@@ -183,7 +183,7 @@ TEST_F(OriInstructionTest, Framework_RegisterReadWrite_ShouldPass)
 
     // 測試$zero暫存器的不可寫特性
     cpu->getRegisterFile().write(0, 0xFFFFFFFF);
-    EXPECT_EQ(cpu->getRegisterFile().read(0), 0); // 應該仍然是0
+    EXPECT_EQ(cpu->getRegisterFile().read(0), 0);  // 應該仍然是0
 }
 
 // ============================================================================

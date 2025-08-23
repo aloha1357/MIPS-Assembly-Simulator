@@ -65,9 +65,9 @@ class JALRInstructionBDD : public ::testing::Test
 TEST_F(JALRInstructionBDD, BasicJumpAndLinkRegister)
 {
     // Given: PC and target address in register
-    const uint32_t initial_pc              = 0x00000200 / 4; // Word address
-    const uint32_t rs_register             = 8;              // $t0 (source address)
-    const uint32_t rd_register             = 31;             // $ra (return address)
+    const uint32_t initial_pc              = 0x00000200 / 4;  // Word address
+    const uint32_t rs_register             = 8;               // $t0 (source address)
+    const uint32_t rd_register             = 31;              // $ra (return address)
     const uint32_t target_address          = 0x00003000;
     const uint32_t expected_pc             = target_address / 4;
     const uint32_t expected_return_address = (initial_pc + 1) * 4;
@@ -98,8 +98,8 @@ TEST_F(JALRInstructionBDD, DifferentDestinationRegister)
 {
     // Given: different destination register
     const uint32_t initial_pc              = 0x00000300 / 4;
-    const uint32_t rs_register             = 16; // $s0 (source address)
-    const uint32_t rd_register             = 17; // $s1 (return address register)
+    const uint32_t rs_register             = 16;  // $s0 (source address)
+    const uint32_t rd_register             = 17;  // $s1 (return address register)
     const uint32_t target_address          = 0x00005678;
     const uint32_t expected_pc             = target_address / 4;
     const uint32_t expected_return_address = (initial_pc + 1) * 4;
@@ -129,8 +129,8 @@ TEST_F(JALRInstructionBDD, ZeroAddressJump)
 {
     // Given: zero target address
     const uint32_t initial_pc              = 0x00000100 / 4;
-    const uint32_t rs_register             = 9;  // $t1
-    const uint32_t rd_register             = 31; // $ra
+    const uint32_t rs_register             = 9;   // $t1
+    const uint32_t rd_register             = 31;  // $ra
     const uint32_t target_address          = 0x00000000;
     const uint32_t expected_pc             = 0;
     const uint32_t expected_return_address = (initial_pc + 1) * 4;
@@ -160,8 +160,8 @@ TEST_F(JALRInstructionBDD, HighAddressJump)
 {
     // Given: high memory address
     const uint32_t initial_pc              = 0x00000400 / 4;
-    const uint32_t rs_register             = 10; // $t2
-    const uint32_t rd_register             = 31; // $ra
+    const uint32_t rs_register             = 10;  // $t2
+    const uint32_t rd_register             = 31;  // $ra
     const uint32_t target_address          = 0xFFFF0000;
     const uint32_t expected_pc             = target_address / 4;
     const uint32_t expected_return_address = (initial_pc + 1) * 4;

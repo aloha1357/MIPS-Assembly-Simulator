@@ -67,4 +67,4 @@ class IFStage : public Stage
     bool                                             m_flushed;
 };
 
-} // namespace mips
+}  // namespace mips

@@ -60,22 +60,22 @@ class ADDUInstructionBDDTest : public ::testing::Test
 TEST_F(ADDUInstructionBDDTest, BasicUnsignedAddition)
 {
     // Given: 準備測試資料
-    const int      rd_register     = 3;   // $v1
-    const int      rs_register     = 1;   // $at
-    const int      rt_register     = 2;   // $v0
-    const uint32_t rs_value        = 100; // 加數1
-    const uint32_t rt_value        = 50;  // 加數2
-    const uint32_t expected_result = 150; // 預期結果
+    const int      rd_register     = 3;    // $v1
+    const int      rs_register     = 1;    // $at
+    const int      rt_register     = 2;    // $v0
+    const uint32_t rs_value        = 100;  // 加數1
+    const uint32_t rt_value        = 50;   // 加數2
+    const uint32_t expected_result = 150;  // 預期結果
 
     // Given: 設定初始寄存器狀態
     cpu->getRegisterFile().write(rs_register, rs_value);
     cpu->getRegisterFile().write(rt_register, rt_value);
-    cpu->getRegisterFile().write(rd_register, 0xFFFFFFFF); // 清除目標寄存器
+    cpu->getRegisterFile().write(rd_register, 0xFFFFFFFF);  // 清除目標寄存器
 
     // Given: 建構ADDU指令 (Function Code: 0x21)
     uint32_t instruction_encoding =
         (rs_register << 21) | (rt_register << 16) | (rd_register << 11) | 0x21;
-    (void)instruction_encoding; // Suppress unused variable warning
+    (void)instruction_encoding;  // Suppress unused variable warning
 
     // When: 創建並執行ADDU指令
     mips::ADDUInstruction addu_instruction(rd_register, rs_register, rt_register);
@@ -97,12 +97,12 @@ TEST_F(ADDUInstructionBDDTest, BasicUnsignedAddition)
 TEST_F(ADDUInstructionBDDTest, OverflowNoException)
 {
     // Given: 準備溢位測試資料
-    const int      rd_register     = 4;          // $a0
-    const int      rs_register     = 5;          // $a1
-    const int      rt_register     = 6;          // $a2
-    const uint32_t rs_value        = 0xFFFFFFFF; // 最大32位無符號數
-    const uint32_t rt_value        = 1;          // 加1將導致溢位
-    const uint32_t expected_result = 0;          // 溢位後回繞為0
+    const int      rd_register     = 4;           // $a0
+    const int      rs_register     = 5;           // $a1
+    const int      rt_register     = 6;           // $a2
+    const uint32_t rs_value        = 0xFFFFFFFF;  // 最大32位無符號數
+    const uint32_t rt_value        = 1;           // 加1將導致溢位
+    const uint32_t expected_result = 0;           // 溢位後回繞為0
 
     // Given: 設定初始寄存器狀態
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -129,12 +129,12 @@ TEST_F(ADDUInstructionBDDTest, OverflowNoException)
 TEST_F(ADDUInstructionBDDTest, ZeroAdditionIdentity)
 {
     // Given: 準備零值加法測試
-    const int      rd_register     = 7;          // $a3
-    const int      rs_register     = 8;          // $t0
-    const int      rt_register     = 9;          // $t1
-    const uint32_t rs_value        = 0xABCDEF12; // 任意非零值
-    const uint32_t rt_value        = 0;          // 零值
-    const uint32_t expected_result = rs_value;   // 期望結果等於非零加數
+    const int      rd_register     = 7;           // $a3
+    const int      rs_register     = 8;           // $t0
+    const int      rt_register     = 9;           // $t1
+    const uint32_t rs_value        = 0xABCDEF12;  // 任意非零值
+    const uint32_t rt_value        = 0;           // 零值
+    const uint32_t expected_result = rs_value;    // 期望結果等於非零加數
 
     // Given: 設定初始寄存器狀態
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -161,12 +161,12 @@ TEST_F(ADDUInstructionBDDTest, ZeroAdditionIdentity)
 TEST_F(ADDUInstructionBDDTest, LargeUnsignedAddition)
 {
     // Given: 準備大數值測試資料
-    const int      rd_register     = 10;         // $t2
-    const int      rs_register     = 11;         // $t3
-    const int      rt_register     = 12;         // $t4
-    const uint32_t rs_value        = 0x80000000; // 2^31
-    const uint32_t rt_value        = 0x70000000; // 大值
-    const uint32_t expected_result = 0xF0000000; // 預期和值
+    const int      rd_register     = 10;          // $t2
+    const int      rs_register     = 11;          // $t3
+    const int      rt_register     = 12;          // $t4
+    const uint32_t rs_value        = 0x80000000;  // 2^31
+    const uint32_t rt_value        = 0x70000000;  // 大值
+    const uint32_t expected_result = 0xF0000000;  // 預期和值
 
     // Given: 設定初始值
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -184,4 +184,4 @@ TEST_F(ADDUInstructionBDDTest, LargeUnsignedAddition)
         << actual_result;
 }
 
-} // namespace mips
+}  // namespace mips

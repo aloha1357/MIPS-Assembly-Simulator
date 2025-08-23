@@ -138,4 +138,4 @@ bool EXStage::shouldTakeBranch(const PipelineData& data)
     return false;
 }
 
-} // namespace mips
+}  // namespace mips

@@ -70,4 +70,4 @@ void MEMStage::setOutputRegister(PipelineRegister* outputReg)
     m_outputRegister = outputReg;
 }
 
-} // namespace mips
+}  // namespace mips

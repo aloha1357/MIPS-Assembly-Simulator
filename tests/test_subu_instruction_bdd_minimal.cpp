@@ -60,22 +60,22 @@ class SUBUInstructionBDDTest : public ::testing::Test
 TEST_F(SUBUInstructionBDDTest, BasicUnsignedSubtraction)
 {
     // Given: 準備測試資料
-    const int      rd_register     = 3;   // $v1
-    const int      rs_register     = 1;   // $at
-    const int      rt_register     = 2;   // $v0
-    const uint32_t rs_value        = 100; // 被減數
-    const uint32_t rt_value        = 30;  // 減數
-    const uint32_t expected_result = 70;  // 預期結果
+    const int      rd_register     = 3;    // $v1
+    const int      rs_register     = 1;    // $at
+    const int      rt_register     = 2;    // $v0
+    const uint32_t rs_value        = 100;  // 被減數
+    const uint32_t rt_value        = 30;   // 減數
+    const uint32_t expected_result = 70;   // 預期結果
 
     // Given: 設定初始寄存器狀態
     cpu->getRegisterFile().write(rs_register, rs_value);
     cpu->getRegisterFile().write(rt_register, rt_value);
-    cpu->getRegisterFile().write(rd_register, 0xFFFFFFFF); // 清除目標寄存器
+    cpu->getRegisterFile().write(rd_register, 0xFFFFFFFF);  // 清除目標寄存器
 
     // Given: 建構SUBU指令 (Function Code: 0x23)
     uint32_t instruction_encoding =
         (rs_register << 21) | (rt_register << 16) | (rd_register << 11) | 0x23;
-    (void)instruction_encoding; // Suppress unused variable warning
+    (void)instruction_encoding;  // Suppress unused variable warning
 
     // When: 創建並執行SUBU指令
     mips::SUBUInstruction subu_instruction(rd_register, rs_register, rt_register);
@@ -97,12 +97,12 @@ TEST_F(SUBUInstructionBDDTest, BasicUnsignedSubtraction)
 TEST_F(SUBUInstructionBDDTest, UnderflowNoException)
 {
     // Given: 準備下溢測試資料
-    const int      rd_register     = 4;                          // $a0
-    const int      rs_register     = 5;                          // $a1
-    const int      rt_register     = 6;                          // $a2
-    const uint32_t rs_value        = 10;                         // 較小的被減數
-    const uint32_t rt_value        = 50;                         // 較大的減數
-    const uint32_t expected_result = static_cast<uint32_t>(-40); // 無符號下溢結果
+    const int      rd_register     = 4;                           // $a0
+    const int      rs_register     = 5;                           // $a1
+    const int      rt_register     = 6;                           // $a2
+    const uint32_t rs_value        = 10;                          // 較小的被減數
+    const uint32_t rt_value        = 50;                          // 較大的減數
+    const uint32_t expected_result = static_cast<uint32_t>(-40);  // 無符號下溢結果
 
     // Given: 設定初始寄存器狀態
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -129,12 +129,12 @@ TEST_F(SUBUInstructionBDDTest, UnderflowNoException)
 TEST_F(SUBUInstructionBDDTest, ZeroSubtractionIdentity)
 {
     // Given: 準備零值減法測試
-    const int      rd_register     = 7;        // $a3
-    const int      rs_register     = 8;        // $t0
-    const int      rt_register     = 9;        // $t1
-    const uint32_t rs_value        = 12345;    // 任意被減數
-    const uint32_t rt_value        = 0;        // 零減數
-    const uint32_t expected_result = rs_value; // 期望結果等於被減數
+    const int      rd_register     = 7;         // $a3
+    const int      rs_register     = 8;         // $t0
+    const int      rt_register     = 9;         // $t1
+    const uint32_t rs_value        = 12345;     // 任意被減數
+    const uint32_t rt_value        = 0;         // 零減數
+    const uint32_t expected_result = rs_value;  // 期望結果等於被減數
 
     // Given: 設定初始寄存器狀態
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -161,11 +161,11 @@ TEST_F(SUBUInstructionBDDTest, ZeroSubtractionIdentity)
 TEST_F(SUBUInstructionBDDTest, SameValueSubtractionZero)
 {
     // Given: 準備相同值測試資料
-    const int      rd_register     = 10;         // $t2
-    const int      rs_register     = 11;         // $t3
-    const int      rt_register     = 12;         // $t4
-    const uint32_t same_value      = 0x12345678; // 相同的值
-    const uint32_t expected_result = 0;          // 期望結果為零
+    const int      rd_register     = 10;          // $t2
+    const int      rs_register     = 11;          // $t3
+    const int      rt_register     = 12;          // $t4
+    const uint32_t same_value      = 0x12345678;  // 相同的值
+    const uint32_t expected_result = 0;           // 期望結果為零
 
     // Given: 設定相同的初始值
     cpu->getRegisterFile().write(rs_register, same_value);
@@ -182,4 +182,4 @@ TEST_F(SUBUInstructionBDDTest, SameValueSubtractionZero)
         << "SUBU相同值減法: 期望 " << expected_result << " 但實際得到 " << actual_result;
 }
 
-} // namespace mips
+}  // namespace mips

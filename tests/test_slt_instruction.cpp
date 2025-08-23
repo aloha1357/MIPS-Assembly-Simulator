@@ -51,12 +51,12 @@ class SltuInstructionTest : public ::testing::Test
 TEST_F(SltuInstructionTest, SltuInstruction_PositiveNumbers_ShouldSetCorrectResult)
 {
     // Arrange: 5 < 10 (unsigned) 應該回傳 1
-    cpu->getRegisterFile().write(8, 5);  // $t0 = 5
-    cpu->getRegisterFile().write(9, 10); // $t1 = 10
+    cpu->getRegisterFile().write(8, 5);   // $t0 = 5
+    cpu->getRegisterFile().write(9, 10);  // $t1 = 10
 
     // Act: 執行 sltu $t2, $t0, $t1
     // 這裡應該會編譯失敗，因為 SltuInstruction 還沒宣告
-    mips::SltuInstruction instr(10, 8, 9); // sltu $t2, $t0, $t1
+    mips::SltuInstruction instr(10, 8, 9);  // sltu $t2, $t0, $t1
     instr.execute(*cpu);
 
     // Assert: 5 < 10 is true (unsigned), so result should be 1
@@ -77,8 +77,8 @@ TEST_F(SltuInstructionTest, SltuInstruction_PositiveNumbers_ShouldSetCorrectResu
 TEST_F(SltuInstructionTest, SltuInstruction_UnsignedVsSigned_CriticalDifference)
 {
     // Arrange: 0xFFFFFFFF vs 5 的無符號比較
-    cpu->getRegisterFile().write(8, 0xFFFFFFFF); // $t0 = 4294967295 (unsigned)
-    cpu->getRegisterFile().write(9, 5);          // $t1 = 5
+    cpu->getRegisterFile().write(8, 0xFFFFFFFF);  // $t0 = 4294967295 (unsigned)
+    cpu->getRegisterFile().write(9, 5);           // $t1 = 5
 
     // Act: 執行 sltu $t2, $t0, $t1
     mips::SltuInstruction instr(10, 8, 9);
@@ -96,8 +96,8 @@ TEST_F(SltuInstructionTest, SltuInstruction_UnsignedVsSigned_CriticalDifference)
 TEST_F(SltuInstructionTest, SltuInstruction_SmallVsLarge_ShouldReturnOne)
 {
     // Arrange: 5 vs 0xFFFFFFFF 的無符號比較
-    cpu->getRegisterFile().write(8, 5);          // $t0 = 5
-    cpu->getRegisterFile().write(9, 0xFFFFFFFF); // $t1 = 4294967295 (unsigned)
+    cpu->getRegisterFile().write(8, 5);           // $t0 = 5
+    cpu->getRegisterFile().write(9, 0xFFFFFFFF);  // $t1 = 4294967295 (unsigned)
 
     // Act: 執行 sltu $t2, $t0, $t1
     mips::SltuInstruction instr(10, 8, 9);
@@ -114,8 +114,8 @@ TEST_F(SltuInstructionTest, SltuInstruction_SmallVsLarge_ShouldReturnOne)
 TEST_F(SltuInstructionTest, SltuInstruction_EqualValues_ShouldReturnZero)
 {
     // Arrange: 0x80000000 == 0x80000000 應該回傳 0
-    cpu->getRegisterFile().write(8, 0x80000000); // $t0 = 2147483648
-    cpu->getRegisterFile().write(9, 0x80000000); // $t1 = 2147483648
+    cpu->getRegisterFile().write(8, 0x80000000);  // $t0 = 2147483648
+    cpu->getRegisterFile().write(9, 0x80000000);  // $t1 = 2147483648
 
     // Act: 執行 sltu $t2, $t0, $t1
     mips::SltuInstruction instr(10, 8, 9);
@@ -132,8 +132,8 @@ TEST_F(SltuInstructionTest, SltuInstruction_EqualValues_ShouldReturnZero)
 TEST_F(SltuInstructionTest, SltuInstruction_ZeroComparison_ShouldWork)
 {
     // Arrange: 0 vs 1 的無符號比較
-    cpu->getRegisterFile().write(8, 0); // $t0 = 0
-    cpu->getRegisterFile().write(9, 1); // $t1 = 1
+    cpu->getRegisterFile().write(8, 0);  // $t0 = 0
+    cpu->getRegisterFile().write(9, 1);  // $t1 = 1
 
     // Act: 執行 sltu $t2, $t0, $t1
     mips::SltuInstruction instr(10, 8, 9);
@@ -150,9 +150,9 @@ TEST_F(SltuInstructionTest, SltuInstruction_ZeroComparison_ShouldWork)
 TEST_F(SltuInstructionTest, SltuInstruction_ProgramCounter_ShouldIncrement)
 {
     // Arrange
-    cpu->getRegisterFile().write(8, 100); // $t0 = 100
-    cpu->getRegisterFile().write(9, 200); // $t1 = 200
-    cpu->setProgramCounter(50);           // PC = 50
+    cpu->getRegisterFile().write(8, 100);  // $t0 = 100
+    cpu->getRegisterFile().write(9, 200);  // $t1 = 200
+    cpu->setProgramCounter(50);            // PC = 50
 
     // Act: 執行 sltu $t2, $t0, $t1
     mips::SltuInstruction instr(10, 8, 9);

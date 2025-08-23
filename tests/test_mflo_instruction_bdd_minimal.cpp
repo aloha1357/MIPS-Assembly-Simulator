@@ -28,7 +28,7 @@ class MFLOInstructionBDD : public ::testing::Test
     void SetUp() override
     {
         cpu = std::make_unique<Cpu>();
-        cpu->reset(); // 確保CPU處於乾淨狀態
+        cpu->reset();  // 確保CPU處於乾淨狀態
     }
 
     void TearDown() override
@@ -49,16 +49,16 @@ TEST_F(MFLOInstructionBDD, BasicLORead_ShouldMoveLOToRegister)
 {
     // Given: LO暫存器包含特定值，$t0為零
     std::unique_ptr<Instruction> instruction =
-        std::make_unique<MFLOInstruction>(8);   // 目標到$t0 (暫存器8)
-    cpu->getRegisterFile().writeLO(0x12345678); // LO = 特定值
-    cpu->getRegisterFile().write(8, 0);         // $t0 = 0
+        std::make_unique<MFLOInstruction>(8);    // 目標到$t0 (暫存器8)
+    cpu->getRegisterFile().writeLO(0x12345678);  // LO = 特定值
+    cpu->getRegisterFile().write(8, 0);          // $t0 = 0
 
     // When: 執行MFLO指令 (目標到$t0)
     instruction->execute(*cpu);
 
     // Then: $t0應包含LO的值，LO暫存器保持不變
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 0x12345678);  // $t0 = LO值
-    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0x12345678); // LO 保持原值
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 0x12345678);   // $t0 = LO值
+    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0x12345678);  // LO 保持原值
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
 
@@ -72,16 +72,16 @@ TEST_F(MFLOInstructionBDD, ZeroLORead_ShouldMoveZeroToRegister)
 {
     // Given: LO暫存器為零，$t1包含其他值
     std::unique_ptr<Instruction> instruction =
-        std::make_unique<MFLOInstruction>(9);    // 目標到$t1 (暫存器9)
-    cpu->getRegisterFile().writeLO(0);           // LO = 0
-    cpu->getRegisterFile().write(9, 0xDEADBEEF); // $t1 = 其他值
+        std::make_unique<MFLOInstruction>(9);     // 目標到$t1 (暫存器9)
+    cpu->getRegisterFile().writeLO(0);            // LO = 0
+    cpu->getRegisterFile().write(9, 0xDEADBEEF);  // $t1 = 其他值
 
     // When: 執行MFLO指令 (目標到$t1)
     instruction->execute(*cpu);
 
     // Then: $t1應變為零，LO保持為零
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 0);  // $t1 = 0
-    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0); // LO = 0
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 0);   // $t1 = 0
+    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0);  // LO = 0
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
 
@@ -95,16 +95,16 @@ TEST_F(MFLOInstructionBDD, MaxValueLORead_ShouldMoveMaxValueToRegister)
 {
     // Given: LO暫存器為最大值，$v0為零
     std::unique_ptr<Instruction> instruction =
-        std::make_unique<MFLOInstruction>(2);   // 目標到$v0 (暫存器2)
-    cpu->getRegisterFile().writeLO(0xFFFFFFFF); // LO = 最大值
-    cpu->getRegisterFile().write(2, 0);         // $v0 = 0
+        std::make_unique<MFLOInstruction>(2);    // 目標到$v0 (暫存器2)
+    cpu->getRegisterFile().writeLO(0xFFFFFFFF);  // LO = 最大值
+    cpu->getRegisterFile().write(2, 0);          // $v0 = 0
 
     // When: 執行MFLO指令 (目標到$v0)
     instruction->execute(*cpu);
 
     // Then: $v0應為最大值，LO保持最大值
-    EXPECT_EQ(cpu->getRegisterFile().read(2), 0xFFFFFFFF);  // $v0 = 最大值
-    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0xFFFFFFFF); // LO = 最大值
+    EXPECT_EQ(cpu->getRegisterFile().read(2), 0xFFFFFFFF);   // $v0 = 最大值
+    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0xFFFFFFFF);  // LO = 最大值
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
 
@@ -118,17 +118,17 @@ TEST_F(MFLOInstructionBDD, DifferentTargetRegister_ShouldMoveOnlyToSpecifiedRegi
 {
     // Given: LO暫存器包含值，$t1和$t2有不同值
     std::unique_ptr<Instruction> instructionT2 =
-        std::make_unique<MFLOInstruction>(10);    // 目標到$t2 (暫存器10)
-    cpu->getRegisterFile().writeLO(0xABCDEF01);   // LO = 特定值
-    cpu->getRegisterFile().write(9, 0x11111111);  // $t1 = 值1
-    cpu->getRegisterFile().write(10, 0x22222222); // $t2 = 值2
+        std::make_unique<MFLOInstruction>(10);     // 目標到$t2 (暫存器10)
+    cpu->getRegisterFile().writeLO(0xABCDEF01);    // LO = 特定值
+    cpu->getRegisterFile().write(9, 0x11111111);   // $t1 = 值1
+    cpu->getRegisterFile().write(10, 0x22222222);  // $t2 = 值2
 
     // When: 執行MFLO指令 (目標到$t2)
     instructionT2->execute(*cpu);
 
     // Then: 只有$t2被LO值覆蓋，$t1保持不變
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 0xABCDEF01); // $t2 = LO值
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 0x11111111);  // $t1 保持原值
-    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0xABCDEF01); // LO 保持原值
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 0xABCDEF01);  // $t2 = LO值
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 0x11111111);   // $t1 保持原值
+    EXPECT_EQ(cpu->getRegisterFile().readLO(), 0xABCDEF01);  // LO 保持原值
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }

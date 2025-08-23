@@ -131,10 +131,10 @@ TEST_F(JRInstructionIntegrationTest, JRInstruction_AssemblerInvalidSyntax_Should
 {
     // Test invalid syntax variations
     std::vector<std::string> invalidSyntax = {
-        "jr",          // Missing register
-        "jr $t0, $t1", // Too many operands
-        "jr 123",      // Invalid register format
-        "jr $invalid"  // Non-existent register
+        "jr",           // Missing register
+        "jr $t0, $t1",  // Too many operands
+        "jr 123",       // Invalid register format
+        "jr $invalid"   // Non-existent register
     };
 
     for (const auto& invalid : invalidSyntax)
@@ -156,7 +156,7 @@ TEST_F(JRInstructionIntegrationTest, JRInstruction_EndToEndIntegration_ShouldWor
     const uint32_t expected_pc    = target_address / 4;
 
     // Setup target address in $t0
-    cpu->getRegisterFile().write(8, target_address); // $t0 = 8
+    cpu->getRegisterFile().write(8, target_address);  // $t0 = 8
 
     // When: Assemble, decode and execute
     auto instructions = assembler->assemble(assembly);
@@ -177,17 +177,17 @@ TEST_F(JRInstructionIntegrationTest, JRInstruction_JumpBehaviorIntegration_Shoul
 {
     // Given: JR instruction and various target addresses
     std::vector<uint32_t> test_addresses = {
-        0x00000000, // Zero address
-        0x00001000, // Low address
-        0x00010000, // Medium address
-        0x7FFFF000  // High address
+        0x00000000,  // Zero address
+        0x00001000,  // Low address
+        0x00010000,  // Medium address
+        0x7FFFF000   // High address
     };
 
     for (uint32_t target_address : test_addresses)
     {
         // Setup
-        cpu->getRegisterFile().write(8, target_address); // $t0 = 8
-        cpu->setProgramCounter(0x1000);                  // Reset PC
+        cpu->getRegisterFile().write(8, target_address);  // $t0 = 8
+        cpu->setProgramCounter(0x1000);                   // Reset PC
 
         // Execute JR
         auto jr_instruction = std::make_unique<mips::JRInstruction>(8);

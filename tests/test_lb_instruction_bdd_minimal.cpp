@@ -68,11 +68,11 @@ TEST_F(LBInstructionBDD, BasicByteLoad_PositiveValue)
 {
     // Given: Memory contains positive byte value
     const uint32_t base_address    = 0x1000;
-    const uint32_t rs_register     = 8; // $t0 (base address register)
-    const uint32_t rt_register     = 9; // $t1 (target register)
+    const uint32_t rs_register     = 8;  // $t0 (base address register)
+    const uint32_t rt_register     = 9;  // $t1 (target register)
     const int16_t  offset          = 0;
-    const uint8_t  byte_value      = 0x42;       // Positive byte
-    const uint32_t expected_result = 0x00000042; // Sign-extended positive
+    const uint8_t  byte_value      = 0x42;        // Positive byte
+    const uint32_t expected_result = 0x00000042;  // Sign-extended positive
 
     cpu->getRegisterFile().write(rs_register, base_address);
     cpu->getMemory().writeByte(base_address + offset, byte_value);
@@ -100,11 +100,11 @@ TEST_F(LBInstructionBDD, SignExtension_NegativeByteValue)
 {
     // Given: Memory contains negative byte value
     const uint32_t base_address    = 0x2000;
-    const uint32_t rs_register     = 10; // $t2 (base address register)
-    const uint32_t rt_register     = 11; // $t3 (target register)
+    const uint32_t rs_register     = 10;  // $t2 (base address register)
+    const uint32_t rt_register     = 11;  // $t3 (target register)
     const int16_t  offset          = 0;
-    const uint8_t  byte_value      = 0x80;       // Negative byte (MSB = 1)
-    const uint32_t expected_result = 0xFFFFFF80; // Sign-extended negative
+    const uint8_t  byte_value      = 0x80;        // Negative byte (MSB = 1)
+    const uint32_t expected_result = 0xFFFFFF80;  // Sign-extended negative
 
     cpu->getRegisterFile().write(rs_register, base_address);
     cpu->getMemory().writeByte(base_address + offset, byte_value);
@@ -131,10 +131,10 @@ TEST_F(LBInstructionBDD, ZeroOffset_DirectBaseAddress)
 {
     // Given: Zero offset, direct address access
     const uint32_t base_address    = 0x3000;
-    const uint32_t rs_register     = 12; // $t4 (base address register)
-    const uint32_t rt_register     = 13; // $t5 (target register)
+    const uint32_t rs_register     = 12;  // $t4 (base address register)
+    const uint32_t rt_register     = 13;  // $t5 (target register)
     const int16_t  offset          = 0;
-    const uint8_t  byte_value      = 0x55; // Arbitrary positive byte
+    const uint8_t  byte_value      = 0x55;  // Arbitrary positive byte
     const uint32_t expected_result = 0x00000055;
 
     cpu->getRegisterFile().write(rs_register, base_address);
@@ -162,12 +162,12 @@ TEST_F(LBInstructionBDD, NegativeOffset_CalculateEffectiveAddress)
 {
     // Given: Negative offset for address calculation
     const uint32_t base_address      = 0x4000;
-    const uint32_t rs_register       = 14; // $t6 (base address register)
-    const uint32_t rt_register       = 15; // $t7 (target register)
+    const uint32_t rs_register       = 14;  // $t6 (base address register)
+    const uint32_t rt_register       = 15;  // $t7 (target register)
     const int16_t  offset            = -4;
-    const uint32_t effective_address = base_address + offset; // 0x3FFC
-    const uint8_t  byte_value        = 0xAA;                  // Negative byte value
-    const uint32_t expected_result   = 0xFFFFFFAA;            // Sign-extended
+    const uint32_t effective_address = base_address + offset;  // 0x3FFC
+    const uint8_t  byte_value        = 0xAA;                   // Negative byte value
+    const uint32_t expected_result   = 0xFFFFFFAA;             // Sign-extended
 
     cpu->getRegisterFile().write(rs_register, base_address);
     cpu->getMemory().writeByte(effective_address, byte_value);

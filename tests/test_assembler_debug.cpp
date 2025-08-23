@@ -50,29 +50,29 @@ syscall
         {
             // Check register values at key points
             if (step == 2)
-            {                                                 // After loading 'H' and 'i'
-                uint32_t t0 = cpu->getRegisterFile().read(8); // $t0
-                uint32_t t1 = cpu->getRegisterFile().read(9); // $t1
+            {                                                  // After loading 'H' and 'i'
+                uint32_t t0 = cpu->getRegisterFile().read(8);  // $t0
+                uint32_t t1 = cpu->getRegisterFile().read(9);  // $t1
                 std::cout << "Step " << step << ": $t0 = 0x" << std::hex << t0 << ", $t1 = 0x"
                           << std::hex << t1 << std::endl;
             }
 
             if (step == 3)
-            {                                                 // After shift
-                uint32_t t1 = cpu->getRegisterFile().read(9); // $t1
+            {                                                  // After shift
+                uint32_t t1 = cpu->getRegisterFile().read(9);  // $t1
                 std::cout << "Step " << step << ": After shift, $t1 = 0x" << std::hex << t1
                           << std::endl;
             }
 
             if (step == 4)
-            {                                                 // After add
-                uint32_t t0 = cpu->getRegisterFile().read(8); // $t0
+            {                                                  // After add
+                uint32_t t0 = cpu->getRegisterFile().read(8);  // $t0
                 std::cout << "Step " << step << ": After add, $t0 = 0x" << std::hex << t0
                           << std::endl;
             }
 
             if (step == 5)
-            { // After store
+            {  // After store
                 uint32_t memValue = cpu->getMemory().readWord(0x1000);
                 std::cout << "Step " << step << ": Memory[0x1000] = 0x" << std::hex << memValue
                           << std::endl;
@@ -111,4 +111,4 @@ syscall
     }
 }
 
-} // namespace mips
+}  // namespace mips

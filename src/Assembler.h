@@ -58,4 +58,4 @@ class Assembler
     std::vector<std::string> split(const std::string& str, char delimiter);
 };
 
-} // namespace mips
+}  // namespace mips

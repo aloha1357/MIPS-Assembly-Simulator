@@ -51,4 +51,4 @@ void PipelineRegister::clockUpdate()
     }
 }
 
-} // namespace mips
+}  // namespace mips

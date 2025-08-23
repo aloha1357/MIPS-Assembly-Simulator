@@ -68,14 +68,14 @@ class LogicalNorMinimalBddTest : public ::testing::Test
 TEST_F(LogicalNorMinimalBddTest, NorInstruction_ZeroInputs_PhaseB)
 {
     // Given: 設定輸入寄存器為全零
-    givenRegisterContains(8, 0x00000000); // $t0 = 0
-    givenRegisterContains(9, 0x00000000); // $t1 = 0
+    givenRegisterContains(8, 0x00000000);  // $t0 = 0
+    givenRegisterContains(9, 0x00000000);  // $t1 = 0
 
     // When: 執行NOR指令
     whenIExecuteInstruction("nor $t2, $t0, $t1");
 
     // Then: 結果應該是全1 (~(0 | 0) = ~0 = 0xFFFFFFFF)
-    uint32_t result = thenRegisterShouldContain(10); // $t2
+    uint32_t result = thenRegisterShouldContain(10);  // $t2
     EXPECT_EQ(result, 0xFFFFFFFF) << "NOR(0, 0) 應該等於 0xFFFFFFFF";
 }
 
@@ -91,13 +91,13 @@ TEST_F(LogicalNorMinimalBddTest, NorInstruction_ZeroInputs_PhaseB)
 TEST_F(LogicalNorMinimalBddTest, NorInstruction_AllOnesInputs_PhaseB)
 {
     // Given: 設定輸入寄存器為全1
-    givenRegisterContains(8, 0xFFFFFFFF); // $t0 = 0xFFFFFFFF
-    givenRegisterContains(9, 0xFFFFFFFF); // $t1 = 0xFFFFFFFF
+    givenRegisterContains(8, 0xFFFFFFFF);  // $t0 = 0xFFFFFFFF
+    givenRegisterContains(9, 0xFFFFFFFF);  // $t1 = 0xFFFFFFFF
 
     // When: 執行NOR指令
     whenIExecuteInstruction("nor $t2, $t0, $t1");
 
     // Then: 結果應該是全0 (~(0xFFFFFFFF | 0xFFFFFFFF) = ~0xFFFFFFFF = 0)
-    uint32_t result = thenRegisterShouldContain(10); // $t2
+    uint32_t result = thenRegisterShouldContain(10);  // $t2
     EXPECT_EQ(result, 0x00000000) << "NOR(0xFFFFFFFF, 0xFFFFFFFF) 應該等於 0x00000000";
 }

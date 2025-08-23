@@ -1,7 +1,7 @@
-#include "Assembler.h"            // Direct assembler testing
-#include "Cpu.h"                  // Direct CPU testing
-#include "Memory.h"               // Memory access
-#include "gui/MipsSimulatorGUI.h" // Use base implementation for testing
+#include "Assembler.h"             // Direct assembler testing
+#include "Cpu.h"                   // Direct CPU testing
+#include "Memory.h"                // Memory access
+#include "gui/MipsSimulatorGUI.h"  // Use base implementation for testing
 #include <gtest/gtest.h>
 #include <memory>
 #include <string>
@@ -23,7 +23,7 @@ class EnhancedGuiConsoleTest : public ::testing::Test
     void SetUp() override
     {
         // Create base GUI in headless mode
-        gui         = std::make_unique<MipsSimulatorGUI>(true); // headless mode
+        gui         = std::make_unique<MipsSimulatorGUI>(true);  // headless mode
         initialized = gui->initialize();
 
         // Also create direct CPU for syscall testing
@@ -158,7 +158,7 @@ TEST_F(EnhancedGuiConsoleTest, MemoryStringStorageTest)
 
     // Store "Hi" manually: H=0x48, i=0x69, \0=0x00
     // Little-endian: 0x00006948
-    uint32_t hiString = 0x6948; // H in lowest byte, i in next byte, rest zeros
+    uint32_t hiString = 0x6948;  // H in lowest byte, i in next byte, rest zeros
     memory.writeWord(0x1000, hiString);
 
     // Verify memory content
@@ -166,9 +166,9 @@ TEST_F(EnhancedGuiConsoleTest, MemoryStringStorageTest)
     EXPECT_EQ(storedValue, 0x6948) << "Memory should store the string correctly";
 
     // Extract and verify individual bytes
-    char byte0 = (storedValue >> 0) & 0xFF;  // Should be 'H' = 0x48
-    char byte1 = (storedValue >> 8) & 0xFF;  // Should be 'i' = 0x69
-    char byte2 = (storedValue >> 16) & 0xFF; // Should be '\0' = 0x00
+    char byte0 = (storedValue >> 0) & 0xFF;   // Should be 'H' = 0x48
+    char byte1 = (storedValue >> 8) & 0xFF;   // Should be 'i' = 0x69
+    char byte2 = (storedValue >> 16) & 0xFF;  // Should be '\0' = 0x00
 
     EXPECT_EQ(byte0, 'H') << "First byte should be 'H'";
     EXPECT_EQ(byte1, 'i') << "Second byte should be 'i'";
@@ -300,4 +300,4 @@ syscall
     }
 }
 
-} // namespace mips
+}  // namespace mips

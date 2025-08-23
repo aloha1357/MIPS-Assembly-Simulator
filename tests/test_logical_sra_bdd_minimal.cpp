@@ -125,13 +125,13 @@ class SraInstructionBDDTest : public ::testing::Test
         if (program.find("sra $t1, $t0, 8") != std::string::npos)
         {
             // 正數測試: sra $t1, $t0, 8
-            mips::SraInstruction instr(9, 8, 8); // rd=9($t1), rt=8($t0), shamt=8
+            mips::SraInstruction instr(9, 8, 8);  // rd=9($t1), rt=8($t0), shamt=8
             instr.execute(*cpu);
         }
         else if (program.find("sra $t1, $t0, 4") != std::string::npos)
         {
             // 負數測試: sra $t1, $t0, 4
-            mips::SraInstruction instr(9, 8, 4); // rd=9($t1), rt=8($t0), shamt=4
+            mips::SraInstruction instr(9, 8, 4);  // rd=9($t1), rt=8($t0), shamt=4
             instr.execute(*cpu);
         }
     }
@@ -147,13 +147,13 @@ class SraInstructionBDDTest : public ::testing::Test
 TEST_F(SraInstructionBDDTest, Sra_PositiveShift_ShouldZeroExtend)
 {
     // Given: 暫存器包含正數值
-    given_register_contains("$t0", 0x7FFFFFFF); // 最大正數
+    given_register_contains("$t0", 0x7FFFFFFF);  // 最大正數
 
     // When: 執行SRA指令進行算術右位移8位
     when_program_executed_for_cycles("sra $t1, $t0, 8", 1);
 
     // Then: 結果應該是算術右移後的值(正數零擴展)
-    then_register_should_equal("$t1", 0x007FFFFF); // 算術右移，MSB=0時零擴展
+    then_register_should_equal("$t1", 0x007FFFFF);  // 算術右移，MSB=0時零擴展
 }
 
 /**
@@ -166,13 +166,13 @@ TEST_F(SraInstructionBDDTest, Sra_PositiveShift_ShouldZeroExtend)
 TEST_F(SraInstructionBDDTest, Sra_NegativeShift_ShouldSignExtend)
 {
     // Given: 暫存器包含負數值(MSB為1)
-    given_register_contains("$t0", 0x80000000); // 最小負數
+    given_register_contains("$t0", 0x80000000);  // 最小負數
 
     // When: 執行SRA指令進行算術右位移4位
     when_program_executed_for_cycles("sra $t1, $t0, 4", 1);
 
     // Then: 結果應該是算術右移後的值(負數符號位擴展)
-    then_register_should_equal("$t1", 0xF8000000); // 算術右移，MSB=1時符號位擴展
+    then_register_should_equal("$t1", 0xF8000000);  // 算術右移，MSB=1時符號位擴展
 }
 
-} // namespace
+}  // namespace

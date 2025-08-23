@@ -45,4 +45,4 @@ class WBStage : public Stage
     PipelineRegister* m_inputRegister;
 };
 
-} // namespace mips
+}  // namespace mips

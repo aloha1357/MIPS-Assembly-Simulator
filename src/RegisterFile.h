@@ -61,8 +61,8 @@ class RegisterFile
 
   private:
     std::array<uint32_t, NUM_REGISTERS> m_registers;
-    uint32_t                            m_hi; // HI register for multiply/divide
-    uint32_t                            m_lo; // LO register for multiply/divide
+    uint32_t                            m_hi;  // HI register for multiply/divide
+    uint32_t                            m_lo;  // LO register for multiply/divide
 };
 
-} // namespace mips
+}  // namespace mips

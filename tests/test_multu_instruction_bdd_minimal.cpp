@@ -55,11 +55,11 @@ class MULTUInstructionBDD : public ::testing::Test
 TEST_F(MULTUInstructionBDD, BasicUnsignedMultiplication)
 {
     // Given: Two positive numbers
-    cpu->getRegisterFile().write(8, 123); // $t0 = 123
-    cpu->getRegisterFile().write(9, 456); // $t1 = 456
+    cpu->getRegisterFile().write(8, 123);  // $t0 = 123
+    cpu->getRegisterFile().write(9, 456);  // $t1 = 456
 
     // When: MULTU $t0, $t1
-    uint32_t multu_instruction = 0x01094819; // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
+    uint32_t multu_instruction = 0x01094819;  // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
     auto     instruction       = decoder->decode(multu_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
@@ -83,11 +83,11 @@ TEST_F(MULTUInstructionBDD, BasicUnsignedMultiplication)
 TEST_F(MULTUInstructionBDD, LargeUnsignedMultiplication)
 {
     // Given: Two large unsigned numbers
-    cpu->getRegisterFile().write(8, 0xFFFFFFFF); // $t0 = max uint32 (4294967295)
-    cpu->getRegisterFile().write(9, 2);          // $t1 = 2
+    cpu->getRegisterFile().write(8, 0xFFFFFFFF);  // $t0 = max uint32 (4294967295)
+    cpu->getRegisterFile().write(9, 2);           // $t1 = 2
 
     // When: MULTU $t0, $t1
-    uint32_t multu_instruction = 0x01094819; // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
+    uint32_t multu_instruction = 0x01094819;  // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
     auto     instruction       = decoder->decode(multu_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
@@ -111,11 +111,11 @@ TEST_F(MULTUInstructionBDD, LargeUnsignedMultiplication)
 TEST_F(MULTUInstructionBDD, MaxValueMultiplication)
 {
     // Given: Two max unsigned values
-    cpu->getRegisterFile().write(8, 0xFFFFFFFF); // $t0 = max uint32
-    cpu->getRegisterFile().write(9, 0xFFFFFFFF); // $t1 = max uint32
+    cpu->getRegisterFile().write(8, 0xFFFFFFFF);  // $t0 = max uint32
+    cpu->getRegisterFile().write(9, 0xFFFFFFFF);  // $t1 = max uint32
 
     // When: MULTU $t0, $t1
-    uint32_t multu_instruction = 0x01094819; // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
+    uint32_t multu_instruction = 0x01094819;  // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
     auto     instruction       = decoder->decode(multu_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);
@@ -139,11 +139,11 @@ TEST_F(MULTUInstructionBDD, MaxValueMultiplication)
 TEST_F(MULTUInstructionBDD, ZeroMultiplication)
 {
     // Given: One operand is zero
-    cpu->getRegisterFile().write(8, 0);          // $t0 = 0
-    cpu->getRegisterFile().write(9, 0xFFFFFFFF); // $t1 = max uint32
+    cpu->getRegisterFile().write(8, 0);           // $t0 = 0
+    cpu->getRegisterFile().write(9, 0xFFFFFFFF);  // $t1 = max uint32
 
     // When: MULTU $t0, $t1
-    uint32_t multu_instruction = 0x01094819; // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
+    uint32_t multu_instruction = 0x01094819;  // MULTU opcode, rs=$t0(8), rt=$t1(9), function=0x19
     auto     instruction       = decoder->decode(multu_instruction);
     ASSERT_NE(instruction, nullptr);
     instruction->execute(*cpu);

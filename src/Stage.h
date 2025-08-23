@@ -50,7 +50,7 @@ class Stage
 struct PipelineData
 {
     // Instruction information
-    Instruction* instruction = nullptr; // Raw pointer for pipeline references
+    Instruction* instruction = nullptr;  // Raw pointer for pipeline references
     uint32_t     pc          = 0;
 
     // Decoded instruction fields
@@ -79,8 +79,8 @@ struct PipelineData
     bool     branch   = false;
     bool     jump     = false;
     bool     aluSrc   = false;
-    uint32_t regDst   = 0; // 0=rt, 1=rd
-    uint32_t memToReg = 0; // 0=alu, 1=memory
+    uint32_t regDst   = 0;  // 0=rt, 1=rd
+    uint32_t memToReg = 0;  // 0=alu, 1=memory
 
     void reset()
     {
@@ -138,4 +138,4 @@ class PipelineRegister
     PipelineData m_nextData;
 };
 
-} // namespace mips
+}  // namespace mips

@@ -78,7 +78,7 @@ class LogicalOrMinimalBddTest : public ::testing::Test
             if (!instructions.empty())
             {
                 instructions[0]->execute(*cpu);
-                executionCycles = 1; // R-type指令執行1個週期
+                executionCycles = 1;  // R-type指令執行1個週期
             }
             else
             {
@@ -226,8 +226,8 @@ TEST_F(LogicalOrMinimalBddTest, OrInstruction_WithZero_PhaseB)
 
 // 其他測試案例暫時被 DISABLED，等待第一個測試通過後逐一啟用
 
-} // namespace test
-} // namespace mips
+}  // namespace test
+}  // namespace mips
 
 /**
  * @brief Phase A 總結

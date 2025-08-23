@@ -40,14 +40,14 @@ TEST_F(MFHIInstructionBDD, BasicHIRead_ShouldMoveHIToRegister)
 {
     // Given: HI暫存器包含特定值
     cpu->getRegisterFile().writeHI(0x12345678);
-    cpu->getRegisterFile().write(10, 0x00000000); // $t2 初始化為0
+    cpu->getRegisterFile().write(10, 0x00000000);  // $t2 初始化為0
 
     // When: 執行MFHI指令
     instruction->execute(*cpu);
 
     // Then: 目標暫存器應包含HI的值
     EXPECT_EQ(cpu->getRegisterFile().read(10), 0x12345678);
-    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0x12345678); // HI暫存器不變
+    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0x12345678);  // HI暫存器不變
     // 程式計數器應前進
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
@@ -62,14 +62,14 @@ TEST_F(MFHIInstructionBDD, ZeroHIRead_ShouldMoveZeroToRegister)
 {
     // Given: HI暫存器為零
     cpu->getRegisterFile().writeHI(0x00000000);
-    cpu->getRegisterFile().write(10, 0xFFFFFFFF); // $t2 初始化為全1
+    cpu->getRegisterFile().write(10, 0xFFFFFFFF);  // $t2 初始化為全1
 
     // When: 執行MFHI指令
     instruction->execute(*cpu);
 
     // Then: 目標暫存器應為零
     EXPECT_EQ(cpu->getRegisterFile().read(10), 0x00000000);
-    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0x00000000); // HI暫存器保持零
+    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0x00000000);  // HI暫存器保持零
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
 
@@ -83,14 +83,14 @@ TEST_F(MFHIInstructionBDD, MaxValueHIRead_ShouldMoveMaxValueToRegister)
 {
     // Given: HI暫存器包含最大32位值
     cpu->getRegisterFile().writeHI(0xFFFFFFFF);
-    cpu->getRegisterFile().write(10, 0x00000000); // $t2 初始化為0
+    cpu->getRegisterFile().write(10, 0x00000000);  // $t2 初始化為0
 
     // When: 執行MFHI指令
     instruction->execute(*cpu);
 
     // Then: 目標暫存器應包含最大值
     EXPECT_EQ(cpu->getRegisterFile().read(10), 0xFFFFFFFF);
-    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0xFFFFFFFF); // HI暫存器不變
+    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0xFFFFFFFF);  // HI暫存器不變
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
 
@@ -105,15 +105,15 @@ TEST_F(MFHIInstructionBDD, DifferentTargetRegister_ShouldMoveToCorrectRegister)
     // Given: 設定特定的HI值，使用$t1 (register 9) 作為目標
     auto instructionT1 = std::make_unique<MFHIInstruction>(9);
     cpu->getRegisterFile().writeHI(0xABCDEF01);
-    cpu->getRegisterFile().write(9, 0x12345678);  // $t1 初始值
-    cpu->getRegisterFile().write(10, 0x87654321); // $t2 初始值
+    cpu->getRegisterFile().write(9, 0x12345678);   // $t1 初始值
+    cpu->getRegisterFile().write(10, 0x87654321);  // $t2 初始值
 
     // When: 執行MFHI指令 (目標為$t1)
     instructionT1->execute(*cpu);
 
     // Then: 只有$t1應接收HI的值，$t2保持不變
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 0xABCDEF01);  // $t1 = HI值
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x87654321); // $t2 保持原值
-    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0xABCDEF01); // HI不變
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 0xABCDEF01);   // $t1 = HI值
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x87654321);  // $t2 保持原值
+    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0xABCDEF01);  // HI不變
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }

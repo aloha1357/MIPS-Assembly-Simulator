@@ -39,15 +39,15 @@ class MTHIInstructionBDD : public ::testing::Test
 TEST_F(MTHIInstructionBDD, BasicHIWrite_ShouldMoveRegisterToHI)
 {
     // Given: $t2暫存器包含特定值
-    cpu->getRegisterFile().write(10, 0x12345678); // $t2 = 0x12345678
-    cpu->getRegisterFile().writeHI(0x00000000);   // HI初始化為0
+    cpu->getRegisterFile().write(10, 0x12345678);  // $t2 = 0x12345678
+    cpu->getRegisterFile().writeHI(0x00000000);    // HI初始化為0
 
     // When: 執行MTHI指令
     instruction->execute(*cpu);
 
     // Then: HI暫存器應包含$t2的值
     EXPECT_EQ(cpu->getRegisterFile().readHI(), 0x12345678);
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x12345678); // $t2暫存器不變
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x12345678);  // $t2暫存器不變
     // 程式計數器應前進
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
@@ -61,15 +61,15 @@ TEST_F(MTHIInstructionBDD, BasicHIWrite_ShouldMoveRegisterToHI)
 TEST_F(MTHIInstructionBDD, ZeroHIWrite_ShouldMoveZeroToHI)
 {
     // Given: $t2暫存器為零
-    cpu->getRegisterFile().write(10, 0x00000000); // $t2 = 0
-    cpu->getRegisterFile().writeHI(0xFFFFFFFF);   // HI初始化為全1
+    cpu->getRegisterFile().write(10, 0x00000000);  // $t2 = 0
+    cpu->getRegisterFile().writeHI(0xFFFFFFFF);    // HI初始化為全1
 
     // When: 執行MTHI指令
     instruction->execute(*cpu);
 
     // Then: HI暫存器應為零
     EXPECT_EQ(cpu->getRegisterFile().readHI(), 0x00000000);
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x00000000); // $t2暫存器保持零
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x00000000);  // $t2暫存器保持零
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
 
@@ -82,15 +82,15 @@ TEST_F(MTHIInstructionBDD, ZeroHIWrite_ShouldMoveZeroToHI)
 TEST_F(MTHIInstructionBDD, MaxValueHIWrite_ShouldMoveMaxValueToHI)
 {
     // Given: $t2暫存器包含最大32位值
-    cpu->getRegisterFile().write(10, 0xFFFFFFFF); // $t2 = 最大值
-    cpu->getRegisterFile().writeHI(0x00000000);   // HI初始化為0
+    cpu->getRegisterFile().write(10, 0xFFFFFFFF);  // $t2 = 最大值
+    cpu->getRegisterFile().writeHI(0x00000000);    // HI初始化為0
 
     // When: 執行MTHI指令
     instruction->execute(*cpu);
 
     // Then: HI暫存器應包含最大值
     EXPECT_EQ(cpu->getRegisterFile().readHI(), 0xFFFFFFFF);
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 0xFFFFFFFF); // $t2暫存器不變
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 0xFFFFFFFF);  // $t2暫存器不變
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }
 
@@ -104,17 +104,17 @@ TEST_F(MTHIInstructionBDD, OverwriteExistingHI_ShouldReplaceHIValue)
 {
     // Given: HI暫存器已有值，$t1暫存器包含新值
     std::unique_ptr<Instruction> instructionT1 =
-        std::make_unique<MTHIInstruction>(9);     // 從$t1 (暫存器9)
-    cpu->getRegisterFile().writeHI(0x11111111);   // HI原有值
-    cpu->getRegisterFile().write(9, 0xABCDEF01);  // $t1 = 新值
-    cpu->getRegisterFile().write(10, 0x87654321); // $t2 = 其他值
+        std::make_unique<MTHIInstruction>(9);      // 從$t1 (暫存器9)
+    cpu->getRegisterFile().writeHI(0x11111111);    // HI原有值
+    cpu->getRegisterFile().write(9, 0xABCDEF01);   // $t1 = 新值
+    cpu->getRegisterFile().write(10, 0x87654321);  // $t2 = 其他值
 
     // When: 執行MTHI指令 (目標從$t1)
     instructionT1->execute(*cpu);
 
     // Then: HI暫存器應被$t1的值覆寫
-    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0xABCDEF01); // HI = $t1值
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 0xABCDEF01);  // $t1 保持原值
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x87654321); // $t2 保持不變
+    EXPECT_EQ(cpu->getRegisterFile().readHI(), 0xABCDEF01);  // HI = $t1值
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 0xABCDEF01);   // $t1 保持原值
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 0x87654321);  // $t2 保持不變
     EXPECT_EQ(cpu->getProgramCounter(), 1);
 }

@@ -12,7 +12,7 @@ uint32_t RegisterFile::read(int regNum) const
 {
     if (regNum < 0 || regNum >= NUM_REGISTERS)
     {
-        return 0; // Invalid register access returns 0
+        return 0;  // Invalid register access returns 0
     }
     return m_registers[regNum];
 }
@@ -21,7 +21,7 @@ void RegisterFile::write(int regNum, uint32_t value)
 {
     if (regNum <= 0 || regNum >= NUM_REGISTERS)
     {
-        return; // $zero (reg 0) is hardwired to 0, invalid regs ignored
+        return;  // $zero (reg 0) is hardwired to 0, invalid regs ignored
     }
     m_registers[regNum] = value;
 }
@@ -53,4 +53,4 @@ void RegisterFile::writeLO(uint32_t value)
     m_lo = value;
 }
 
-} // namespace mips
+}  // namespace mips

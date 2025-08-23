@@ -43,7 +43,7 @@ class MipsCoreConsoleTest : public ::testing::Test
     void SetUp() override
     {
         // Create base GUI in headless mode
-        gui         = std::make_unique<MipsSimulatorGUI>(true); // headless mode
+        gui         = std::make_unique<MipsSimulatorGUI>(true);  // headless mode
         initialized = gui->initialize();
 
         // Create core components for isolated testing
@@ -308,7 +308,7 @@ TEST_F(MipsCoreConsoleTest, ConsoleHandlesAssemblyParsingErrors)
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
 
     // And: A minimal test - just check that invalid assembly is handled gracefully
-    std::string emptyProgram = ""; // Empty program should be handled gracefully
+    std::string emptyProgram = "";  // Empty program should be handled gracefully
 
     // When: We try to load an empty program (should be safe and fast)
     auto start   = std::chrono::high_resolution_clock::now();
@@ -439,7 +439,7 @@ syscall
     }
 }
 
-} // namespace mips
+}  // namespace mips
 
 /*
  * =============================================================================

@@ -75,4 +75,4 @@ class IDStage : public Stage
     bool detectLoadUseHazard(const PipelineData& data);
 };
 
-} // namespace mips
+}  // namespace mips

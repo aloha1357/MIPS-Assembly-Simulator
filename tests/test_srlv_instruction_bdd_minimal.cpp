@@ -68,10 +68,10 @@ TEST_F(SRLVInstructionBDDTest, BasicVariableLogicalRightShift)
     // Given: rt = 0x80000000, rs = 4
     const uint32_t rt_value        = 0x80000000;
     const uint32_t rs_value        = 4;
-    const uint32_t rt_register     = 1;                    // $t0 (source value)
-    const uint32_t rs_register     = 2;                    // $t1 (shift amount)
-    const uint32_t rd_register     = 3;                    // $t2 (destination)
-    const uint32_t expected_result = rt_value >> rs_value; // 0x08000000
+    const uint32_t rt_register     = 1;                     // $t0 (source value)
+    const uint32_t rs_register     = 2;                     // $t1 (shift amount)
+    const uint32_t rd_register     = 3;                     // $t2 (destination)
+    const uint32_t expected_result = rt_value >> rs_value;  // 0x08000000
 
     cpu->getRegisterFile().write(rt_register, rt_value);
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -98,12 +98,12 @@ TEST_F(SRLVInstructionBDDTest, ShiftAmountTruncationLogical)
 {
     // Given: rt = 0xFFFFFFFF, rs = 35 (0x23)
     const uint32_t rt_value        = 0xFFFFFFFF;
-    const uint32_t rs_value        = 35;              // 0x23, but only low 5 bits (3) will be used
-    const uint32_t rt_register     = 4;               // $t3
-    const uint32_t rs_register     = 5;               // $t4
-    const uint32_t rd_register     = 6;               // $t5
-    const uint32_t effective_shift = rs_value & 0x1F; // 35 & 0x1F = 3
-    const uint32_t expected_result = rt_value >> effective_shift; // 0x1FFFFFFF
+    const uint32_t rs_value        = 35;               // 0x23, but only low 5 bits (3) will be used
+    const uint32_t rt_register     = 4;                // $t3
+    const uint32_t rs_register     = 5;                // $t4
+    const uint32_t rd_register     = 6;                // $t5
+    const uint32_t effective_shift = rs_value & 0x1F;  // 35 & 0x1F = 3
+    const uint32_t expected_result = rt_value >> effective_shift;  // 0x1FFFFFFF
 
     cpu->getRegisterFile().write(rt_register, rt_value);
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -129,10 +129,10 @@ TEST_F(SRLVInstructionBDDTest, ZeroShiftIdentity)
     // Given: rt = 0xABCDEF12, rs = 0
     const uint32_t rt_value        = 0xABCDEF12;
     const uint32_t rs_value        = 0;
-    const uint32_t rt_register     = 7;        // $t6
-    const uint32_t rs_register     = 8;        // $t7
-    const uint32_t rd_register     = 9;        // $t8
-    const uint32_t expected_result = rt_value; // No shift, identity
+    const uint32_t rt_register     = 7;         // $t6
+    const uint32_t rs_register     = 8;         // $t7
+    const uint32_t rd_register     = 9;         // $t8
+    const uint32_t expected_result = rt_value;  // No shift, identity
 
     cpu->getRegisterFile().write(rt_register, rt_value);
     cpu->getRegisterFile().write(rs_register, rs_value);
@@ -157,11 +157,11 @@ TEST_F(SRLVInstructionBDDTest, MaximumShiftZeroExtension)
 {
     // Given: rt = 0x80000001, rs = 31
     const uint32_t rt_value        = 0x80000001;
-    const uint32_t rs_value        = 31;                   // Maximum shift amount
-    const uint32_t rt_register     = 10;                   // $t9
-    const uint32_t rs_register     = 11;                   // $s0
-    const uint32_t rd_register     = 12;                   // $s1
-    const uint32_t expected_result = rt_value >> rs_value; // 0x00000001 (logical shift)
+    const uint32_t rs_value        = 31;                    // Maximum shift amount
+    const uint32_t rt_register     = 10;                    // $t9
+    const uint32_t rs_register     = 11;                    // $s0
+    const uint32_t rd_register     = 12;                    // $s1
+    const uint32_t expected_result = rt_value >> rs_value;  // 0x00000001 (logical shift)
 
     cpu->getRegisterFile().write(rt_register, rt_value);
     cpu->getRegisterFile().write(rs_register, rs_value);

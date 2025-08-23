@@ -35,9 +35,9 @@ class RTypeInstruction : public Instruction
     RTypeInstruction(int rd, int rs, int rt);
 
   protected:
-    int m_rd; // Destination register
-    int m_rs; // Source register 1
-    int m_rt; // Source register 2
+    int m_rd;  // Destination register
+    int m_rs;  // Source register 1
+    int m_rt;  // Source register 2
 };
 
 /**
@@ -64,4 +64,4 @@ class SubInstruction : public RTypeInstruction
     std::string getName() const override;
 };
 
-} // namespace mips
+}  // namespace mips

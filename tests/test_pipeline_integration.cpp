@@ -75,7 +75,7 @@ TEST_F(PipelineIntegrationTest, PipelineRegistersWorkCorrectly)
     // Create test data
     PipelineData testData;
     testData.pc          = 0x1000;
-    testData.instruction = nullptr; // For now
+    testData.instruction = nullptr;  // For now
     testData.regWrite    = true;
     testData.memRead     = false;
 
@@ -118,14 +118,14 @@ TEST_F(PipelineIntegrationTest, SingleCycleModeStillWorksWithPipelineCode)
     cpu->loadProgramFromString(program);
 
     // Set up registers
-    cpu->getRegisterFile().write(9, 5);  // $t1 = 5
-    cpu->getRegisterFile().write(10, 3); // $t2 = 3
+    cpu->getRegisterFile().write(9, 5);   // $t1 = 5
+    cpu->getRegisterFile().write(10, 3);  // $t2 = 3
 
     // Execute one cycle
     cpu->tick();
 
     // Check result
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 8); // $t0 should be 5+3=8
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 8);  // $t0 should be 5+3=8
 }
 
 /**

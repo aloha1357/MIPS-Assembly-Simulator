@@ -188,15 +188,15 @@ class LogicalInstructionWalkingSkeleton : public ::testing::Test
 TEST_F(LogicalInstructionWalkingSkeleton, AND_BasicFunctionality_ShouldFail)
 {
     // Arrange: 設定初始狀態
-    setRegister("$t0", 0xFF00FF00); // 來源暫存器1
-    setRegister("$t1", 0x0FF00FF0); // 來源暫存器2
+    setRegister("$t0", 0xFF00FF00);  // 來源暫存器1
+    setRegister("$t1", 0x0FF00FF0);  // 來源暫存器2
 
     // Act: 執行AND指令 - Phase B: 現在實際執行指令
     std::string instruction = "and $t2, $t0, $t1";
     executeInstruction(instruction);
 
     // Assert: 檢查預期結果 - 現在應該通過！
-    uint32_t expectedResult = 0x0F000F00; // 0xFF00FF00 & 0x0FF00FF0
+    uint32_t expectedResult = 0x0F000F00;  // 0xFF00FF00 & 0x0FF00FF0
     expectRegister("$t2", expectedResult);
 
     // Phase B: 如果實作正確，這個測試現在應該通過（變成綠燈）
@@ -214,8 +214,8 @@ TEST_F(LogicalInstructionWalkingSkeleton, CPU_BasicFunctionality_ShouldPass)
     expectRegister("$t0", 0x12345678);
 
     // 測試$zero暫存器總是0
-    setRegister("$zero", 0xFFFFFFFF); // 嘗試寫入非零值
-    expectRegister("$zero", 0);       // 應該仍然是0
+    setRegister("$zero", 0xFFFFFFFF);  // 嘗試寫入非零值
+    expectRegister("$zero", 0);        // 應該仍然是0
 
     // 這個測試應該通過，確認我們的測試框架工作正常
 }
@@ -262,15 +262,15 @@ TEST_F(LogicalInstructionWalkingSkeleton, AND_ComprehensiveTests)
     expectRegister("$t3", 0xFFFFFFFF);
 
     // 測試案例3: 交替位元模式
-    setRegister("$t0", 0xAAAAAAAA); // 10101010...
-    setRegister("$t1", 0x55555555); // 01010101...
+    setRegister("$t0", 0xAAAAAAAA);  // 10101010...
+    setRegister("$t1", 0x55555555);  // 01010101...
     executeInstruction("and $t4, $t0, $t1");
-    expectRegister("$t4", 0x00000000); // 應該全為0
+    expectRegister("$t4", 0x00000000);  // 應該全為0
 
     // 測試案例4: 同一個暫存器
     setRegister("$t0", 0x12345678);
     executeInstruction("and $t5, $t0, $t0");
-    expectRegister("$t5", 0x12345678); // x & x = x
+    expectRegister("$t5", 0x12345678);  // x & x = x
 }
 
 /**
@@ -281,12 +281,12 @@ TEST_F(LogicalInstructionWalkingSkeleton, AND_EdgeCases)
     // 測試$zero暫存器行為
     setRegister("$t0", 0xFFFFFFFF);
     executeInstruction("and $zero, $t0, $t0");
-    expectRegister("$zero", 0x00000000); // $zero應該保持為0
+    expectRegister("$zero", 0x00000000);  // $zero應該保持為0
 
     // 測試與$zero的AND操作
     setRegister("$t1", 0xFFFFFFFF);
     executeInstruction("and $t2, $t1, $zero");
-    expectRegister("$t2", 0x00000000); // 任何數與0的AND都是0
+    expectRegister("$t2", 0x00000000);  // 任何數與0的AND都是0
 }
 
 /**
@@ -295,15 +295,15 @@ TEST_F(LogicalInstructionWalkingSkeleton, AND_EdgeCases)
 TEST_F(LogicalInstructionWalkingSkeleton, OR_BasicFunctionality_ShouldFail)
 {
     // Arrange: 設定初始狀態
-    setRegister("$t0", 0xFF00FF00); // 來源暫存器1
-    setRegister("$t1", 0x00FF00FF); // 來源暫存器2
+    setRegister("$t0", 0xFF00FF00);  // 來源暫存器1
+    setRegister("$t1", 0x00FF00FF);  // 來源暫存器2
 
     // Act: 執行OR指令 - Phase D: 期望失敗（紅燈）
     std::string instruction = "or $t2, $t0, $t1";
     executeInstruction(instruction);
 
     // Assert: 檢查預期結果
-    uint32_t expectedResult = 0xFFFFFFFF; // 0xFF00FF00 | 0x00FF00FF
+    uint32_t expectedResult = 0xFFFFFFFF;  // 0xFF00FF00 | 0x00FF00FF
     expectRegister("$t2", expectedResult);
 
     // Phase D: 這個測試應該失敗，因為OR指令還沒實作
@@ -315,27 +315,27 @@ TEST_F(LogicalInstructionWalkingSkeleton, OR_BasicFunctionality_ShouldFail)
 TEST_F(LogicalInstructionWalkingSkeleton, XOR_BasicFunctionality_ShouldPass)
 {
     // Arrange: 設定初始狀態
-    setRegister("$t0", 0xAAAAAAAA); // 來源暫存器1: 10101010...
-    setRegister("$t1", 0x55555555); // 來源暫存器2: 01010101...
+    setRegister("$t0", 0xAAAAAAAA);  // 來源暫存器1: 10101010...
+    setRegister("$t1", 0x55555555);  // 來源暫存器2: 01010101...
 
     // Act: 執行XOR指令
     std::string instruction = "xor $t2, $t0, $t1";
     executeInstruction(instruction);
 
     // Assert: 檢查預期結果
-    uint32_t expectedResult = 0xFFFFFFFF; // 0xAAAAAAAA ^ 0x55555555 = 0xFFFFFFFF
+    uint32_t expectedResult = 0xFFFFFFFF;  // 0xAAAAAAAA ^ 0x55555555 = 0xFFFFFFFF
     expectRegister("$t2", expectedResult);
 
     // 測試案例2: XOR with zero (identity test)
     setRegister("$t0", 0x12345678);
     setRegister("$t1", 0x00000000);
     executeInstruction("xor $t3, $t0, $t1");
-    expectRegister("$t3", 0x12345678); // x ^ 0 = x
+    expectRegister("$t3", 0x12345678);  // x ^ 0 = x
 
     // 測試案例3: XOR with self (should be zero)
     setRegister("$t0", 0xDEADBEEF);
     executeInstruction("xor $t4, $t0, $t0");
-    expectRegister("$t4", 0x00000000); // x ^ x = 0
+    expectRegister("$t4", 0x00000000);  // x ^ x = 0
 }
 
 /**
@@ -344,28 +344,28 @@ TEST_F(LogicalInstructionWalkingSkeleton, XOR_BasicFunctionality_ShouldPass)
 TEST_F(LogicalInstructionWalkingSkeleton, XOR_ComprehensiveTests)
 {
     // 測試案例1: XOR加密/解密原理（可逆性）
-    setRegister("$t0", 0x12345678); // 原始數據
-    setRegister("$t1", 0xABCDEF00); // 加密密鑰
+    setRegister("$t0", 0x12345678);  // 原始數據
+    setRegister("$t1", 0xABCDEF00);  // 加密密鑰
 
     // 加密：data ^ key
     executeInstruction("xor $t2, $t0, $t1");
-    expectRegister("$t2", 0xB9F9B978); // 0x12345678 ^ 0xABCDEF00
+    expectRegister("$t2", 0xB9F9B978);  // 0x12345678 ^ 0xABCDEF00
 
     // 解密：encrypted ^ key = original
     executeInstruction("xor $t3, $t2, $t1");
-    expectRegister("$t3", 0x12345678); // 應該恢復原始值
+    expectRegister("$t3", 0x12345678);  // 應該恢復原始值
 
     // 測試案例2: 位元翻轉測試
     setRegister("$t0", 0x0F0F0F0F);
     setRegister("$t1", 0xF0F0F0F0);
     executeInstruction("xor $t4, $t0, $t1");
-    expectRegister("$t4", 0xFFFFFFFF); // 完全互補位元的XOR
+    expectRegister("$t4", 0xFFFFFFFF);  // 完全互補位元的XOR
 
     // 測試案例3: 部分位元操作
     setRegister("$t0", 0xFF00FF00);
     setRegister("$t1", 0x00FF0000);
     executeInstruction("xor $t2, $t0, $t1");
-    expectRegister("$t2", 0xFFFFFF00); // 選擇性位元翻轉
+    expectRegister("$t2", 0xFFFFFF00);  // 選擇性位元翻轉
 }
 
 /**
@@ -374,28 +374,28 @@ TEST_F(LogicalInstructionWalkingSkeleton, XOR_ComprehensiveTests)
 TEST_F(LogicalInstructionWalkingSkeleton, NOR_BasicFunctionality_ShouldPass)
 {
     // Arrange: 設定初始狀態
-    setRegister("$t0", 0xF0F0F0F0); // 來源暫存器1
-    setRegister("$t1", 0x0F0F0F0F); // 來源暫存器2
+    setRegister("$t0", 0xF0F0F0F0);  // 來源暫存器1
+    setRegister("$t1", 0x0F0F0F0F);  // 來源暫存器2
 
     // Act: 執行NOR指令 - 預期實作後通過
     std::string instruction = "nor $t2, $t0, $t1";
     executeInstruction(instruction);
 
     // Assert: 檢查預期結果
-    uint32_t expectedResult = 0x00000000; // ~(0xF0F0F0F0 | 0x0F0F0F0F) = ~0xFFFFFFFF = 0x00000000
+    uint32_t expectedResult = 0x00000000;  // ~(0xF0F0F0F0 | 0x0F0F0F0F) = ~0xFFFFFFFF = 0x00000000
     expectRegister("$t2", expectedResult);
 
     // 測試案例2: NOR with zero (NOT operation)
     setRegister("$t0", 0xAAAAAAAA);
-    setRegister("$t1", 0x00000000); // $zero
+    setRegister("$t1", 0x00000000);  // $zero
     executeInstruction("nor $t3, $t0, $t1");
-    expectRegister("$t3", 0x55555555); // ~(0xAAAAAAAA | 0x00000000) = ~0xAAAAAAAA = 0x55555555
+    expectRegister("$t3", 0x55555555);  // ~(0xAAAAAAAA | 0x00000000) = ~0xAAAAAAAA = 0x55555555
 
     // 測試案例3: NOR with all zeros (should be all ones)
     setRegister("$t0", 0x00000000);
     setRegister("$t1", 0x00000000);
     executeInstruction("nor $t4, $t0, $t1");
-    expectRegister("$t4", 0xFFFFFFFF); // ~(0x00000000 | 0x00000000) = ~0x00000000 = 0xFFFFFFFF
+    expectRegister("$t4", 0xFFFFFFFF);  // ~(0x00000000 | 0x00000000) = ~0x00000000 = 0xFFFFFFFF
 }
 
 /**
@@ -405,23 +405,23 @@ TEST_F(LogicalInstructionWalkingSkeleton, NOR_ComprehensiveTests)
 {
     // 測試案例1: NOR 作為通用 NOT 運算 (與 $zero 的 NOR)
     setRegister("$t0", 0x12345678);
-    setRegister("$t1", 0x00000000); // 使用 $zero
+    setRegister("$t1", 0x00000000);  // 使用 $zero
     executeInstruction("nor $t2, $t0, $t1");
-    expectRegister("$t2", 0xEDCBA987); // ~0x12345678 = 0xEDCBA987
+    expectRegister("$t2", 0xEDCBA987);  // ~0x12345678 = 0xEDCBA987
 
     // 測試案例2: 雙重否定 (DeMorgan's Law 驗證)
     // NOT(A OR B) = NOT(A) AND NOT(B)
-    setRegister("$t0", 0xAAAAAAAA);          // A
-    setRegister("$t1", 0x55555555);          // B
-    executeInstruction("nor $t3, $t0, $t1"); // NOT(A OR B)
+    setRegister("$t0", 0xAAAAAAAA);           // A
+    setRegister("$t1", 0x55555555);           // B
+    executeInstruction("nor $t3, $t0, $t1");  // NOT(A OR B)
     expectRegister("$t3",
-                   0x00000000); // NOT(0xAAAAAAAA OR 0x55555555) = NOT(0xFFFFFFFF) = 0x00000000
+                   0x00000000);  // NOT(0xAAAAAAAA OR 0x55555555) = NOT(0xFFFFFFFF) = 0x00000000
 
     // 測試案例3: NOR 的對稱性 (交換律)
     setRegister("$t0", 0xFF00FF00);
     setRegister("$t1", 0x00FFFF00);
-    executeInstruction("nor $t4, $t0, $t1"); // NOR(A, B)
-    executeInstruction("nor $t2, $t1, $t0"); // NOR(B, A) - 需要更新函數
+    executeInstruction("nor $t4, $t0, $t1");  // NOR(A, B)
+    executeInstruction("nor $t2, $t1, $t0");  // NOR(B, A) - 需要更新函數
     // 兩者應該相等：~(0xFF00FF00 | 0x00FFFF00) = ~0xFFFFFF00 = 0x000000FF
     expectRegister("$t4", 0x000000FF);
     // expectRegister("$t2", 0x000000FF);  // 先註解，等添加支援

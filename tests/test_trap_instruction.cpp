@@ -15,14 +15,14 @@ class TrapInstructionTest : public ::testing::Test
   protected:
     void SetUp() override
     {
-        memory = std::make_unique<Memory>();
+        memory       = std::make_unique<Memory>();
         registerFile = std::make_unique<RegisterFile>();
-        cpu = std::make_unique<Cpu>();
+        cpu          = std::make_unique<Cpu>();
     }
 
-    std::unique_ptr<Memory> memory;
+    std::unique_ptr<Memory>       memory;
     std::unique_ptr<RegisterFile> registerFile;
-    std::unique_ptr<Cpu> cpu;
+    std::unique_ptr<Cpu>          cpu;
 };
 
 /**
@@ -33,12 +33,12 @@ class TrapInstructionTest : public ::testing::Test
 TEST_F(TrapInstructionTest, Given_TrapCode_When_TrapExecuted_Then_HandlerInvoked)
 {
     // Given: Clear console output
-    cpu->getConsoleOutput(); // This reads and potentially clears
-    
+    cpu->getConsoleOutput();  // This reads and potentially clears
+
     // When: Execute trap instruction with code 42
     TrapInstruction trap(42);
     trap.execute(*cpu);
-    
+
     // Then: Should output trap information
     std::string output = cpu->getConsoleOutput();
     EXPECT_TRUE(output.find("TRAP") != std::string::npos);
@@ -50,7 +50,7 @@ TEST_F(TrapInstructionTest, Given_ZeroTrapCode_When_TrapExecuted_Then_HandlerInv
     // When: Execute trap instruction with code 0
     TrapInstruction trap(0);
     trap.execute(*cpu);
-    
+
     // Then: Should handle zero trap code
     std::string output = cpu->getConsoleOutput();
     EXPECT_TRUE(output.find("TRAP") != std::string::npos);
@@ -61,11 +61,11 @@ TEST_F(TrapInstructionTest, Given_MaxTrapCode_When_TrapExecuted_Then_HandlerInvo
 {
     // Given: Max 26-bit value (0x3FFFFFF)
     uint32_t maxTrapCode = 0x3FFFFFF;
-    
+
     // When: Execute trap instruction with max code
     TrapInstruction trap(maxTrapCode);
     trap.execute(*cpu);
-    
+
     // Then: Should handle max trap code
     std::string output = cpu->getConsoleOutput();
     EXPECT_TRUE(output.find("TRAP") != std::string::npos);
@@ -77,11 +77,11 @@ TEST_F(TrapInstructionTest, Given_MaxTrapCode_When_TrapExecuted_Then_HandlerInvo
 TEST_F(TrapInstructionTest, Given_TrapOpcode_When_Decoded_Then_TrapInstructionCreated)
 {
     // Given: TRAP instruction word - opcode 0x1A, trapcode=42
-    uint32_t word = 0x6800002A; // opcode=0x1A, trapcode=42
-    
+    uint32_t word = 0x6800002A;  // opcode=0x1A, trapcode=42
+
     // When: Decode instruction
     auto instruction = InstructionDecoder::decode(word);
-    
+
     // Then: Should create TRAP instruction
     ASSERT_NE(instruction, nullptr);
     EXPECT_EQ(instruction->getName(), "trap");

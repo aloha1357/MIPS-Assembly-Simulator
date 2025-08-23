@@ -60,7 +60,7 @@ void IFStage::execute()
 
     // Create pipeline data
     PipelineData data;
-    data.instruction = instruction.get(); // Get raw pointer from unique_ptr
+    data.instruction = instruction.get();  // Get raw pointer from unique_ptr
     data.pc          = pc;
 
     // Debug output
@@ -110,4 +110,4 @@ void IFStage::setPCUpdateEnable(bool enable)
     m_pcUpdateEnable = enable;
 }
 
-} // namespace mips
+}  // namespace mips

@@ -152,9 +152,9 @@ class Cpu
     std::vector<std::unique_ptr<Instruction>> m_instructions;
 
     int      m_cycleCount;
-    uint32_t m_pc;           // Program counter
-    bool     m_pipelineMode; // Pipeline vs single-cycle mode
-    bool     m_terminated;   // Program termination flag
+    uint32_t m_pc;            // Program counter
+    bool     m_pipelineMode;  // Pipeline vs single-cycle mode
+    bool     m_terminated;    // Program termination flag
 
     // Console I/O for syscall support
     std::string m_consoleOutput;
@@ -186,4 +186,4 @@ class Cpu
     // For now, maintain single-cycle compatibility
 };
 
-} // namespace mips
+}  // namespace mips

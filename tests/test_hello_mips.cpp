@@ -69,7 +69,7 @@ TEST_F(HelloMipsTest, TestHelloMipsSimple)
 
         // 檢查是否呼叫了 exit syscall
         if (cpu->getRegisterFile().read(2) == 10)
-        { // $v0 == 10 (exit)
+        {  // $v0 == 10 (exit)
             exit_called = true;
         }
 
@@ -114,7 +114,7 @@ TEST_F(HelloMipsTest, TestSllInstruction)
     }
 
     // 檢查 SLL 指令的結果
-    uint32_t result = cpu->getRegisterFile().read(9); // $t1
+    uint32_t result = cpu->getRegisterFile().read(9);  // $t1
     EXPECT_EQ(result, 0x6900) << "SLL 指令應該將 0x69 左移 8 位得到 0x6900";
 
     std::cout << "SLL 指令測試完成！" << std::endl;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Instruction.h" // Include for complete definition
+#include "Instruction.h"  // Include for complete definition
 #include "Stage.h"
 
 namespace mips
@@ -64,4 +64,4 @@ class EXStage : public Stage
     bool shouldTakeBranch(const PipelineData& data);
 };
 
-} // namespace mips
+}  // namespace mips

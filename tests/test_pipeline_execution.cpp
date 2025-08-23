@@ -35,7 +35,7 @@ TEST_F(PipelineExecutionTest, BasicPipelineExecution)
     EXPECT_TRUE(cpu->isPipelineMode());
 
     // Execute with maximum cycle limit to prevent infinite loops
-    const int MAX_CYCLES = 15; // Generous limit for 4 instructions + pipeline fill
+    const int MAX_CYCLES = 15;  // Generous limit for 4 instructions + pipeline fill
     int       cycles     = 0;
 
     for (cycles = 0; cycles < MAX_CYCLES; ++cycles)
@@ -49,9 +49,9 @@ TEST_F(PipelineExecutionTest, BasicPipelineExecution)
     EXPECT_LT(cycles, MAX_CYCLES) << "Test exceeded maximum cycle limit";
 
     // Check that registers have been updated correctly
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 10u);  // $t0
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 20u);  // $t1
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 30u); // $t2
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 10u);   // $t0
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 20u);   // $t1
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 30u);  // $t2
 }
 
 TEST_F(PipelineExecutionTest, PipelineVsSingleCycleComparison)
@@ -103,10 +103,10 @@ TEST_F(PipelineExecutionTest, PipelineVsSingleCycleComparison)
     uint32_t t3_pipeline = cpu2->getRegisterFile().read(11);
 
     // Results should be the same regardless of execution mode
-    EXPECT_EQ(t0_single, t0_pipeline); // $t0 = 5
-    EXPECT_EQ(t1_single, t1_pipeline); // $t1 = 3
-    EXPECT_EQ(t2_single, t2_pipeline); // $t2 = 8
-    EXPECT_EQ(t3_single, t3_pipeline); // $t3 = 2
+    EXPECT_EQ(t0_single, t0_pipeline);  // $t0 = 5
+    EXPECT_EQ(t1_single, t1_pipeline);  // $t1 = 3
+    EXPECT_EQ(t2_single, t2_pipeline);  // $t2 = 8
+    EXPECT_EQ(t3_single, t3_pipeline);  // $t3 = 2
 
     EXPECT_EQ(t0_single, 5u);
     EXPECT_EQ(t1_single, 3u);
@@ -129,7 +129,7 @@ TEST_F(PipelineExecutionTest, PipelineModeWithMemoryOperations)
     cpu->setPipelineMode(true);
 
     // Execute program with timeout protection
-    const int MAX_CYCLES = 25; // More cycles for memory operations
+    const int MAX_CYCLES = 25;  // More cycles for memory operations
     int       cycles     = 0;
     while (!cpu->shouldTerminate() && cycles < MAX_CYCLES)
     {
@@ -139,10 +139,10 @@ TEST_F(PipelineExecutionTest, PipelineModeWithMemoryOperations)
     EXPECT_LT(cycles, MAX_CYCLES) << "Memory operations test exceeded maximum cycles";
 
     // Verify results
-    EXPECT_EQ(cpu->getRegisterFile().read(8), 100u);  // $t0
-    EXPECT_EQ(cpu->getRegisterFile().read(9), 100u);  // $t1 (loaded from memory)
-    EXPECT_EQ(cpu->getRegisterFile().read(10), 150u); // $t2
-    EXPECT_EQ(cpu->getMemory().readWord(0), 100u);    // Memory location 0
+    EXPECT_EQ(cpu->getRegisterFile().read(8), 100u);   // $t0
+    EXPECT_EQ(cpu->getRegisterFile().read(9), 100u);   // $t1 (loaded from memory)
+    EXPECT_EQ(cpu->getRegisterFile().read(10), 150u);  // $t2
+    EXPECT_EQ(cpu->getMemory().readWord(0), 100u);     // Memory location 0
 }
 
 TEST_F(PipelineExecutionTest, PipelineStageReset)
