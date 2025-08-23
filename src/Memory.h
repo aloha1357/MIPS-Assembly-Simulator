@@ -3,13 +3,15 @@
 #include <cstdint>
 #include <vector>
 
-namespace mips {
+namespace mips
+{
 
 /**
  * @brief Memory subsystem for data and instruction storage
  */
-class Memory {
-public:
+class Memory
+{
+  public:
     static constexpr uint32_t MEMORY_SIZE = 0x100000; // 1MB
 
     Memory();
@@ -66,7 +68,7 @@ public:
      */
     bool isValidAddress(uint32_t address) const;
 
-private:
+  private:
     std::vector<uint8_t> m_data;
 };
 

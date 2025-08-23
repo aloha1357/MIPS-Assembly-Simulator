@@ -1,73 +1,79 @@
 /**
  * @file test_mips_core_console.cpp
  * @brief Comprehensive test suite for MIPS Core Requirements Console Output
- * 
+ *
  * This test suite validates the three main MIPS simulator requirements:
  * 1. Decode instructions from 32-bit words
- * 2. Execute instructions (access memory, registers, syscalls)  
+ * 2. Execute instructions (access memory, registers, syscalls)
  * 3. Parse assembly code and directives from text
- * 
+ *
  * All tests include timeout controls to prevent infinite loops and ensure
  * CI/CD pipeline stability. Tests are designed to work in both Windows
  * and Linux environments (headless mode support).
- * 
+ *
  * @date August 2025
  * @version 2.0 - Enhanced with comprehensive MIPS requirement coverage
  */
 
-#include <gtest/gtest.h>
-#include "gui/MipsSimulatorGUI.h"
-#include "Cpu.h"
-#include "Memory.h"
 #include "Assembler.h"
+#include "Cpu.h"
 #include "InstructionDecoder.h"
+#include "Memory.h"
+#include "gui/MipsSimulatorGUI.h"
+#include <cctype>
+#include <chrono>
+#include <gtest/gtest.h>
 #include <memory>
 #include <string>
-#include <chrono>
-#include <cctype>
 
-namespace mips {
+namespace mips
+{
 
 /**
  * @brief Test suite for MIPS Core Requirements Console Output
- * 
+ *
  * This test covers the three main MIPS simulator requirements:
  * 1. Decode instructions from 32 bit words
- * 2. Execute instructions (access memory, registers or execute syscall)  
+ * 2. Execute instructions (access memory, registers or execute syscall)
  * 3. Parse assembly code and directives from text
  */
-class MipsCoreConsoleTest : public ::testing::Test {
-protected:
-    void SetUp() override {
-        // Create base GUI in headless mode 
-        gui = std::make_unique<MipsSimulatorGUI>(true); // headless mode
+class MipsCoreConsoleTest : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        // Create base GUI in headless mode
+        gui         = std::make_unique<MipsSimulatorGUI>(true); // headless mode
         initialized = gui->initialize();
-        
+
         // Create core components for isolated testing
-        cpu = std::make_unique<Cpu>();
+        cpu       = std::make_unique<Cpu>();
         assembler = std::make_unique<Assembler>();
-        decoder = std::make_unique<InstructionDecoder>();
+        decoder   = std::make_unique<InstructionDecoder>();
     }
-    
-    void TearDown() override {
-        if (gui && initialized) {
+
+    void TearDown() override
+    {
+        if (gui && initialized)
+        {
             gui->shutdown();
         }
     }
-    
-    std::unique_ptr<MipsSimulatorGUI> gui;
-    std::unique_ptr<Cpu> cpu;
-    std::unique_ptr<Assembler> assembler;
+
+    std::unique_ptr<MipsSimulatorGUI>   gui;
+    std::unique_ptr<Cpu>                cpu;
+    std::unique_ptr<Assembler>          assembler;
     std::unique_ptr<InstructionDecoder> decoder;
-    bool initialized = false;
+    bool                                initialized = false;
 };
 
 // ===== REQUIREMENT 1: Decode instructions from 32 bit words =====
 
-TEST_F(MipsCoreConsoleTest, ConsoleShowsInstructionDecodeErrors) {
+TEST_F(MipsCoreConsoleTest, ConsoleShowsInstructionDecodeErrors)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A program with invalid 32-bit instruction (Red phase - expect failure)
     std::string program = R"(
 # This should create an invalid instruction when assembled incorrectly
@@ -75,27 +81,31 @@ TEST_F(MipsCoreConsoleTest, ConsoleShowsInstructionDecodeErrors) {
 addi $v0, $zero, 10 # exit syscall
 syscall
 )";
-    
+
     // When: We try to load and execute the program
     bool loaded = gui->loadProgram(program);
-    
+
     // Then: Either loading fails OR console shows decode error
-    if (loaded) {
+    if (loaded)
+    {
         gui->runProgram();
         std::string consoleOutput = gui->getConsoleOutput();
         // Console should contain some indication of the problem
-        EXPECT_TRUE(!consoleOutput.empty()) 
+        EXPECT_TRUE(!consoleOutput.empty())
             << "Console should contain some output when encountering invalid instructions";
-    } else {
+    }
+    else
+    {
         // Loading failed, which is also acceptable for invalid programs
         SUCCEED() << "Program loading failed as expected for invalid instruction";
     }
 }
 
-TEST_F(MipsCoreConsoleTest, ConsoleShowsValidInstructionDecoding) {
+TEST_F(MipsCoreConsoleTest, ConsoleShowsValidInstructionDecoding)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A program with all supported MIPS instructions
     std::string program = R"(
 # Test all 9 supported MIPS instructions in console output
@@ -111,29 +121,31 @@ end:
 addi $v0, $zero, 10    # SYSCALL setup
 syscall                # SYSCALL instruction
 )";
-    
+
     // When: We load and execute the program
     bool loaded = gui->loadProgram(program);
     EXPECT_TRUE(loaded) << "Program with valid instructions should load successfully";
-    
-    if (loaded) {
+
+    if (loaded)
+    {
         gui->runProgram();
-        
+
         // Then: Console should not contain decode errors
         std::string consoleOutput = gui->getConsoleOutput();
         EXPECT_TRUE(consoleOutput.find("error") == std::string::npos ||
-                   consoleOutput.find("invalid") == std::string::npos ||
-                   consoleOutput.find("unknown") == std::string::npos) 
+                    consoleOutput.find("invalid") == std::string::npos ||
+                    consoleOutput.find("unknown") == std::string::npos)
             << "Console should not contain decode errors for valid instructions";
     }
 }
 
 // ===== REQUIREMENT 2: Execute instructions (memory, registers, syscalls) =====
 
-TEST_F(MipsCoreConsoleTest, ConsoleShowsMemoryAccessOperations) {
+TEST_F(MipsCoreConsoleTest, ConsoleShowsMemoryAccessOperations)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A program that performs memory operations with console output
     std::string program = R"(
 # Memory operations test
@@ -149,33 +161,35 @@ syscall
 addi $v0, $zero, 10        # exit
 syscall
 )";
-    
+
     // When: We execute the program with timeout
     bool loaded = gui->loadProgram(program);
     EXPECT_TRUE(loaded) << "Memory access program should load successfully";
-    
-    if (loaded) {
+
+    if (loaded)
+    {
         auto start = std::chrono::high_resolution_clock::now();
         gui->runProgram();
         auto end = std::chrono::high_resolution_clock::now();
-        
+
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        
+
         // Timeout check: should complete within 500ms
-        EXPECT_LT(duration.count(), 500) 
+        EXPECT_LT(duration.count(), 500)
             << "Memory access test should complete within 500ms, took " << duration.count() << "ms";
-        
+
         // Then: Console should show the result of memory operations
         std::string consoleOutput = gui->getConsoleOutput();
-        EXPECT_TRUE(consoleOutput.find("4660") != std::string::npos) 
+        EXPECT_TRUE(consoleOutput.find("4660") != std::string::npos)
             << "Console should contain '4660' (0x1234 in decimal) from memory load operation";
     }
 }
 
-TEST_F(MipsCoreConsoleTest, ConsoleShowsRegisterOperations) {
+TEST_F(MipsCoreConsoleTest, ConsoleShowsRegisterOperations)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A program that demonstrates register file operations
     std::string program = R"(
 # Register operations test
@@ -201,37 +215,40 @@ syscall
 addi $v0, $zero, 10        # exit
 syscall
 )";
-    
+
     // When: We execute the program with timeout
     bool loaded = gui->loadProgram(program);
     EXPECT_TRUE(loaded) << "Register operations program should load successfully";
-    
-    if (loaded) {
+
+    if (loaded)
+    {
         auto start = std::chrono::high_resolution_clock::now();
         gui->runProgram();
         auto end = std::chrono::high_resolution_clock::now();
-        
+
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        
+
         // Timeout check: should complete within 500ms
-        EXPECT_LT(duration.count(), 500) 
-            << "Register operations test should complete within 500ms, took " << duration.count() << "ms";
-        
+        EXPECT_LT(duration.count(), 500)
+            << "Register operations test should complete within 500ms, took " << duration.count()
+            << "ms";
+
         // Then: Console should show all register operation results
         std::string consoleOutput = gui->getConsoleOutput();
-        EXPECT_TRUE(consoleOutput.find("10") != std::string::npos) 
+        EXPECT_TRUE(consoleOutput.find("10") != std::string::npos)
             << "Console should contain '10' from $t0";
-        EXPECT_TRUE(consoleOutput.find("20") != std::string::npos) 
+        EXPECT_TRUE(consoleOutput.find("20") != std::string::npos)
             << "Console should contain '20' from $t1 and $t3";
-        EXPECT_TRUE(consoleOutput.find("30") != std::string::npos) 
+        EXPECT_TRUE(consoleOutput.find("30") != std::string::npos)
             << "Console should contain '30' from $t2";
     }
 }
 
-TEST_F(MipsCoreConsoleTest, ConsoleHandlesAllSupportedSyscalls) {
+TEST_F(MipsCoreConsoleTest, ConsoleHandlesAllSupportedSyscalls)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A simplified program that uses key syscalls (avoid read_int which may block)
     std::string program = R"(
 # Test 3 main syscalls: print_int, print_string, exit
@@ -257,63 +274,69 @@ syscall
 addi $v0, $zero, 10        # syscall 10: exit
 syscall
 )";
-    
+
     // When: We execute the program with timeout
     bool loaded = gui->loadProgram(program);
     EXPECT_TRUE(loaded) << "All syscalls program should load successfully";
-    
-    if (loaded) {
+
+    if (loaded)
+    {
         auto start = std::chrono::high_resolution_clock::now();
         gui->runProgram();
         auto end = std::chrono::high_resolution_clock::now();
-        
+
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        
+
         // Timeout check: should complete within 2 seconds
-        EXPECT_LT(duration.count(), 2000) 
+        EXPECT_LT(duration.count(), 2000)
             << "Syscall test should complete within 2 seconds, took " << duration.count() << "ms";
-        
+
         // Then: Console should handle each syscall appropriately
         std::string consoleOutput = gui->getConsoleOutput();
-        EXPECT_TRUE(consoleOutput.find("42") != std::string::npos) 
+        EXPECT_TRUE(consoleOutput.find("42") != std::string::npos)
             << "Console should contain '42' from print_int syscall";
-        EXPECT_TRUE(consoleOutput.find("Hi") != std::string::npos) 
+        EXPECT_TRUE(consoleOutput.find("Hi") != std::string::npos)
             << "Console should contain 'Hi' from print_string syscall";
     }
 }
 
 // ===== REQUIREMENT 3: Parse assembly code and directives from text =====
 
-TEST_F(MipsCoreConsoleTest, ConsoleHandlesAssemblyParsingErrors) {
+TEST_F(MipsCoreConsoleTest, ConsoleHandlesAssemblyParsingErrors)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A minimal test - just check that invalid assembly is handled gracefully
-    std::string emptyProgram = "";  // Empty program should be handled gracefully
-    
+    std::string emptyProgram = ""; // Empty program should be handled gracefully
+
     // When: We try to load an empty program (should be safe and fast)
-    auto start = std::chrono::high_resolution_clock::now();
-    bool loaded = gui->loadProgram(emptyProgram);
+    auto start   = std::chrono::high_resolution_clock::now();
+    bool loaded  = gui->loadProgram(emptyProgram);
     auto loadEnd = std::chrono::high_resolution_clock::now();
-    
+
     auto loadDuration = std::chrono::duration_cast<std::chrono::milliseconds>(loadEnd - start);
     EXPECT_LT(loadDuration.count(), 100) << "Loading empty program should be very fast";
-    
+
     // Then: Either loading fails (expected) or succeeds with empty state
-    if (loaded) {
+    if (loaded)
+    {
         // If empty program loaded, console should be empty or contain no errors
         std::string consoleOutput = gui->getConsoleOutput();
         SUCCEED() << "Empty program loaded successfully, console: '" << consoleOutput << "'";
-    } else {
+    }
+    else
+    {
         // Loading failed, which is acceptable for empty program
         SUCCEED() << "Empty program loading failed as expected (assembler validation)";
     }
 }
 
-TEST_F(MipsCoreConsoleTest, ConsoleHandlesValidAssemblyParsing) {
+TEST_F(MipsCoreConsoleTest, ConsoleHandlesValidAssemblyParsing)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A simplified valid assembly program (reduced loop count)
     std::string validProgram = R"(
 # Valid assembly with labels and comments (simplified)
@@ -336,35 +359,38 @@ end:
     addi $v0, $zero, 10    # exit syscall
     syscall
 )";
-    
+
     // When: We load and execute the valid program with timeout
     bool loaded = gui->loadProgram(validProgram);
     EXPECT_TRUE(loaded) << "Valid assembly program should load successfully";
-    
-    if (loaded) {
+
+    if (loaded)
+    {
         auto start = std::chrono::high_resolution_clock::now();
         gui->runProgram();
         auto end = std::chrono::high_resolution_clock::now();
-        
+
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        
+
         // Timeout check: should complete within 1 second
-        EXPECT_LT(duration.count(), 1000) 
-            << "Assembly parsing test should complete within 1 second, took " << duration.count() << "ms";
-        
+        EXPECT_LT(duration.count(), 1000)
+            << "Assembly parsing test should complete within 1 second, took " << duration.count()
+            << "ms";
+
         // Then: Console should show correct execution result
         std::string consoleOutput = gui->getConsoleOutput();
-        EXPECT_TRUE(consoleOutput.find("6") != std::string::npos) 
+        EXPECT_TRUE(consoleOutput.find("6") != std::string::npos)
             << "Console should contain '6' (sum of 1+2+3) from assembly parsing and execution";
     }
 }
 
 // ===== PERFORMANCE TESTING (Extension Requirement) =====
 
-TEST_F(MipsCoreConsoleTest, ConsolePerformanceWithLargeOutput) {
+TEST_F(MipsCoreConsoleTest, ConsolePerformanceWithLargeOutput)
+{
     // Given: GUI simulator initialized
     ASSERT_TRUE(initialized) << "GUI should initialize successfully";
-    
+
     // And: A simplified program that generates moderate console output (just 3 numbers for speed)
     std::string program = R"(
 # Performance test - print numbers 1, 2, 3
@@ -381,30 +407,35 @@ syscall
 addi $v0, $zero, 10        # exit syscall
 syscall
 )";
-    
+
     // When: We execute the performance test program with timeout
     bool loaded = gui->loadProgram(program);
     EXPECT_TRUE(loaded) << "Performance test program should load successfully";
-    
-    if (loaded) {
+
+    if (loaded)
+    {
         auto start = std::chrono::high_resolution_clock::now();
         gui->runProgram();
         auto end = std::chrono::high_resolution_clock::now();
-        
+
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        
+
         // Then: Console should handle moderate amounts of text efficiently
         std::string consoleOutput = gui->getConsoleOutput();
-        EXPECT_TRUE(consoleOutput.find("1") != std::string::npos) 
-            << "Console should contain '1' (first number), actual output: '" << consoleOutput << "'";
-        EXPECT_TRUE(consoleOutput.find("2") != std::string::npos) 
-            << "Console should contain '2' (second number), actual output: '" << consoleOutput << "'";
-        EXPECT_TRUE(consoleOutput.find("3") != std::string::npos) 
-            << "Console should contain '3' (third number), actual output: '" << consoleOutput << "'";
-        
+        EXPECT_TRUE(consoleOutput.find("1") != std::string::npos)
+            << "Console should contain '1' (first number), actual output: '" << consoleOutput
+            << "'";
+        EXPECT_TRUE(consoleOutput.find("2") != std::string::npos)
+            << "Console should contain '2' (second number), actual output: '" << consoleOutput
+            << "'";
+        EXPECT_TRUE(consoleOutput.find("3") != std::string::npos)
+            << "Console should contain '3' (third number), actual output: '" << consoleOutput
+            << "'";
+
         // Performance check: should complete within 1 second
-        EXPECT_LT(duration.count(), 1000) 
-            << "Performance test should complete within 1 second, took " << duration.count() << "ms";
+        EXPECT_LT(duration.count(), 1000)
+            << "Performance test should complete within 1 second, took " << duration.count()
+            << "ms";
     }
 }
 
@@ -414,45 +445,45 @@ syscall
  * =============================================================================
  * TEST SUITE SUMMARY
  * =============================================================================
- * 
- * This test suite provides comprehensive coverage for the MIPS Assembly 
+ *
+ * This test suite provides comprehensive coverage for the MIPS Assembly
  * Simulator's core requirements with a focus on console output validation.
- * 
+ *
  * TEST CATEGORIES:
- * 
+ *
  * 1. INSTRUCTION DECODING (2 tests)
  *    - ConsoleShowsInstructionDecodeErrors: Error handling for invalid instructions
  *    - ConsoleShowsValidInstructionDecoding: All 9 MIPS instructions validation
- * 
- * 2. INSTRUCTION EXECUTION (3 tests)  
+ *
+ * 2. INSTRUCTION EXECUTION (3 tests)
  *    - ConsoleShowsMemoryAccessOperations: LW/SW instruction validation
  *    - ConsoleShowsRegisterOperations: Register file operations
  *    - ConsoleHandlesAllSupportedSyscalls: 4 syscalls (print_int, print_string, read_int, exit)
- * 
+ *
  * 3. ASSEMBLY PARSING (2 tests)
  *    - ConsoleHandlesAssemblyParsingErrors: Error handling for invalid assembly
  *    - ConsoleHandlesValidAssemblyParsing: Complex program with labels/loops
- * 
+ *
  * 4. PERFORMANCE & RELIABILITY (1 test)
  *    - ConsolePerformanceWithLargeOutput: Execution speed and output handling
- * 
+ *
  * TOTAL: 8 tests covering all MIPS simulator core requirements
- * 
+ *
  * TIMEOUT CONTROLS:
  * - All tests have < 1 second execution timeout
  * - Memory access tests: < 500ms
- * - Assembly parsing tests: < 1 second  
+ * - Assembly parsing tests: < 1 second
  * - Performance tests: < 1 second
- * 
+ *
  * COMPATIBILITY:
  * - Windows: Full GUI + console testing
  * - Linux: Headless mode for CI/CD
  * - Cross-platform timeout handling
- * 
+ *
  * INTEGRATION:
  * - Works with existing 84-test suite
  * - Maintains 100% pass rate
  * - Supports Red-Green-Refactor TDD cycle
- * 
+ *
  * =============================================================================
  */

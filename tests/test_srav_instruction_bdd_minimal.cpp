@@ -1,12 +1,12 @@
 /**
  * @file test_srav_instruction_bdd_minimal.cpp
  * @brief BDD Tests for SRAV (Shift Right Arithmetic Variable) instruction implementation
- * 
+ *
  * Phase 5.3: SRAV instruction BDD tests (Red-Light Phase)
- * 
+ *
  * This file implements Behavior-Driven Development (BDD) tests for the SRAV instruction.
  * SRAV performs variable arithmetic right shift where shift amount comes from a register.
- * 
+ *
  * Key characteristics of SRAV:
  * - Function Code: 0x07 (R-type instruction)
  * - Format: srav $rd, $rt, $rs
@@ -15,38 +15,42 @@
  * - Arithmetic shift: sign extension from left (preserve sign bit)
  */
 
-#include <gtest/gtest.h>
-#include <cstdint>
-#include "../src/Cpu.h"
-#include "../src/RegisterFile.h"
-#include "../src/Instruction.h"
 #include "../src/Assembler.h"
+#include "../src/Cpu.h"
+#include "../src/Instruction.h"
 #include "../src/InstructionDecoder.h"
+#include "../src/RegisterFile.h"
+#include <cstdint>
+#include <gtest/gtest.h>
 #include <memory>
 
 /**
  * BDD Test Fixture for SRAV instruction
  * Follows Given-When-Then pattern for behavior verification
  */
-class SRAVInstructionBDDTest : public ::testing::Test {
-protected:
-    std::unique_ptr<mips::Cpu> cpu;
-    std::unique_ptr<mips::Assembler> assembler;
+class SRAVInstructionBDDTest : public ::testing::Test
+{
+  protected:
+    std::unique_ptr<mips::Cpu>                cpu;
+    std::unique_ptr<mips::Assembler>          assembler;
     std::unique_ptr<mips::InstructionDecoder> decoder;
-    
-    void SetUp() override {
-        cpu = std::make_unique<mips::Cpu>();
+
+    void SetUp() override
+    {
+        cpu       = std::make_unique<mips::Cpu>();
         assembler = std::make_unique<mips::Assembler>();
-        decoder = std::make_unique<mips::InstructionDecoder>();
-        
+        decoder   = std::make_unique<mips::InstructionDecoder>();
+
         // Clear all registers
-        for (int i = 0; i < 32; ++i) {
+        for (int i = 0; i < 32; ++i)
+        {
             cpu->getRegisterFile().write(i, 0);
         }
         cpu->setProgramCounter(0);
     }
 
-    void TearDown() override {
+    void TearDown() override
+    {
         cpu.reset();
         assembler.reset();
         decoder.reset();
@@ -59,14 +63,15 @@ protected:
  * When: SRAV instruction shifts rt right arithmetically by rs amount
  * Then: rd register should contain 0xF8000000 (sign extended)
  */
-TEST_F(SRAVInstructionBDDTest, BasicVariableArithmeticRightShiftNegative) {
+TEST_F(SRAVInstructionBDDTest, BasicVariableArithmeticRightShiftNegative)
+{
     // Given: rt = 0x80000000 (negative number), rs = 4
-    const uint32_t rt_value = 0x80000000;
-    const uint32_t rs_value = 4;
-    const uint32_t rt_register = 1;  // $t0 (source value)
-    const uint32_t rs_register = 2;  // $t1 (shift amount)
-    const uint32_t rd_register = 3;  // $t2 (destination)
-    
+    const uint32_t rt_value    = 0x80000000;
+    const uint32_t rs_value    = 4;
+    const uint32_t rt_register = 1; // $t0 (source value)
+    const uint32_t rs_register = 2; // $t1 (shift amount)
+    const uint32_t rd_register = 3; // $t2 (destination)
+
     // For arithmetic right shift: sign-extend from left
     // 0x80000000 >> 4 = 0xF8000000 (arithmetic)
     const uint32_t expected_result = 0xF8000000;
@@ -77,9 +82,8 @@ TEST_F(SRAVInstructionBDDTest, BasicVariableArithmeticRightShiftNegative) {
     // When: Execute SRAV instruction
     // Format: SRAV rd, rt, rs
     // Note: This will fail initially as SRAVInstruction class doesn't exist
-    auto srav_instruction = std::make_unique<mips::SRAVInstruction>(
-        rd_register, rt_register, rs_register
-    );
+    auto srav_instruction =
+        std::make_unique<mips::SRAVInstruction>(rd_register, rt_register, rs_register);
     srav_instruction->execute(*cpu);
 
     // Then: rd register should contain the sign-extended result
@@ -93,14 +97,15 @@ TEST_F(SRAVInstructionBDDTest, BasicVariableArithmeticRightShiftNegative) {
  * When: SRAV instruction shifts rt right arithmetically by rs amount
  * Then: rd register should contain 0x07000000 (zero extended, same as logical)
  */
-TEST_F(SRAVInstructionBDDTest, ArithmeticRightShiftPositive) {
+TEST_F(SRAVInstructionBDDTest, ArithmeticRightShiftPositive)
+{
     // Given: rt = 0x70000000 (positive number), rs = 4
-    const uint32_t rt_value = 0x70000000;
-    const uint32_t rs_value = 4;
-    const uint32_t rt_register = 4;  // $t3
-    const uint32_t rs_register = 5;  // $t4
-    const uint32_t rd_register = 6;  // $t5
-    
+    const uint32_t rt_value    = 0x70000000;
+    const uint32_t rs_value    = 4;
+    const uint32_t rt_register = 4; // $t3
+    const uint32_t rs_register = 5; // $t4
+    const uint32_t rd_register = 6; // $t5
+
     // For positive numbers, arithmetic and logical shifts are the same
     const uint32_t expected_result = 0x07000000;
 
@@ -108,9 +113,8 @@ TEST_F(SRAVInstructionBDDTest, ArithmeticRightShiftPositive) {
     cpu->getRegisterFile().write(rs_register, rs_value);
 
     // When: Execute SRAV instruction
-    auto srav_instruction = std::make_unique<mips::SRAVInstruction>(
-        rd_register, rt_register, rs_register
-    );
+    auto srav_instruction =
+        std::make_unique<mips::SRAVInstruction>(rd_register, rt_register, rs_register);
     srav_instruction->execute(*cpu);
 
     // Then: rd register should contain the shifted result
@@ -124,16 +128,17 @@ TEST_F(SRAVInstructionBDDTest, ArithmeticRightShiftPositive) {
  * When: SRAV instruction uses only low 5 bits of rs (35 & 0x1F = 3)
  * Then: rd register should contain 0xFFFFFFFF (sign extended, all 1s remain)
  */
-TEST_F(SRAVInstructionBDDTest, ShiftAmountTruncationSignExtended) {
+TEST_F(SRAVInstructionBDDTest, ShiftAmountTruncationSignExtended)
+{
     // Given: rt = 0xFFFFFFFF (negative -1), rs = 35 (0x23)
-    const uint32_t rt_value = 0xFFFFFFFF;
-    const uint32_t rs_value = 35;  // 0x23, but only low 5 bits (3) will be used
-    const uint32_t rt_register = 7;  // $t6
-    const uint32_t rs_register = 8;  // $t7
-    const uint32_t rd_register = 9;  // $t8
-    const uint32_t effective_shift = rs_value & 0x1F;  // 35 & 0x1F = 3
-    (void)effective_shift;  // Suppress unused variable warning
-    
+    const uint32_t rt_value        = 0xFFFFFFFF;
+    const uint32_t rs_value        = 35;              // 0x23, but only low 5 bits (3) will be used
+    const uint32_t rt_register     = 7;               // $t6
+    const uint32_t rs_register     = 8;               // $t7
+    const uint32_t rd_register     = 9;               // $t8
+    const uint32_t effective_shift = rs_value & 0x1F; // 35 & 0x1F = 3
+    (void)effective_shift;                            // Suppress unused variable warning
+
     // Arithmetic right shift of -1 by any amount is still -1
     const uint32_t expected_result = 0xFFFFFFFF;
 
@@ -141,9 +146,8 @@ TEST_F(SRAVInstructionBDDTest, ShiftAmountTruncationSignExtended) {
     cpu->getRegisterFile().write(rs_register, rs_value);
 
     // When: Execute SRAV instruction
-    auto srav_instruction = std::make_unique<mips::SRAVInstruction>(
-        rd_register, rt_register, rs_register
-    );
+    auto srav_instruction =
+        std::make_unique<mips::SRAVInstruction>(rd_register, rt_register, rs_register);
     srav_instruction->execute(*cpu);
 
     // Then: rd register should contain sign-extended result
@@ -157,14 +161,15 @@ TEST_F(SRAVInstructionBDDTest, ShiftAmountTruncationSignExtended) {
  * When: SRAV instruction shifts by maximum amount (31) with sign extension
  * Then: rd register should contain 0xFFFFFFFF (sign bit propagated throughout)
  */
-TEST_F(SRAVInstructionBDDTest, MaximumShiftSignExtension) {
+TEST_F(SRAVInstructionBDDTest, MaximumShiftSignExtension)
+{
     // Given: rt = 0x80000001 (negative number), rs = 31
-    const uint32_t rt_value = 0x80000001;
-    const uint32_t rs_value = 31;  // Maximum shift amount
+    const uint32_t rt_value    = 0x80000001;
+    const uint32_t rs_value    = 31; // Maximum shift amount
     const uint32_t rt_register = 10; // $t9
     const uint32_t rs_register = 11; // $s0
     const uint32_t rd_register = 12; // $s1
-    
+
     // Arithmetic right shift by 31 of negative number results in all 1s (0xFFFFFFFF)
     const uint32_t expected_result = 0xFFFFFFFF;
 
@@ -172,9 +177,8 @@ TEST_F(SRAVInstructionBDDTest, MaximumShiftSignExtension) {
     cpu->getRegisterFile().write(rs_register, rs_value);
 
     // When: Execute SRAV instruction with maximum shift
-    auto srav_instruction = std::make_unique<mips::SRAVInstruction>(
-        rd_register, rt_register, rs_register
-    );
+    auto srav_instruction =
+        std::make_unique<mips::SRAVInstruction>(rd_register, rt_register, rs_register);
     srav_instruction->execute(*cpu);
 
     // Then: rd register should contain the sign-extended result

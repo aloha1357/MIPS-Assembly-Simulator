@@ -1,5 +1,5 @@
-#include <QApplication>
 #include "lib.hpp"
+#include <QApplication>
 
 int main(int argc, char** argv)
 {

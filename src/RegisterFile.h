@@ -1,15 +1,17 @@
 #pragma once
 
-#include <cstdint>
 #include <array>
+#include <cstdint>
 
-namespace mips {
+namespace mips
+{
 
 /**
  * @brief MIPS register file with 32 general-purpose registers
  */
-class RegisterFile {
-public:
+class RegisterFile
+{
+  public:
     static constexpr int NUM_REGISTERS = 32;
 
     RegisterFile();
@@ -57,10 +59,10 @@ public:
      */
     void writeLO(uint32_t value);
 
-private:
+  private:
     std::array<uint32_t, NUM_REGISTERS> m_registers;
-    uint32_t m_hi;  // HI register for multiply/divide
-    uint32_t m_lo;  // LO register for multiply/divide
+    uint32_t                            m_hi; // HI register for multiply/divide
+    uint32_t                            m_lo; // LO register for multiply/divide
 };
 
 } // namespace mips

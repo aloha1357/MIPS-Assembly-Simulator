@@ -1,10 +1,11 @@
 #include "MipsSimulatorAPI.h"
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <sstream>
+#include <string>
 
-void printUsage(const char* programName) {
+void printUsage(const char* programName)
+{
     std::cout << "MIPS Simulator - Artemis Compatible Version\n";
     std::cout << "Usage: " << programName << " [options] [file.asm]\n\n";
     std::cout << "Options:\n";
@@ -19,170 +20,228 @@ void printUsage(const char* programName) {
     std::cout << "  " << programName << " -s program.asm        # Step through program\n";
 }
 
-bool runInteractiveMode(mips::MipsSimulatorAPI& api) {
+bool runInteractiveMode(mips::MipsSimulatorAPI& api)
+{
     std::cout << "MIPS Simulator Interactive Mode\n";
     std::cout << "Enter assembly code line by line. Type 'run' to execute, 'quit' to exit.\n\n";
-    
-    std::string line;
+
+    std::string       line;
     std::stringstream program;
-    
-    while (true) {
+
+    while (true)
+    {
         std::cout << "mips> ";
-        if (!std::getline(std::cin, line)) {
+        if (!std::getline(std::cin, line))
+        {
             break;
         }
-        
-        if (line == "quit" || line == "exit") {
+
+        if (line == "quit" || line == "exit")
+        {
             break;
-        } else if (line == "run") {
+        }
+        else if (line == "run")
+        {
             std::string assemblyCode = program.str();
-            if (assemblyCode.empty()) {
+            if (assemblyCode.empty())
+            {
                 std::cout << "No program to run.\n";
                 continue;
             }
-            
+
             api.reset();
-            if (!api.loadProgram(assemblyCode)) {
+            if (!api.loadProgram(assemblyCode))
+            {
                 std::cout << "Error: " << api.getLastError() << "\n";
                 continue;
             }
-            
+
             std::cout << "Running program...\n";
             int cycles = api.run(1000); // Max 1000 cycles
             std::cout << "Program completed in " << cycles << " cycles.\n";
-            
+
             // Show console output if any
-            if (!api.getConsoleOutput().empty()) {
+            if (!api.getConsoleOutput().empty())
+            {
                 std::cout << "Program output:\n" << api.getConsoleOutput() << "\n";
             }
-        } else if (line == "clear") {
+        }
+        else if (line == "clear")
+        {
             program.str("");
             program.clear();
             std::cout << "Program cleared.\n";
-        } else if (line == "show") {
+        }
+        else if (line == "show")
+        {
             std::cout << "Current program:\n" << program.str() << "\n";
-        } else if (!line.empty()) {
+        }
+        else if (!line.empty())
+        {
             program << line << "\n";
         }
     }
-    
+
     return true;
 }
 
-bool runFile(mips::MipsSimulatorAPI& api, const std::string& filename, bool stepMode, int maxCycles, bool verbose) {
-    if (verbose) {
+bool runFile(mips::MipsSimulatorAPI& api, const std::string& filename, bool stepMode, int maxCycles,
+             bool verbose)
+{
+    if (verbose)
+    {
         std::cout << "Loading program from: " << filename << "\n";
     }
-    
-    if (!api.loadProgramFromFile(filename)) {
+
+    if (!api.loadProgramFromFile(filename))
+    {
         std::cerr << "Error loading file: " << api.getLastError() << "\n";
         return false;
     }
-    
-    if (verbose) {
+
+    if (verbose)
+    {
         std::cout << "Program loaded successfully.\n";
     }
-    
-    if (stepMode) {
+
+    if (stepMode)
+    {
         std::cout << "Step mode - press Enter to execute each instruction, 'q' to quit:\n";
         std::string input;
-        
-        while (!api.isTerminated()) {
+
+        while (!api.isTerminated())
+        {
             std::cout << "PC: 0x" << std::hex << api.getProgramCounter() << std::dec;
             std::cout << " | Cycle: " << api.getCycleCount() << " > ";
-            
-            if (!std::getline(std::cin, input) || input == "q") {
+
+            if (!std::getline(std::cin, input) || input == "q")
+            {
                 break;
             }
-            
-            if (!api.step()) {
+
+            if (!api.step())
+            {
                 break;
             }
-            
-            if (verbose) {
+
+            if (verbose)
+            {
                 // Show some register values
-                std::cout << "  $t0=" << api.readRegister(8) << " $t1=" << api.readRegister(9) 
-                         << " $t2=" << api.readRegister(10) << "\n";
+                std::cout << "  $t0=" << api.readRegister(8) << " $t1=" << api.readRegister(9)
+                          << " $t2=" << api.readRegister(10) << "\n";
             }
         }
-    } else {
-        if (verbose) {
+    }
+    else
+    {
+        if (verbose)
+        {
             std::cout << "Running program...\n";
         }
-        
+
         int cycles = api.run(maxCycles);
-        
-        if (verbose) {
+
+        if (verbose)
+        {
             std::cout << "Program completed in " << cycles << " cycles.\n";
         }
     }
-    
+
     // Show console output if any
     const std::string& output = api.getConsoleOutput();
-    if (!output.empty()) {
+    if (!output.empty())
+    {
         std::cout << "Program output:\n" << output;
-        if (output.back() != '\n') {
+        if (output.back() != '\n')
+        {
             std::cout << "\n";
         }
     }
-    
+
     return true;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
     mips::MipsSimulatorAPI api;
-    
-    if (!api.isInitialized()) {
+
+    if (!api.isInitialized())
+    {
         std::cerr << "Error: Failed to initialize MIPS simulator\n";
         return 1;
     }
-    
+
     // Parse command line arguments
-    bool interactive = false;
-    bool stepMode = false;
-    bool verbose = false;
-    int maxCycles = 10000;
+    bool        interactive = false;
+    bool        stepMode    = false;
+    bool        verbose     = false;
+    int         maxCycles   = 10000;
     std::string filename;
-    
-    for (int i = 1; i < argc; ++i) {
+
+    for (int i = 1; i < argc; ++i)
+    {
         std::string arg = argv[i];
-        
-        if (arg == "-h" || arg == "--help") {
+
+        if (arg == "-h" || arg == "--help")
+        {
             printUsage(argv[0]);
             return 0;
-        } else if (arg == "-i" || arg == "--interactive") {
+        }
+        else if (arg == "-i" || arg == "--interactive")
+        {
             interactive = true;
-        } else if (arg == "-s" || arg == "--step") {
+        }
+        else if (arg == "-s" || arg == "--step")
+        {
             stepMode = true;
-        } else if (arg == "-v" || arg == "--verbose") {
+        }
+        else if (arg == "-v" || arg == "--verbose")
+        {
             verbose = true;
-        } else if (arg == "-c" || arg == "--cycles") {
-            if (i + 1 < argc) {
+        }
+        else if (arg == "-c" || arg == "--cycles")
+        {
+            if (i + 1 < argc)
+            {
                 maxCycles = std::atoi(argv[++i]);
-            } else {
+            }
+            else
+            {
                 std::cerr << "Error: --cycles requires a number\n";
                 return 1;
             }
-        } else if (arg[0] != '-') {
+        }
+        else if (arg[0] != '-')
+        {
             filename = arg;
-        } else {
+        }
+        else
+        {
             std::cerr << "Error: Unknown option " << arg << "\n";
             printUsage(argv[0]);
             return 1;
         }
     }
-    
-    try {
-        if (interactive) {
+
+    try
+    {
+        if (interactive)
+        {
             return runInteractiveMode(api) ? 0 : 1;
-        } else if (!filename.empty()) {
+        }
+        else if (!filename.empty())
+        {
             return runFile(api, filename, stepMode, maxCycles, verbose) ? 0 : 1;
-        } else {
+        }
+        else
+        {
             std::cerr << "Error: No input file specified and not in interactive mode\n";
             printUsage(argv[0]);
             return 1;
         }
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e)
+    {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;
     }

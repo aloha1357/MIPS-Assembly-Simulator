@@ -1,53 +1,57 @@
 #pragma once
 
+#include <functional>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <functional>
 
-namespace mips {
+namespace mips
+{
 
 class Cpu;
 
 /**
  * @brief Register information for GUI display
  */
-struct RegisterInfo {
+struct RegisterInfo
+{
     std::string name;
-    uint32_t value;
-    bool hasDecimalValue;
-    bool hasHexValue;
-    bool isHighlighted;
+    uint32_t    value;
+    bool        hasDecimalValue;
+    bool        hasHexValue;
+    bool        isHighlighted;
 };
 
 /**
  * @brief Pipeline stage information for visualization
  */
-struct PipelineStageInfo {
+struct PipelineStageInfo
+{
     std::string name;
     std::string instruction;
-    bool hasValidInstruction;
-    bool hasVisualRepresentation;
-    bool isHighlighted;
+    bool        hasValidInstruction;
+    bool        hasVisualRepresentation;
+    bool        isHighlighted;
 };
 
 /**
  * @brief Main GUI class for MIPS Assembly Simulator
- * 
+ *
  * This class provides a graphical interface for the MIPS simulator,
  * including code editing, register/memory viewing, pipeline visualization,
  * and execution controls.
- * 
+ *
  * Designed to support both real GUI (Qt/Dear ImGui) and headless testing modes.
  */
-class MipsSimulatorGUI {
-public:
+class MipsSimulatorGUI
+{
+  public:
     /**
      * @brief Constructor
      * @param headless If true, runs in headless mode for testing
      */
     explicit MipsSimulatorGUI(bool headless = false);
-    
+
     /**
      * @brief Destructor
      */
@@ -431,16 +435,19 @@ public:
      */
     void setOnExecutionStateChangedCallback(std::function<void(bool)> callback);
 
-protected:
+  protected:
     // Protected access for derived classes
-    bool isHeadless() const { return m_headless; }
+    bool isHeadless() const
+    {
+        return m_headless;
+    }
 
-private:
+  private:
     // Implementation details hidden in private section
     class Impl;
     std::unique_ptr<Impl> m_impl;
-    
-    bool m_headless;
+
+    bool                 m_headless;
     std::unique_ptr<Cpu> m_cpu;
 };
 

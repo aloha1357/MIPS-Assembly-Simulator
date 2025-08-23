@@ -3,21 +3,23 @@
 
 /**
  * @brief Test GUI console output functionality
- * 
+ *
  * This program tests if the GUI properly displays syscall output,
  * specifically string printing functionality.
  */
-int main() {
+int main()
+{
     std::cout << "=== Testing GUI Console Output ===" << std::endl;
-    
+
     // Create GUI in headless mode
     mips::ImGuiMipsSimulatorGUI gui(true);
-    
-    if (!gui.initialize()) {
+
+    if (!gui.initialize())
+    {
         std::cerr << "Failed to initialize GUI" << std::endl;
         return 1;
     }
-    
+
     // Test string printing program
     const char* testProgram = R"(
 # Test string printing
@@ -56,36 +58,43 @@ syscall
 )";
 
     std::cout << "\nLoading test program..." << std::endl;
-    if (!gui.loadProgram(testProgram)) {
+    if (!gui.loadProgram(testProgram))
+    {
         std::cerr << "Failed to load test program" << std::endl;
         return 1;
     }
-    
+
     std::cout << "Program loaded successfully!" << std::endl;
-    
+
     // Execute the program
     std::cout << "\nExecuting program..." << std::endl;
     gui.runProgram();
-    
+
     // Get the console output
     std::string consoleOutput = gui.getConsoleOutput();
     std::cout << "\n=== Console Output ===" << std::endl;
     std::cout << consoleOutput << std::endl;
     std::cout << "======================" << std::endl;
-    
+
     // Analyze output
-    if (consoleOutput.find("Hello") != std::string::npos) {
+    if (consoleOutput.find("Hello") != std::string::npos)
+    {
         std::cout << "\n✓ String printing is working!" << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "\n✗ String printing failed or not visible in output" << std::endl;
     }
-    
-    if (consoleOutput.find("123") != std::string::npos) {
+
+    if (consoleOutput.find("123") != std::string::npos)
+    {
         std::cout << "✓ Integer printing is working!" << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "✗ Integer printing failed or not visible in output" << std::endl;
     }
-    
+
     gui.shutdown();
     return 0;
 }
