@@ -10,7 +10,7 @@ TEST(LegacyTest, Foo_Is42)
 
 class MipsSimulatorTest : public ::testing::Test
 {
-protected:
+  protected:
     void SetUp() override
     {
         cpu     = std::make_unique<mips::CPU>();
@@ -19,9 +19,9 @@ protected:
         api     = std::make_unique<mips::MipsSimulatorAPI>();
     }
 
-    std::unique_ptr<mips::CPU> cpu;
-    std::unique_ptr<mips::Memory> memory;
-    std::unique_ptr<mips::RegisterFile> regFile;
+    std::unique_ptr<mips::CPU>              cpu;
+    std::unique_ptr<mips::Memory>           memory;
+    std::unique_ptr<mips::RegisterFile>     regFile;
     std::unique_ptr<mips::MipsSimulatorAPI> api;
 };
 
@@ -68,8 +68,8 @@ TEST_F(MipsSimulatorTest, RegisterFile_ZeroRegister)
 
 TEST_F(MipsSimulatorTest, Assembler_BasicInstruction)
 {
-    mips::Assembler assembler;
-    std::string     assembly = "add $t0, $t1, $t2";
+    mips::Assembler       assembler;
+    std::string           assembly = "add $t0, $t1, $t2";
     std::vector<uint32_t> instructions = assembler.assemble(assembly);
     EXPECT_GT(instructions.size(), 0);
 }
@@ -86,14 +86,14 @@ TEST_F(MipsSimulatorTest, API_ProgramExecution)
     EXPECT_TRUE(api->loadProgram(program));
 
     // Execute the program step by step
-    EXPECT_TRUE(api->step());                    // addi $t0, $zero, 10
-    EXPECT_EQ(api->readRegister(8), 10);         // $t0 = register 8
+    EXPECT_TRUE(api->step());                // addi $t0, $zero, 10
+    EXPECT_EQ(api->readRegister(8), 10);     // $t0 = register 8
 
-    EXPECT_TRUE(api->step());                    // addi $t1, $zero, 20
-    EXPECT_EQ(api->readRegister(9), 20);         // $t1 = register 9
+    EXPECT_TRUE(api->step());                // addi $t1, $zero, 20
+    EXPECT_EQ(api->readRegister(9), 20);     // $t1 = register 9
 
-    EXPECT_TRUE(api->step());                    // add $t2, $t0, $t1
-    EXPECT_EQ(api->readRegister(10), 30);        // $t2 = register 10
+    EXPECT_TRUE(api->step());                // add $t2, $t0, $t1
+    EXPECT_EQ(api->readRegister(10), 30);    // $t2 = register 10
 }
 
 TEST_F(MipsSimulatorTest, API_MemoryThroughAPI)
