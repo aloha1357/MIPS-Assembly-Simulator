@@ -157,17 +157,20 @@ private:
     void clearError();
 };
 
+} // namespace mips
+
 // ===== Compatibility aliases for legacy test code =====
+// These are in the global namespace to match test expectations
 
 /**
  * @brief Legacy CPU class alias for backward compatibility
  */
-class CPU : public MipsSimulatorAPI {
+class CPU : public mips::MipsSimulatorAPI {
 public:
-    CPU() : MipsSimulatorAPI() {}
+    CPU() : mips::MipsSimulatorAPI() {}
     
     // Legacy method aliases
-    bool isInitialized() const { return MipsSimulatorAPI::isInitialized(); }
+    bool isInitialized() const { return mips::MipsSimulatorAPI::isInitialized(); }
 };
 
 /**
@@ -175,7 +178,7 @@ public:
  */
 class Memory {
 public:
-    Memory(size_t size = 4096) : m_api(std::make_shared<MipsSimulatorAPI>()) {}
+    Memory(size_t size = 4096) : m_api(std::make_shared<mips::MipsSimulatorAPI>()) {}
     
     uint32_t loadWord(uint32_t address) const { return m_api->loadWord(address); }
     void storeWord(uint32_t address, uint32_t value) { m_api->storeWord(address, value); }
@@ -183,7 +186,7 @@ public:
     void storeByte(uint32_t address, uint8_t value) { m_api->storeByte(address, value); }
     
 private:
-    std::shared_ptr<MipsSimulatorAPI> m_api;
+    std::shared_ptr<mips::MipsSimulatorAPI> m_api;
 };
 
 /**
@@ -191,13 +194,13 @@ private:
  */
 class RegisterFile {
 public:
-    RegisterFile() : m_api(std::make_shared<MipsSimulatorAPI>()) {}
+    RegisterFile() : m_api(std::make_shared<mips::MipsSimulatorAPI>()) {}
     
     uint32_t readRegister(int regNum) const { return m_api->readRegister(regNum); }
     void writeRegister(int regNum, uint32_t value) { m_api->writeRegister(regNum, value); }
     
 private:
-    std::shared_ptr<MipsSimulatorAPI> m_api;
+    std::shared_ptr<mips::MipsSimulatorAPI> m_api;
 };
 
 /**
@@ -206,7 +209,7 @@ private:
 class Assembler {
 public:
     std::vector<uint32_t> assemble(const std::string& assembly) {
-        MipsSimulatorAPI api;
+        mips::MipsSimulatorAPI api;
         if (api.loadProgram(assembly)) {
             // Return dummy instruction count for test compatibility
             return {0x12345678}; // Dummy instruction
@@ -214,5 +217,3 @@ public:
         return {};
     }
 };
-
-} // namespace mips
