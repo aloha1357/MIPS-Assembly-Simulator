@@ -1,42 +1,26 @@
-# MIPS Simulator Core Library
-add_library(mips-simulator
-    Cpu.cpp
-    RegisterFile.cpp
-    Memory.cpp
-    Stage.cpp
-    Instruction.cpp
-    Assembler.cpp
-    InstructionDecoder.cpp
-    IFStage.cpp
-    IDStage.cpp
-    EXStage.cpp
-    MEMStage.cpp
-    WBStage.cpp
-    MipsSimulatorAPI.cpp             # New unified API
-    gui/MipsSimulatorGUI.cpp         # Base class implementation
+# 把 src/ 下面所有 .cpp 都抓進來
+file(GLOB_RECURSE SRC_ALL CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-target_include_directories(mips-simulator
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-)
+# 排除 main.cpp 和 GUI 相關檔案，只留核心檔變成 library
+set(MAIN_CANDIDATE "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
+list(FILTER SRC_ALL EXCLUDE REGEX ".*/main\\.cpp$")
+list(FILTER SRC_ALL EXCLUDE REGEX ".*/imgui_main\\.cpp$")
+list(FILTER SRC_ALL EXCLUDE REGEX ".*/gui_main\\.cpp$")
+list(FILTER SRC_ALL EXCLUDE REGEX ".*/gui/.*\\.cpp$")
 
-# Main CLI executable
-add_executable(mips-sim
-    main.cpp
+add_library(mips_core ${SRC_ALL})
+# 如果你的 public header 在 src/include/，請改成該路徑
+target_include_directories(mips_core
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
+target_compile_features(mips_core PUBLIC cxx_std_20)
 
-target_link_libraries(mips-sim
-    PRIVATE mips-simulator
-)
-
-# Simple GUI executable (Qt6 only, no ImGui)
-add_executable(mips-sim-gui-qt
-    gui_main.cpp
-)
-
-target_link_libraries(mips-sim-gui-qt
-    PRIVATE 
-    mips-simulator
-    Qt6::Core
-    Qt6::Widgets
-)
+# CLI：只編 main.cpp，連上 core
+if (EXISTS "${MAIN_CANDIDATE}")
+  add_executable(mips_cli "${MAIN_CANDIDATE}")
+  target_link_libraries(mips_cli PRIVATE mips_core)
+  target_compile_features(mips_cli PRIVATE cxx_std_20)
+endif()
