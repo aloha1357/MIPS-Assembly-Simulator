@@ -4,7 +4,7 @@
 Write-Host "Formatting source code with clang-format..."
 
 # Find all source files
-$sourceFiles = Get-ChildItem -Recurse -Include "*.cpp", "*.h", "*.hpp" -Path "src", "tests", "." | Where-Object { $_.Directory.Name -ne "build" -and $_.Directory.Name -ne "_deps" }
+$sourceFiles = Get-ChildItem -Recurse -Include "*.cpp", "*.h", "*.hpp" -Path "src", "tests", "features", "." | Where-Object { $_.Directory.Name -ne "build" -and $_.Directory.Name -ne "_deps" }
 
 if ($sourceFiles.Count -eq 0) {
     Write-Host "No source files found to format."

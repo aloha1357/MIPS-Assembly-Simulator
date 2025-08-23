@@ -2,4 +2,7 @@ build*
 cmake-*
 .cache
 .vscode
-.ps1
+
+# Exclude features directory and PowerShell scripts
+features/
+*.ps1
