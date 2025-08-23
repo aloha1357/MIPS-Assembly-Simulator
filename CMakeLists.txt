@@ -1,20 +1,19 @@
-cmake_minimum_required(VERSION 3.21)
-project(Project)
-set(CMAKE_CXX_STANDARD 14)
-find_package(Catch2 REQUIRED)
-find_package(GTest REQUIRED)
-find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+cmake_minimum_required(VERSION 3.20)
+project(MipsSim LANGUAGES CXX)
 
-add_library(my_library lib.cpp)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(my_cli_tool cli.cpp)
-target_link_libraries(my_cli_tool my_library)
+option(ENABLE_QT "Build Qt GUI" OFF)  # 之後若有 GUI 再開
 
-add_executable(my_gui_tool gui.cpp)
-target_link_libraries(my_gui_tool my_library Qt6::Core Qt6::Widgets)
+add_subdirectory(src)
+add_subdirectory(tests)
 
-add_executable(my_catch2_tests tests.cpp)
-target_link_libraries(my_catch2_tests my_library Catch2::Catch2WithMain)
-
-add_executable(my_gtest_tests tests2.cpp)
-target_link_libraries(my_gtest_tests my_library GTest::gtest_main)
+if (ENABLE_QT)
+  find_package(Qt6 COMPONENTS Widgets REQUIRED)
+  add_executable(mips_gui src/gui/main_window.cpp)
+  target_link_libraries(mips_gui PRIVATE Qt6::Widgets mips_core)
+  target_compile_features(mips_gui PRIVATE cxx_std_20)
+endif()
