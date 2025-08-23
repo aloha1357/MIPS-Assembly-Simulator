@@ -110,9 +110,19 @@ class Cpu
     void printString(const std::string& str);
 
     /**
+     * @brief Print character to console (for syscall support)
+     */
+    void printChar(char character);
+
+    /**
      * @brief Read integer from console (for syscall support)
      */
     uint32_t readInt();
+
+    /**
+     * @brief Read character from console (for syscall support)
+     */
+    char readChar();
 
     /**
      * @brief Set program termination flag (for syscall support)

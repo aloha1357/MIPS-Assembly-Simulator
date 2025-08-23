@@ -18,6 +18,11 @@ set(CORE_TEST_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/test_pipeline.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_syscalls.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_bdd_core_instructions.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_llo_instruction.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_lhi_instruction.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_trap_instruction.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_character_syscalls.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_missing_instructions_integration.cpp"
 )
 
 # 檢查檔案是否存在並過濾

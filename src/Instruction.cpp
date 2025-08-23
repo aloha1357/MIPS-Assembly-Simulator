@@ -1136,6 +1136,12 @@ void SyscallInstruction::execute(Cpu& cpu)
     case 10:
         handleExit(cpu);
         break;
+    case 11: // print_character (avoiding conflict with original syscall 1)
+        handlePrintCharacter(cpu);
+        break;
+    case 12: // read_character (avoiding conflict with original syscall 4)
+        handleReadCharacter(cpu);
+        break;
     default:
         // Unknown system call - just continue execution
         break;
@@ -1200,9 +1206,81 @@ void SyscallInstruction::handleExit(Cpu& cpu)
     cpu.terminate();
 }
 
+void SyscallInstruction::handlePrintCharacter(Cpu& cpu)
+{
+    // Character code to print is in $a0 (register 4)
+    uint32_t charCode = cpu.getRegisterFile().read(4); // $a0
+    char character = static_cast<char>(charCode & 0xFF); // Use only lower 8 bits
+    cpu.printChar(character);
+}
+
+void SyscallInstruction::handleReadCharacter(Cpu& cpu)
+{
+    char character = cpu.readChar();
+    cpu.getRegisterFile().write(2, static_cast<uint32_t>(character)); // $v0 = character
+}
+
 std::string SyscallInstruction::getName() const
 {
     return "syscall";
+}
+
+// ===== LLO Instruction =====
+
+LLOInstruction::LLOInstruction(int rt, uint16_t immediate)
+    : ITypeInstruction(rt, 0, static_cast<int16_t>(immediate))
+{
+}
+
+void LLOInstruction::execute(Cpu& cpu)
+{
+    uint32_t currentValue = cpu.getRegisterFile().read(m_rt);
+    uint32_t newValue = (currentValue & 0xFFFF0000u) | (static_cast<uint32_t>(m_imm) & 0xFFFF);
+    cpu.getRegisterFile().write(m_rt, newValue);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string LLOInstruction::getName() const
+{
+    return "llo";
+}
+
+// ===== LHI Instruction =====
+
+LHIInstruction::LHIInstruction(int rt, uint16_t immediate)
+    : ITypeInstruction(rt, 0, static_cast<int16_t>(immediate))
+{
+}
+
+void LHIInstruction::execute(Cpu& cpu)
+{
+    uint32_t currentValue = cpu.getRegisterFile().read(m_rt);
+    uint32_t newValue = (currentValue & 0x0000FFFFu) | ((static_cast<uint32_t>(m_imm) & 0xFFFF) << 16);
+    cpu.getRegisterFile().write(m_rt, newValue);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string LHIInstruction::getName() const
+{
+    return "lhi";
+}
+
+// ===== TRAP Instruction =====
+
+TrapInstruction::TrapInstruction(uint32_t trapCode) : m_trapCode(trapCode)
+{
+}
+
+void TrapInstruction::execute(Cpu& cpu)
+{
+    // Generate trap exception - for now just print trap code
+    cpu.printString("TRAP: " + std::to_string(m_trapCode));
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string TrapInstruction::getName() const
+{
+    return "trap";
 }
 
 } // namespace mips

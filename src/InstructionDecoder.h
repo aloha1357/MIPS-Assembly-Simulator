@@ -38,6 +38,7 @@ class InstructionDecoder
     static std::unique_ptr<Instruction> decodeRType(uint32_t word);
     static std::unique_ptr<Instruction> decodeIType(uint32_t word);
     static std::unique_ptr<Instruction> decodeJType(uint32_t word);
+    static std::unique_ptr<Instruction> decodeTrapInstruction(uint32_t word);
 };
 
 } // namespace mips

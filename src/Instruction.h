@@ -798,6 +798,56 @@ class SyscallInstruction : public Instruction
     void handlePrintString(Cpu& cpu);
     void handleReadInt(Cpu& cpu);
     void handleExit(Cpu& cpu);
+    void handlePrintCharacter(Cpu& cpu);
+    void handleReadCharacter(Cpu& cpu);
+};
+
+/**
+ * @brief LLO instruction (Load Low Immediate)
+ * Opcode: 0x18
+ * Format: llo $rt, immediate
+ * Operation: rt = rt & 0xffff0000u | imm
+ */
+class LLOInstruction : public ITypeInstruction
+{
+  public:
+    LLOInstruction(int rt, uint16_t immediate);
+
+    void        execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief LHI instruction (Load High Immediate)
+ * Opcode: 0x19
+ * Format: lhi $rt, immediate
+ * Operation: rt = rt & 0x0000ffffu | (imm << 16)
+ */
+class LHIInstruction : public ITypeInstruction
+{
+  public:
+    LHIInstruction(int rt, uint16_t immediate);
+
+    void        execute(Cpu& cpu) override;
+    std::string getName() const override;
+};
+
+/**
+ * @brief TRAP instruction
+ * Opcode: 0x1A
+ * Format: trap syscall
+ * Operation: trap(imm)
+ */
+class TrapInstruction : public Instruction
+{
+  public:
+    TrapInstruction(uint32_t trapCode);
+
+    void        execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+  private:
+    uint32_t m_trapCode;
 };
 
 } // namespace mips

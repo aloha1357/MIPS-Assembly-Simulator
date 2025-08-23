@@ -227,6 +227,11 @@ void Cpu::printString(const std::string& str)
     m_consoleOutput += str;
 }
 
+void Cpu::printChar(char character)
+{
+    m_consoleOutput += character;
+}
+
 uint32_t Cpu::readInt()
 {
     // Find next integer in input buffer
@@ -249,6 +254,15 @@ uint32_t Cpu::readInt()
 
     // If no more input, return 0
     return 0;
+}
+
+char Cpu::readChar()
+{
+    if (m_inputPosition < m_consoleInput.length())
+    {
+        return m_consoleInput[m_inputPosition++];
+    }
+    return -1; // Return EOF if no more input
 }
 
 void Cpu::terminate()

@@ -6,3 +6,4 @@ cmake-*
 # Exclude features directory and PowerShell scripts
 features/
 *.ps1
+docs/

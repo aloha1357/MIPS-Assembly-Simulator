@@ -34,7 +34,11 @@ std::unique_ptr<Instruction> InstructionDecoder::decode(uint32_t word)
     case 0x05: // BNE instruction
     case 0x06: // BLEZ instruction
     case 0x07: // BGTZ instruction
+    case 0x18: // LLO instruction
+    case 0x19: // LHI instruction
         return decodeIType(word);
+    case 0x1A: // TRAP instruction
+        return decodeTrapInstruction(word);
     default:
         return nullptr; // Unknown instruction
     }
@@ -204,6 +208,10 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word)
         return std::make_unique<OriInstruction>(rt, rs, signedImmediate);
     case 0x0E: // XORI instruction
         return std::make_unique<XoriInstruction>(rt, rs, signedImmediate);
+    case 0x18: // LLO instruction
+        return std::make_unique<LLOInstruction>(rt, static_cast<uint16_t>(immediate));
+    case 0x19: // LHI instruction
+        return std::make_unique<LHIInstruction>(rt, static_cast<uint16_t>(immediate));
     default:
         return nullptr; // Unknown I-type instruction
     }
@@ -224,6 +232,12 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeJType(uint32_t word)
     default:
         return nullptr; // Unknown J-type instruction
     }
+}
+
+std::unique_ptr<Instruction> InstructionDecoder::decodeTrapInstruction(uint32_t word)
+{
+    uint32_t trapCode = extractJumpTarget(word); // Use 26-bit immediate for trap code
+    return std::make_unique<TrapInstruction>(trapCode);
 }
 
 } // namespace mips
