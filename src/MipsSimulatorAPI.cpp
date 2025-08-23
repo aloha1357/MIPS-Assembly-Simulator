@@ -101,11 +101,18 @@ int MipsSimulatorAPI::run(int maxCycles)
         if (maxCycles <= 0)
         {
             // Run until termination
-            m_cpu->run(-1);  // Assuming -1 means run until completion
+            while (!m_cpu->shouldTerminate())
+            {
+                m_cpu->tick();
+            }
         }
         else
         {
-            m_cpu->run(maxCycles);
+            // Run for specified cycles or until termination
+            for (int i = 0; i < maxCycles && !m_cpu->shouldTerminate(); ++i)
+            {
+                m_cpu->tick();
+            }
         }
 
         return m_cpu->getCycleCount() - cyclesBefore;

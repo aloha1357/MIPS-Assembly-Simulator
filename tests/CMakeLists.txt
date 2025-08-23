@@ -58,6 +58,8 @@ else()
         "${CMAKE_CURRENT_SOURCE_DIR}/test_trap_instruction.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/test_character_syscalls.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/test_missing_instructions_integration.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/test_cli_argument_parsing.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/test_cli_run_command.cpp"
     )
 
     # 檢查檔案是否存在並過濾
@@ -84,7 +86,7 @@ list(LENGTH EXISTING_TEST_SOURCES TEST_COUNT)
 message(STATUS "Building with ${TEST_COUNT} test files to avoid timeout")
 
 add_executable(mips_tests ${EXISTING_TEST_SOURCES})
-target_link_libraries(mips_tests PRIVATE gtest_main gtest mips_core)
+target_link_libraries(mips_tests PRIVATE gtest_main gtest mips_core mips_cli_lib)
 target_compile_features(mips_tests PRIVATE cxx_std_20)
 
 # 簡化的測試配置

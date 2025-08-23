@@ -9,6 +9,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # 為了加速編譯，先只編譯核心功能
 add_subdirectory(src)
 
+# 添加 CLI 模塊
+add_subdirectory(cli)
+
 # 只在需要時編譯測試
 option(BUILD_TESTING "Build tests" ON)
 if(BUILD_TESTING)
