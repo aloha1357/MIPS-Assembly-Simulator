@@ -2,6 +2,4 @@
 
 #include <gtest/gtest.h>
 
-TEST(Foo, Is42) {
-    ASSERT_EQ(foo(), 42);
-}
+TEST(Foo, Is42) { ASSERT_EQ(foo(), 42); }
