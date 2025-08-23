@@ -20,9 +20,14 @@ class MipsSimulatorGUI::Impl
 {
   public:
     explicit Impl(bool headless)
-        : m_headless(headless), m_initialized(false), m_windowTitle("MIPS Assembly Simulator"),
-          m_codeEditorText(""), m_consoleOutput(""), m_pipelineMode(false),
-          m_executionPaused(false), m_currentExecutionLine(0)
+        : m_headless(headless),
+          m_initialized(false),
+          m_windowTitle("MIPS Assembly Simulator"),
+          m_codeEditorText(""),
+          m_consoleOutput(""),
+          m_pipelineMode(false),
+          m_executionPaused(false),
+          m_currentExecutionLine(0)
     {
         // Initialize panel visibility
         m_panelVisibility["code_editor"]     = true;
@@ -237,12 +242,12 @@ std::string MipsSimulatorGUI::getCodeEditorText() const
 
 bool MipsSimulatorGUI::isSyntaxHighlightingEnabled() const
 {
-    return true; // Assume syntax highlighting is always enabled
+    return true;  // Assume syntax highlighting is always enabled
 }
 
 bool MipsSimulatorGUI::areLineNumbersVisible() const
 {
-    return true; // Assume line numbers are always visible
+    return true;  // Assume line numbers are always visible
 }
 
 bool MipsSimulatorGUI::loadFile(const std::string& filename, const std::string& content)
@@ -339,7 +344,7 @@ void MipsSimulatorGUI::updateHighlights()
     // Simulate highlight fade-out
     for (size_t i = 0; i < m_impl->m_registerHighlights.size(); ++i)
     {
-        m_impl->m_registerHighlights[i] = false; // In real implementation, this would be gradual
+        m_impl->m_registerHighlights[i] = false;  // In real implementation, this would be gradual
     }
     m_impl->m_highlightedMemoryAddresses.clear();
 }
@@ -430,7 +435,7 @@ bool MipsSimulatorGUI::isResetButtonEnabled() const
 
 bool MipsSimulatorGUI::isStopButtonEnabled() const
 {
-    return false; // TODO: Implement execution state tracking
+    return false;  // TODO: Implement execution state tracking
 }
 
 void MipsSimulatorGUI::stepExecution()
@@ -458,7 +463,7 @@ void MipsSimulatorGUI::stepExecution()
     if (currentConsoleOutput.length() > previousConsoleOutput.length())
     {
         std::string newOutput = currentConsoleOutput.substr(previousConsoleOutput.length());
-        addConsoleText(newOutput, "blue"); // Add syscall output in blue color
+        addConsoleText(newOutput, "blue");  // Add syscall output in blue color
     }
 
     // Update highlights for changed registers
@@ -502,7 +507,7 @@ void MipsSimulatorGUI::runProgram()
         // Check for breakpoints
         uint32_t currentPC = m_cpu->getProgramCounter();
         if (m_impl->m_breakpoints.count(currentPC + 1) > 0)
-        { // +1 for 1-based line numbers
+        {  // +1 for 1-based line numbers
             m_impl->m_executionPaused      = true;
             m_impl->m_currentExecutionLine = currentPC + 1;
             addConsoleText("Execution paused at breakpoint", "yellow");
@@ -702,7 +707,7 @@ uint8_t MipsSimulatorGUI::getMemoryByte(uint32_t address) const
     if (m_cpu && &m_cpu->getMemory())
     {
         // Get word and extract byte
-        uint32_t wordAddr   = address & ~0x3; // Align to word boundary
+        uint32_t wordAddr   = address & ~0x3;  // Align to word boundary
         uint32_t wordData   = m_cpu->getMemory().readWord(wordAddr);
         int      byteOffset = address & 0x3;
         return (wordData >> (byteOffset * 8)) & 0xFF;
@@ -739,4 +744,4 @@ void MipsSimulatorGUI::setOnExecutionStateChangedCallback(std::function<void(boo
     m_impl->m_onExecutionStateChanged = callback;
 }
 
-} // namespace mips
+}  // namespace mips

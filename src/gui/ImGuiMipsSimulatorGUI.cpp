@@ -20,10 +20,19 @@ namespace mips
 {
 
 ImGuiMipsSimulatorGUI::ImGuiMipsSimulatorGUI(bool headless)
-    : MipsSimulatorGUI(headless), m_window(nullptr), m_glContext(nullptr), m_shouldQuit(false),
-      m_showCodeEditor(true), m_showRegisterViewer(true), m_showMemoryViewer(true),
-      m_showPipelineViewer(true), m_showConsoleOutput(true), m_showAbout(false), m_selectedLine(-1),
-      m_memoryViewStart(0), m_memoryBytesPerRow(16)
+    : MipsSimulatorGUI(headless),
+      m_window(nullptr),
+      m_glContext(nullptr),
+      m_shouldQuit(false),
+      m_showCodeEditor(true),
+      m_showRegisterViewer(true),
+      m_showMemoryViewer(true),
+      m_showPipelineViewer(true),
+      m_showConsoleOutput(true),
+      m_showAbout(false),
+      m_selectedLine(-1),
+      m_memoryViewStart(0),
+      m_memoryBytesPerRow(16)
 {
     // Initialize code buffer
     memset(m_codeBuffer, 0, sizeof(m_codeBuffer));
@@ -106,14 +115,14 @@ bool ImGuiMipsSimulatorGUI::initialize()
 
     m_glContext = SDL_GL_CreateContext(m_window);
     SDL_GL_MakeCurrent(m_window, m_glContext);
-    SDL_GL_SetSwapInterval(1); // Enable vsync
+    SDL_GL_SetSwapInterval(1);  // Enable vsync
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -429,7 +438,7 @@ void ImGuiMipsSimulatorGUI::renderPipelineViewer()
             if (m_cpu)
             {
                 // This would need to be implemented in the CPU class
-                ImGui::Text("NOP"); // Placeholder
+                ImGui::Text("NOP");  // Placeholder
             }
             else
             {
@@ -487,7 +496,7 @@ void ImGuiMipsSimulatorGUI::executeCode()
         m_cpu->loadProgramFromString(code);
 
         // Run until program terminates or max cycles reached
-        int maxCycles = 1000; // Prevent infinite loops
+        int maxCycles = 1000;  // Prevent infinite loops
         int cycles    = 0;
 
         while (!m_cpu->shouldTerminate() && cycles < maxCycles)
@@ -642,4 +651,4 @@ std::string ImGuiMipsSimulatorGUI::getRegisterName(int regNum)
     return "unknown";
 }
 
-} // namespace mips
+}  // namespace mips

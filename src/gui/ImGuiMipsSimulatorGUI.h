@@ -78,7 +78,7 @@ class ImGuiMipsSimulatorGUI : public MipsSimulatorGUI
     bool m_showAbout;
 
     // Editor state
-    char m_codeBuffer[8192]; // Code editor buffer
+    char m_codeBuffer[8192];  // Code editor buffer
     int  m_selectedLine;
 
     // Memory viewer state
@@ -110,4 +110,4 @@ class ImGuiMipsSimulatorGUI : public MipsSimulatorGUI
   private:
 };
 
-} // namespace mips
+}  // namespace mips

@@ -451,4 +451,4 @@ class MipsSimulatorGUI
     std::unique_ptr<Cpu> m_cpu;
 };
 
-} // namespace mips
+}  // namespace mips
