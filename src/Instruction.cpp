@@ -702,19 +702,18 @@ void BneInstruction::execute(Cpu& cpu)
     if (rsValue != rtValue)
     {
         // 分支條件成立：rs != rt
-        // 計算分支目標地址
-        // PC = PC + 4 + (sign_extend(offset) << 2)
+        // 計算分支目標地址（指令級偏移）
         uint32_t currentPC          = cpu.getProgramCounter();
         int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
-        uint32_t targetPC           = currentPC + 4 + (signExtendedOffset << 2);
+        uint32_t targetPC           = currentPC + 1 + signExtendedOffset;  // 指令級偏移
 
         cpu.setProgramCounter(targetPC);
     }
     else
     {
         // 分支條件不成立：rs == rt
-        // 正常遞增 PC
-        cpu.setProgramCounter(cpu.getProgramCounter() + 4);
+        // 正常遞增 PC（讓 CPU 自動處理）
+        cpu.setProgramCounter(cpu.getProgramCounter() + 1);
     }
 }
 
@@ -740,11 +739,10 @@ void BLEZInstruction::execute(Cpu& cpu)
     if (signedRsValue <= 0)
     {
         // 分支條件成立：rs <= 0
-        // 計算分支目標地址
-        // PC = PC + 4 + (sign_extend(offset) << 2)
+        // 計算分支目標地址（指令級偏移）
         uint32_t currentPC          = cpu.getProgramCounter();
         int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
-        uint32_t targetPC           = currentPC + 4 + (signExtendedOffset << 2);
+        uint32_t targetPC           = currentPC + 1 + signExtendedOffset;  // 指令級偏移
 
         cpu.setProgramCounter(targetPC);
     }
@@ -752,7 +750,7 @@ void BLEZInstruction::execute(Cpu& cpu)
     {
         // 分支條件不成立：rs > 0
         // 正常遞增 PC
-        cpu.setProgramCounter(cpu.getProgramCounter() + 4);
+        cpu.setProgramCounter(cpu.getProgramCounter() + 1);
     }
 }
 
@@ -778,11 +776,10 @@ void BGTZInstruction::execute(Cpu& cpu)
     if (signedRsValue > 0)
     {
         // 分支條件成立：rs > 0
-        // 計算分支目標地址
-        // PC = PC + 4 + (sign_extend(offset) << 2)
+        // 計算分支目標地址（指令級偏移）
         uint32_t currentPC          = cpu.getProgramCounter();
         int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
-        uint32_t targetPC           = currentPC + 4 + (signExtendedOffset << 2);
+        uint32_t targetPC           = currentPC + 1 + signExtendedOffset;  // 指令級偏移
 
         cpu.setProgramCounter(targetPC);
     }
@@ -790,7 +787,7 @@ void BGTZInstruction::execute(Cpu& cpu)
     {
         // 分支條件不成立：rs <= 0
         // 正常遞增 PC
-        cpu.setProgramCounter(cpu.getProgramCounter() + 4);
+        cpu.setProgramCounter(cpu.getProgramCounter() + 1);
     }
 }
 

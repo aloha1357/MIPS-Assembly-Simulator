@@ -2,6 +2,7 @@
 #include "../src/Instruction.h"
 #include "../src/Memory.h"
 #include "../src/RegisterFile.h"
+#include "test_timeout_helper.hpp"
 #include <gtest/gtest.h>
 
 using namespace mips;
@@ -137,11 +138,8 @@ TEST_F(SyscallTest, ComplexPrintIntProgram)
 
     cpu->loadProgramFromString(program);
 
-    // Execute until termination
-    for (int i = 0; i < 10 && !cpu->shouldTerminate(); ++i)
-    {
-        cpu->tick();
-    }
+    // Execute until termination with safety limits
+    CPU_TEST_WITH_LIMITS(*cpu, 20, 2);  // Max 20 steps, 2 seconds timeout
 
     // Check console output (should contain both printed integers)
     std::string output = cpu->getConsoleOutput();

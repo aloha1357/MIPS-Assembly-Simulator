@@ -34,12 +34,12 @@ protected:
         m_result = cli::execute_run_command(config);
     }
 
-    // Helper to execute run command with basic config
+    // Helper to execute run command with basic config (with safety timeout)
     void when_executing_run_command(const std::string& program) {
         cli::RunConfig config;
         config.program = program;
         config.limit = -1;
-        config.timeout = -1;
+        config.timeout = 10;  // 10 second safety timeout for all tests
         m_result = cli::execute_run_command(config);
     }
 
@@ -108,7 +108,7 @@ TEST_F(CLIRunCommandBDD, DISABLED_ReturnsRuntimeErrorForInvalidAssembly) {
 // Scenario: Enforce step limit
 TEST_F(CLIRunCommandBDD, EnforcesStepLimitAndReturnsRuntimeError) {
     // When I execute the run command with a step limit on an infinite loop
-    when_executing_run_command_with_limit("../test_loop.asm", 100);
+    when_executing_run_command_with_limit("../test_infinite_loop.asm", 100);
     
     // Then the exit code should be runtime error (step limit exceeded)
     then_exit_code_should_be(cli::EXIT_RUNTIME_ERROR);
@@ -126,7 +126,7 @@ TEST_F(CLIRunCommandBDD, CompletesWithinStepLimit) {
 // Scenario: Enforce timeout (using a short timeout for testing)
 TEST_F(CLIRunCommandBDD, EnforcesTimeoutAndReturnsRuntimeError) {
     // When I execute the run command with a 1 second timeout on infinite loop
-    when_executing_run_command_with_timeout("../test_loop.asm", 1);
+    when_executing_run_command_with_timeout("../test_infinite_loop.asm", 1);
     
     // Then the exit code should be runtime error (timeout exceeded)
     then_exit_code_should_be(cli::EXIT_RUNTIME_ERROR);
@@ -141,11 +141,20 @@ TEST_F(CLIRunCommandBDD, CompletesWithinTimeout) {
     then_exit_code_should_be(cli::EXIT_OK);
 }
 
+// Scenario: Program with finite loop completes properly
+TEST_F(CLIRunCommandBDD, FiniteLoopCompletesWithExit) {
+    // When I execute a simple finite program that ends with exit syscall
+    when_executing_run_command("../test_simple_finite.asm");
+    
+    // Then the exit code should be success (program terminates normally)
+    then_exit_code_should_be(cli::EXIT_OK);
+}
+
 // Scenario: Combined limits - step limit reached first
 TEST_F(CLIRunCommandBDD, StepLimitReachedBeforeTimeout) {
     // When I execute with both step limit (small) and timeout (large)
     cli::RunConfig config;
-    config.program = "../test_loop.asm";
+    config.program = "../test_infinite_loop.asm";
     config.limit = 50;      // Small step limit  
     config.timeout = 10;    // Large timeout
     when_executing_run_command(config);
