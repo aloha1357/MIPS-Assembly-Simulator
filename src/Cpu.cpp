@@ -235,6 +235,11 @@ uint32_t Cpu::getLabelAddress(const std::string& label) const
         // while instruction indices are typically small integers
         if (address < 1000 || address % 4 != 0)  // Likely instruction index
         {
+            // Ensure instruction index is within bounds
+            if (address >= m_instructions.size()) {
+                // Find the actual end of instructions (typically trap exit)
+                return (m_instructions.size() - 1) * 4;
+            }
             return address * 4;  // Convert to byte address
         }
         else  // Likely data address (already byte address)
