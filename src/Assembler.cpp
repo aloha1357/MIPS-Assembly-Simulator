@@ -2,6 +2,7 @@
 #include "Instruction.h"
 #include <algorithm>
 #include <cctype>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 

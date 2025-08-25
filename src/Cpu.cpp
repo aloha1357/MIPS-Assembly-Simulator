@@ -9,6 +9,7 @@
 #include "RegisterFile.h"
 #include "Stage.h"
 #include "WBStage.h"
+#include <iostream>
 #include <cstdio>
 #include <cctype>
 #include <string>
@@ -230,13 +231,13 @@ uint32_t Cpu::getLabelAddress(const std::string& label) const
     {
         uint32_t address = it->second;
         
-        // Heuristic: if address is small, it's likely an instruction index
-        // If address is large, it's likely already a byte address
-        if (address < 100)  // Instruction label
+        // Better heuristic: data addresses are typically large multiples of 4,
+        // while instruction indices are typically small integers
+        if (address < 1000 || address % 4 != 0)  // Likely instruction index
         {
             return address * 4;  // Convert to byte address
         }
-        else  // Data label (already byte address)
+        else  // Likely data address (already byte address)
         {
             return address;
         }

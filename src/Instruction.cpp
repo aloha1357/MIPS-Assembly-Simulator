@@ -670,8 +670,9 @@ void BeqInstruction::execute(Cpu& cpu)
     if (rsValue == rtValue)
     {
         // Branch taken - jump to label
-        uint32_t targetAddress = cpu.getLabelAddress(m_label);
-        cpu.setProgramCounter(targetAddress);
+        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+        cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -698,8 +699,9 @@ void BneInstruction::execute(Cpu& cpu)
     if (rsValue != rtValue)
     {
         // Branch taken - jump to label
-        uint32_t targetAddress = cpu.getLabelAddress(m_label);
-        cpu.setProgramCounter(targetAddress);
+        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+        cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -729,8 +731,9 @@ void BLEZInstruction::execute(Cpu& cpu)
     {
         // 分支條件成立：rs <= 0
         // Jump to label
-        uint32_t targetAddress = cpu.getLabelAddress(m_label);
-        cpu.setProgramCounter(targetAddress);
+        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+        cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -761,8 +764,9 @@ void BGTZInstruction::execute(Cpu& cpu)
     {
         // 分支條件成立：rs > 0
         // Jump to label
-        uint32_t targetAddress = cpu.getLabelAddress(m_label);
-        cpu.setProgramCounter(targetAddress);
+        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+        cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -782,8 +786,9 @@ JInstruction::JInstruction(const std::string& label) : m_label(label) {}
 void JInstruction::execute(Cpu& cpu)
 {
     // Unconditional jump to label
-    uint32_t targetAddress = cpu.getLabelAddress(m_label);
-    cpu.setProgramCounter(targetAddress);
+    uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+    uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+    cpu.setProgramCounter(targetInstructionIndex);
 }
 
 std::string JInstruction::getName() const
