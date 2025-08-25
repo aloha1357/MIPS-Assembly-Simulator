@@ -1,14 +1,14 @@
-# 測試 la 指令
-la $a0, test_data   # 獲取 test_data 的位址
-addi $v0, $zero, 1
-syscall
+# Test la instruction  
+.text
+main:
+llo $a0, 99
+trap print_int
+la $a0, test_string  # Load address of test_string
+lb $a1, 0($a0)       # Load first character
+or $a0, $a1, $zero   # Move to $a0
+trap print_int       # Should print 84 (ASCII 'T')
+trap exit
 
-lw $a0, 0($a0)      # 從該位址載入值
-addi $v0, $zero, 1  
-syscall
-
-addi $v0, $zero, 10
-syscall
-
-test_data:
-.word 555
+.data
+test_string:
+.asciiz "Test"

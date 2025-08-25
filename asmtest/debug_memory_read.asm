@@ -1,10 +1,20 @@
-# 測試記憶體讀取
-la $a1, mydata
-addi $a0, $a1, 0  # 複製位址到 $a0
-trap print_int    # 印出位址
-lw $a0, 0($a1)   # 讀取資料
-trap print_int    # 印出資料
+# Test to examine memory contents
+.text
+main:
+# Check what's at address 24
+llo $a0, 24
+lw $a1, 0($a0)  # Load word from address 24
+or $a0, $a1, $zero  # Copy to $a0
+trap print_int
+
+# Check what's at address 28
+llo $a0, 28  
+lw $a1, 0($a0)  # Load word from address 28
+or $a0, $a1, $zero  # Copy to $a0
+trap print_int
+
 trap exit
 
-mydata:
-.word 42
+.data
+hello_msg:
+.asciiz "Hello"
