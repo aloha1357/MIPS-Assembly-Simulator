@@ -48,4 +48,14 @@ lhi $a0, 0
 mfhi $a0
 trap print_int
 llo $a0, 1234
+lhi $a0, 5678
+trap print_int
+mtlo $a0
+lhi $a0, 0
+mflo $a0
+trap print_int
+llo $a0, 65530
+lhi $a0, 65535
+llo $a1, 65535
+lhi $a1, 65535
 trap exit
