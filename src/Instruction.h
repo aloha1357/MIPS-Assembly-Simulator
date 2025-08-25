@@ -496,39 +496,47 @@ class BeqInstruction : public BranchInstruction
 };
 
 /**
- * @brief I-type BNE instruction (branch not equal)
+ * @brief BNE instruction (branch not equal)
  */
-class BneInstruction : public ITypeInstruction
+class BneInstruction : public BranchInstruction
 {
   public:
-    BneInstruction(int rs, int rt, int16_t offset);
+    BneInstruction(int rs, int rt, const std::string& label);
 
     void        execute(Cpu& cpu) override;
     std::string getName() const override;
 };
 
 /**
- * @brief I-type BLEZ instruction (branch less than or equal zero)
+ * @brief BLEZ instruction (branch less than or equal zero)
  */
-class BLEZInstruction : public ITypeInstruction
+class BLEZInstruction : public Instruction
 {
   public:
-    BLEZInstruction(int rs, int16_t offset);
+    BLEZInstruction(int rs, const std::string& label);
 
     void        execute(Cpu& cpu) override;
     std::string getName() const override;
+
+  private:
+    int         m_rs;
+    std::string m_label;
 };
 
 /**
- * @brief I-type BGTZ instruction (branch greater than zero)
+ * @brief BGTZ instruction (branch greater than zero)
  */
-class BGTZInstruction : public ITypeInstruction
+class BGTZInstruction : public Instruction
 {
   public:
-    BGTZInstruction(int rs, int16_t offset);
+    BGTZInstruction(int rs, const std::string& label);
 
     void        execute(Cpu& cpu) override;
     std::string getName() const override;
+
+  private:
+    int         m_rs;
+    std::string m_label;
 };
 
 /**
@@ -672,6 +680,28 @@ class JALInstruction : public Instruction
 
   private:
     uint32_t m_target;  // 26-bit target address
+};
+
+/**
+ * @brief JAL (Jump And Link) instruction with label support - J-type instruction
+ * Opcode: 0x03
+ * Format: jal label
+ * Operation: $ra = PC+4; PC = label_address (jump to label address and save return address)
+ */
+class JALLabelInstruction : public Instruction
+{
+  public:
+    /**
+     * @brief Construct a JAL instruction with label target
+     * @param label Target label name
+     */
+    explicit JALLabelInstruction(const std::string& label);
+
+    void        execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+  private:
+    std::string m_label;  // Target label name
 };
 
 /**
@@ -848,6 +878,24 @@ class TrapInstruction : public Instruction
 
   private:
     uint32_t m_trapCode;
+};
+
+/**
+ * @brief LA instruction (Load Address)
+ * Format: la $rt, label
+ * Operation: rt = address_of(label)
+ */
+class LAInstruction : public Instruction
+{
+  public:
+    LAInstruction(int rt, const std::string& label);
+
+    void        execute(Cpu& cpu) override;
+    std::string getName() const override;
+
+  private:
+    int         m_rt;
+    std::string m_label;
 };
 
 }  // namespace mips

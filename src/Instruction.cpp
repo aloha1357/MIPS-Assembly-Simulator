@@ -684,35 +684,25 @@ std::string BeqInstruction::getName() const
     return "beq";
 }
 
-BneInstruction::BneInstruction(int rs, int rt, int16_t offset) : ITypeInstruction(0, 0, offset)
-{  // 暫時設定 rt=0, rs=0
-    // BNE 指令的格式是 bne $rs, $rt, offset
-    // 正確設定暫存器編號
-    m_rs = rs;
-    m_rt = rt;
-    // m_imm 已經在基礎類別中正確設定為 offset
+BneInstruction::BneInstruction(int rs, int rt, const std::string& label)
+    : BranchInstruction(rs, rt, label)
+{
 }
 
 void BneInstruction::execute(Cpu& cpu)
 {
-    // 讀取兩個源暫存器的值
     uint32_t rsValue = cpu.getRegisterFile().read(m_rs);
     uint32_t rtValue = cpu.getRegisterFile().read(m_rt);
 
     if (rsValue != rtValue)
     {
-        // 分支條件成立：rs != rt
-        // 計算分支目標地址（指令級偏移）
-        uint32_t currentPC          = cpu.getProgramCounter();
-        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
-        uint32_t targetPC           = currentPC + 1 + signExtendedOffset;  // 指令級偏移
-
-        cpu.setProgramCounter(targetPC);
+        // Branch taken - jump to label
+        uint32_t targetAddress = cpu.getLabelAddress(m_label);
+        cpu.setProgramCounter(targetAddress);
     }
     else
     {
-        // 分支條件不成立：rs == rt
-        // 正常遞增 PC（讓 CPU 自動處理）
+        // Branch not taken - continue with next instruction
         cpu.setProgramCounter(cpu.getProgramCounter() + 1);
     }
 }
@@ -722,10 +712,8 @@ std::string BneInstruction::getName() const
     return "bne";
 }
 
-BLEZInstruction::BLEZInstruction(int rs, int16_t offset) : ITypeInstruction(0, rs, offset)
+BLEZInstruction::BLEZInstruction(int rs, const std::string& label) : m_rs(rs), m_label(label)
 {
-    // BLEZ 指令的格式是 blez $rs, offset
-    // rt 總是 0 (未使用)，只檢查 rs 暫存器
 }
 
 void BLEZInstruction::execute(Cpu& cpu)
@@ -739,12 +727,9 @@ void BLEZInstruction::execute(Cpu& cpu)
     if (signedRsValue <= 0)
     {
         // 分支條件成立：rs <= 0
-        // 計算分支目標地址（指令級偏移）
-        uint32_t currentPC          = cpu.getProgramCounter();
-        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
-        uint32_t targetPC           = currentPC + 1 + signExtendedOffset;  // 指令級偏移
-
-        cpu.setProgramCounter(targetPC);
+        // Jump to label
+        uint32_t targetAddress = cpu.getLabelAddress(m_label);
+        cpu.setProgramCounter(targetAddress);
     }
     else
     {
@@ -759,10 +744,8 @@ std::string BLEZInstruction::getName() const
     return "blez";
 }
 
-BGTZInstruction::BGTZInstruction(int rs, int16_t offset) : ITypeInstruction(0, rs, offset)
+BGTZInstruction::BGTZInstruction(int rs, const std::string& label) : m_rs(rs), m_label(label)
 {
-    // BGTZ 指令的格式是 bgtz $rs, offset
-    // rt 總是 0 (未使用)，只檢查 rs 暫存器
 }
 
 void BGTZInstruction::execute(Cpu& cpu)
@@ -776,12 +759,9 @@ void BGTZInstruction::execute(Cpu& cpu)
     if (signedRsValue > 0)
     {
         // 分支條件成立：rs > 0
-        // 計算分支目標地址（指令級偏移）
-        uint32_t currentPC          = cpu.getProgramCounter();
-        int32_t  signExtendedOffset = static_cast<int32_t>(m_imm);  // 符號擴展
-        uint32_t targetPC           = currentPC + 1 + signExtendedOffset;  // 指令級偏移
-
-        cpu.setProgramCounter(targetPC);
+        // Jump to label
+        uint32_t targetAddress = cpu.getLabelAddress(m_label);
+        cpu.setProgramCounter(targetAddress);
     }
     else
     {
@@ -974,8 +954,8 @@ void JRInstruction::execute(Cpu& cpu)
     // Read target address from source register
     uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
 
-    // Set PC to target address (convert to word address by dividing by 4)
-    cpu.setProgramCounter(targetAddress / 4);
+    // Set PC to target address (LA instruction provides instruction index directly)
+    cpu.setProgramCounter(targetAddress);
 }
 
 std::string JRInstruction::getName() const
@@ -1002,6 +982,26 @@ std::string JALInstruction::getName() const
     return "jal";
 }
 
+// ===== JAL Label Instruction =====
+
+JALLabelInstruction::JALLabelInstruction(const std::string& label) : m_label(label) {}
+
+void JALLabelInstruction::execute(Cpu& cpu)
+{
+    // Save return address in $ra (register 31)
+    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
+    cpu.getRegisterFile().write(31, returnAddress);
+
+    // Jump to label address (instruction index)
+    uint32_t targetAddress = cpu.getLabelAddress(m_label);
+    cpu.setProgramCounter(targetAddress);  // Direct assignment like JInstruction
+}
+
+std::string JALLabelInstruction::getName() const
+{
+    return "jal";
+}
+
 // ===== JALR Instruction =====
 
 JALRInstruction::JALRInstruction(int rd, int rs) : RTypeInstruction(rd, rs, 0)
@@ -1017,8 +1017,8 @@ void JALRInstruction::execute(Cpu& cpu)
     uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
     cpu.getRegisterFile().write(m_rd, returnAddress);
 
-    // Jump to target address (convert to word address by dividing by 4)
-    cpu.setProgramCounter(targetAddress / 4);
+    // Jump to target address (LA instruction provides instruction index directly)
+    cpu.setProgramCounter(targetAddress);
 }
 
 std::string JALRInstruction::getName() const
@@ -1269,14 +1269,88 @@ TrapInstruction::TrapInstruction(uint32_t trapCode) : m_trapCode(trapCode) {}
 
 void TrapInstruction::execute(Cpu& cpu)
 {
-    // Generate trap exception - for now just print trap code
-    cpu.printString("TRAP: " + std::to_string(m_trapCode));
+    // Handle trap by calling appropriate syscall handlers
+    switch (m_trapCode)
+    {
+    case 1:  // print_int
+        {
+            uint32_t value = cpu.getRegisterFile().read(4);  // $a0
+            cpu.printInt(value);
+        }
+        break;
+    case 4:  // print_string
+        {
+            uint32_t stringAddress = cpu.getRegisterFile().read(4);  // $a0
+            std::string str;
+            uint32_t currentAddr = stringAddress;
+            
+            try
+            {
+                while (true)
+                {
+                    uint32_t word = cpu.getMemory().readWord(currentAddr);
+                    
+                    // Extract bytes from word (little-endian)
+                    for (int i = 0; i < 4; i++)
+                    {
+                        char c = (word >> (i * 8)) & 0xFF;
+                        if (c == '\0')
+                        {
+                            cpu.printString(str);
+                            goto string_done;
+                        }
+                        str += c;
+                    }
+                    currentAddr += 4;
+                }
+                string_done:;
+            }
+            catch (...)
+            {
+                // Memory access failed, just print what we have
+                cpu.printString(str);
+            }
+        }
+        break;
+    case 10: // exit
+        cpu.terminate();
+        break;
+    case 11: // print_character
+        {
+            uint32_t charCode = cpu.getRegisterFile().read(4);       // $a0
+            char character = static_cast<char>(charCode & 0xFF);  // Use only lower 8 bits
+            cpu.printChar(character);
+        }
+        break;
+    default:
+        // Unknown trap code - just print trap information for debugging
+        cpu.printString("TRAP: " + std::to_string(m_trapCode));
+        break;
+    }
+    
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 
 std::string TrapInstruction::getName() const
 {
     return "trap";
+}
+
+// ===== LA Instruction =====
+
+LAInstruction::LAInstruction(int rt, const std::string& label) : m_rt(rt), m_label(label) {}
+
+void LAInstruction::execute(Cpu& cpu)
+{
+    // Load the address of the label into the target register
+    uint32_t labelAddress = cpu.getLabelAddress(m_label);
+    cpu.getRegisterFile().write(m_rt, labelAddress);
+    cpu.setProgramCounter(cpu.getProgramCounter() + 1);
+}
+
+std::string LAInstruction::getName() const
+{
+    return "la";
 }
 
 }  // namespace mips

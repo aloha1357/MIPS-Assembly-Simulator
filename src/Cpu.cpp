@@ -102,7 +102,30 @@ void Cpu::tickPipeline()
 void Cpu::loadProgramFromString(const std::string& assembly)
 {
     Assembler assembler;
-    m_instructions = assembler.assembleWithLabels(assembly, m_labelMap);
+    std::vector<DataDirective> dataDirectives;
+    m_instructions = assembler.assembleWithLabels(assembly, m_labelMap, dataDirectives);
+    
+    // Initialize memory with data directives
+    for (const auto& directive : dataDirectives)
+    {
+        if (directive.type == DataDirective::WORD)
+        {
+            for (size_t i = 0; i < directive.words.size(); ++i)
+            {
+                uint32_t address = directive.address + (i * 4);
+                m_memory->writeWord(address, directive.words[i]);
+            }
+        }
+        else if (directive.type == DataDirective::BYTE || directive.type == DataDirective::ASCIIZ)
+        {
+            for (size_t i = 0; i < directive.bytes.size(); ++i)
+            {
+                uint32_t address = directive.address + i;
+                m_memory->writeByte(address, directive.bytes[i]);
+            }
+        }
+    }
+    
     m_pc           = 0;
     m_terminated   = false;  // Reset termination flag
 

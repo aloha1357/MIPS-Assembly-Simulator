@@ -194,14 +194,14 @@ std::unique_ptr<Instruction> InstructionDecoder::decodeIType(uint32_t word)
         // In a real implementation, this would need a symbol table
         return std::make_unique<BeqInstruction>(rs, rt, "label_" + std::to_string(signedImmediate));
     case 0x05:  // BNE instruction
-        // For BNE, use the signed immediate directly as offset
-        return std::make_unique<BneInstruction>(rs, rt, signedImmediate);
+        // For BNE, use a label placeholder based on the immediate value
+        return std::make_unique<BneInstruction>(rs, rt, "label_" + std::to_string(signedImmediate));
     case 0x06:  // BLEZ instruction
         // For BLEZ, only rs is used, rt is ignored (should be 0)
-        return std::make_unique<BLEZInstruction>(rs, signedImmediate);
+        return std::make_unique<BLEZInstruction>(rs, "label_" + std::to_string(signedImmediate));
     case 0x07:  // BGTZ instruction
         // For BGTZ, only rs is used, rt is ignored (should be 0)
-        return std::make_unique<BGTZInstruction>(rs, signedImmediate);
+        return std::make_unique<BGTZInstruction>(rs, "label_" + std::to_string(signedImmediate));
     case 0x0C:  // ANDI instruction
         return std::make_unique<AndiInstruction>(rt, rs, signedImmediate);
     case 0x0D:  // ORI instruction

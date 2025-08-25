@@ -11,6 +11,21 @@ namespace mips
 class Instruction;
 
 /**
+ * @brief Data directive for memory initialization
+ */
+struct DataDirective
+{
+    enum Type { WORD, BYTE, ASCIIZ };
+    
+    Type type;
+    uint32_t address;
+    std::vector<uint32_t> words;  // For .word directives
+    std::vector<uint8_t> bytes;   // For .byte and .asciiz directives
+    
+    DataDirective(Type t, uint32_t addr) : type(t), address(addr) {}
+};
+
+/**
  * @brief Simple assembler for MIPS instructions
  */
 class Assembler
@@ -34,6 +49,17 @@ class Assembler
     std::vector<std::unique_ptr<Instruction>>
     assembleWithLabels(const std::string& assembly, std::map<std::string, uint32_t>& labelMap);
 
+    /**
+     * @brief Parse assembly code with label support and return instructions + label map + data
+     * @param assembly Assembly code as string
+     * @param[out] labelMap Map of label names to instruction addresses
+     * @param[out] dataDirectives Vector of data directives for memory initialization
+     * @return Vector of parsed instructions
+     */
+    std::vector<std::unique_ptr<Instruction>>
+    assembleWithLabels(const std::string& assembly, std::map<std::string, uint32_t>& labelMap,
+                       std::vector<DataDirective>& dataDirectives);
+
   private:
     std::map<std::string, int> m_registerMap;
 
@@ -41,6 +67,11 @@ class Assembler
      * @brief Parse a single instruction line
      */
     std::unique_ptr<Instruction> parseInstruction(const std::string& line);
+
+    /**
+     * @brief Parse a data directive line
+     */
+    bool parseDataDirective(const std::string& line, uint32_t address, DataDirective& directive);
 
     /**
      * @brief Get register number from name
