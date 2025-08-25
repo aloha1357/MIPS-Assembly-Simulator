@@ -107,6 +107,9 @@ void Cpu::loadProgramFromString(const std::string& assembly)
     std::vector<DataDirective> dataDirectives;
     m_instructions = assembler.assembleWithLabels(assembly, m_labelMap, dataDirectives);
     
+    // Debug: Print data directives count
+    // std::cerr << "DEBUG: Found " << dataDirectives.size() << " data directives" << std::endl;
+    
     // Initialize memory with data directives
     for (const auto& directive : dataDirectives)
     {
@@ -231,15 +234,17 @@ uint32_t Cpu::getLabelAddress(const std::string& label) const
     {
         uint32_t address = it->second;
         
-        // Better heuristic: data addresses are typically large multiples of 4,
-        // while instruction indices are typically small integers
-        if (address < 1000 || address % 4 != 0)  // Likely instruction index
+        // Debug output for problematic labels (disabled for now)
+        // if (label == "label3" || label == "label4" || label == "label5" || label == "target")
+        // {
+        //     std::cerr << "LABEL DEBUG: " << label << " maps to " << address 
+        //               << " (instructions.size=" << m_instructions.size() << ")" << std::endl;
+        // }
+        
+        // Better heuristic: data addresses are typically after all instructions
+        // Instructions are indexed 0, 1, 2, ... and data starts at (instructionCount * 4)
+        if (address < m_instructions.size())  // Definitely instruction index
         {
-            // Ensure instruction index is within bounds
-            if (address >= m_instructions.size()) {
-                // Find the actual end of instructions (typically trap exit)
-                return (m_instructions.size() - 1) * 4;
-            }
             return address * 4;  // Convert to byte address
         }
         else  // Likely data address (already byte address)

@@ -3,6 +3,7 @@
 #include "Memory.h"
 #include "RegisterFile.h"
 #include <cstdio>
+#include <iostream>
 
 namespace mips
 {

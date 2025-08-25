@@ -103,10 +103,12 @@ Assembler::assembleWithLabels(const std::string&               assembly,
     {
         line = allLines[lineIndex];
         
-        // Check if this line is a label (ends with ':')
-        if (line.back() == ':')
+        // Check if this line is a label (contains ':')
+        size_t colonPos = line.find(':');
+        if (colonPos != std::string::npos)
         {
-            std::string labelName = line.substr(0, line.length() - 1);
+            std::string labelName = line.substr(0, colonPos);
+            labelName = trim(labelName); // Remove any whitespace around label name
             
             // Look ahead to see if next line is a data directive
             bool nextLineIsData = false;
