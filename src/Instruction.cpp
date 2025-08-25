@@ -2,6 +2,7 @@
 #include "Cpu.h"
 #include "Memory.h"
 #include "RegisterFile.h"
+#include <cstdio>
 
 namespace mips
 {
@@ -951,11 +952,12 @@ JRInstruction::JRInstruction(int rs) : RTypeInstruction(0, rs, 0)
 
 void JRInstruction::execute(Cpu& cpu)
 {
-    // Read target address from source register
-    uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
+    // Read target address from source register (byte address from LA instruction)
+    uint32_t targetByteAddress = cpu.getRegisterFile().read(m_rs);
 
-    // Set PC to target address (LA instruction provides instruction index directly)
-    cpu.setProgramCounter(targetAddress);
+    // Convert byte address to instruction index and set PC
+    uint32_t targetInstructionIndex = targetByteAddress / 4;
+    cpu.setProgramCounter(targetInstructionIndex);
 }
 
 std::string JRInstruction::getName() const
@@ -970,7 +972,7 @@ JALInstruction::JALInstruction(uint32_t target) : m_target(target) {}
 void JALInstruction::execute(Cpu& cpu)
 {
     // Save return address in $ra (register 31)
-    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
+    uint32_t returnAddress = cpu.getProgramCounter() + 1;  // Next instruction index
     cpu.getRegisterFile().write(31, returnAddress);
 
     // Jump to target address
@@ -989,12 +991,13 @@ JALLabelInstruction::JALLabelInstruction(const std::string& label) : m_label(lab
 void JALLabelInstruction::execute(Cpu& cpu)
 {
     // Save return address in $ra (register 31)
-    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
+    uint32_t returnAddress = cpu.getProgramCounter() + 1;  // Next instruction index
     cpu.getRegisterFile().write(31, returnAddress);
 
-    // Jump to label address (instruction index)
-    uint32_t targetAddress = cpu.getLabelAddress(m_label);
-    cpu.setProgramCounter(targetAddress);  // Direct assignment like JInstruction
+    // Jump to label address (convert byte address to instruction index)
+    uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+    uint32_t targetInstructionIndex = targetByteAddress / 4;
+    cpu.setProgramCounter(targetInstructionIndex);
 }
 
 std::string JALLabelInstruction::getName() const
@@ -1010,15 +1013,16 @@ JALRInstruction::JALRInstruction(int rd, int rs) : RTypeInstruction(rd, rs, 0)
 
 void JALRInstruction::execute(Cpu& cpu)
 {
-    // Read target address from source register
-    uint32_t targetAddress = cpu.getRegisterFile().read(m_rs);
+    // Read target address from source register (byte address from LA instruction)
+    uint32_t targetByteAddress = cpu.getRegisterFile().read(m_rs);
 
     // Save return address in destination register
-    uint32_t returnAddress = (cpu.getProgramCounter() + 1) * 4;  // Next instruction address
+    uint32_t returnAddress = cpu.getProgramCounter() + 1;  // Next instruction index
     cpu.getRegisterFile().write(m_rd, returnAddress);
 
-    // Jump to target address (LA instruction provides instruction index directly)
-    cpu.setProgramCounter(targetAddress);
+    // Convert byte address to instruction index and jump
+    uint32_t targetInstructionIndex = targetByteAddress / 4;
+    cpu.setProgramCounter(targetInstructionIndex);
 }
 
 std::string JALRInstruction::getName() const
