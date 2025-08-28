@@ -970,8 +970,19 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     else if (opcode == "sh" && tokens.size() >= 3)
     {
         // Parse: sh $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        std::string rtStr = tokens[1];
+        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and (reg)
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            // Remove any stray commas
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
         if (rtStr.back() == ',')
@@ -1018,12 +1029,21 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     }
     else if (opcode == "lhu" && tokens.size() >= 3)
     {
-        // Parse: lhu $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        // Parse: lhu $rt, offset($rs) -- accept both "0($a1)" and "0 ($a1)"
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
-        if (rtStr.back() == ',')
+        if (!rtStr.empty() && rtStr.back() == ',')
             rtStr.pop_back();
 
         int rt = getRegisterNumber(rtStr);
@@ -1035,7 +1055,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 std::string offsetStr = offsetRegStr.substr(0, parenPos);
                 std::string rsStr     = offsetRegStr.substr(parenPos + 1);
-                if (rsStr.back() == ')')
+                if (!rsStr.empty() && rsStr.back() == ')')
                     rsStr.pop_back();
 
                 int rs = getRegisterNumber(rsStr);
@@ -1050,10 +1070,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                             {
                                 offsetStr = offsetStr.substr(1);
                             }
-                            if (!offsetStr.empty())
-                            {
-                                offset = static_cast<int16_t>(std::stoi(offsetStr));
-                            }
+                            offset = static_cast<int16_t>(std::stoi(offsetStr));
                         }
                         return std::make_unique<LHUInstruction>(rt, rs, offset);
                     }
@@ -1067,12 +1084,21 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     }
     else if (opcode == "lh" && tokens.size() >= 3)
     {
-        // Parse: lh $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        // Parse: lh $rt, offset($rs) -- accept both "0($a1)" and "0 ($a1)"
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
-        if (rtStr.back() == ',')
+        if (!rtStr.empty() && rtStr.back() == ',')
             rtStr.pop_back();
 
         int rt = getRegisterNumber(rtStr);
@@ -1084,7 +1110,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 std::string offsetStr = offsetRegStr.substr(0, parenPos);
                 std::string rsStr     = offsetRegStr.substr(parenPos + 1);
-                if (rsStr.back() == ')')
+                if (!rsStr.empty() && rsStr.back() == ')')
                     rsStr.pop_back();
 
                 int rs = getRegisterNumber(rsStr);
@@ -1113,9 +1139,18 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     }
     else if (opcode == "lw" && tokens.size() >= 3)
     {
-        // Parse: lw $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        // Parse: lw $rt, offset($rs) -- accept both "0($a1)" and "0 ($a1)"
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
         if (rtStr.back() == ',')
@@ -1162,9 +1197,18 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     }
     else if (opcode == "sw" && tokens.size() >= 3)
     {
-        // Parse: sw $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        // Parse: sw $rt, offset($rs) -- accept both "0($a1)" and "0 ($a1)"
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
         if (rtStr.back() == ',')
