@@ -1,587 +1,535 @@
-# MIPS Simulator - Final Project Report
+﻿# MIPS 模擬器專案架構與設計
 
-## Project Overview
+## 專案目錄結構
 
-This project implements a MIPS assembly simulator with a 5-stage pipeline architecture. The simulator supports core MIPS instructions and provides both command-line and graphical interfaces for educational purposes.
+`
+MIPS-Assembly-Simulator/
+ src/                    # 核心模擬器程式碼
+    Cpu.h/.cpp         # CPU 管線實現 (5階段)
+    Memory.h/.cpp      # 記憶體管理系統
+    RegisterFile.h/.cpp # 暫存器檔案
+    Assembler.h/.cpp   # 組譯器 (雙階段)
+    Instruction.h/.cpp # 指令類別層次結構
+    IFStage.h/.cpp     # 取指階段
+    IDStage.h/.cpp     # 解碼階段
+    EXStage.h/.cpp     # 執行階段
+    MEMStage.h/.cpp    # 記憶體階段
+    WBStage.h/.cpp     # 寫回階段
+    tools/             # 實用工具
+        clean_runner.cpp     # 清除輸出執行器
+        cli_trace_runner.cpp # 追蹤除錯器
+        dump_labels.cpp      # 標籤分析器
+ tests/                 # 測試套件
+    test_*.cpp         # 各指令測試
+    CMakeLists.txt     # 測試建構配置
+ assignment/            # 最終專案交付
+    test/              # 最終測試檔案
+       instructions.asm    # 完整測試套件
+       instructions.out    # 預期輸出
+    report.md          # 專案報告
+ CMakeLists.txt        # 主要建構配置
+ README.md             # 專案說明
+`
 
-### Key Features
-- 5-Stage Pipeline: IF → ID → EX → MEM → WB
-- Command Line Interface (CLI)
-- Graphical User Interface (GUI) using Qt6
-- Comprehensive test suite using GoogleTest
-- Support for 67+ core MIPS instructions
+## MIPS 設計架構
 
-## Architecture Design
+### 1. 五階段管線設計
+`
+IF (Instruction Fetch) -> ID (Instruction Decode) -> EX (Execute) -> MEM (Memory) -> WB (Write Back)
+`
 
-### Core Components
+### 2. 核心元件
 
-#### CPU Pipeline
-The simulator implements a classic 5-stage MIPS pipeline:
-1. **Instruction Fetch (IF)**: Fetches instructions from memory
-2. **Instruction Decode (ID)**: Decodes instructions and reads registers
-3. **Execute (EX)**: Performs arithmetic and logic operations
-4. **Memory Access (MEM)**: Handles load/store operations
-5. **Write Back (WB)**: Writes results back to registers
+#### CPU 類別 (Cpu.h/.cpp)
+`cpp
+class Cpu {
+public:
+    void tick();                    // 執行一個時鐘週期
+    void loadProgram(string path);  // 載入程式
+    void loadProgramFromString(string assembly); // 從字串載入
+    
+private:
+    unique_ptr<RegisterFile> m_registerFile;  // 32個暫存器
+    unique_ptr<Memory> m_memory;              // 4KB 記憶體
+    unique_ptr<Assembler> m_assembler;        // 組譯器
+    
+    // 管線階段
+    unique_ptr<IFStage> m_ifStage;
+    unique_ptr<IDStage> m_idStage;
+    unique_ptr<EXStage> m_exStage;
+    unique_ptr<MEMStage> m_memStage;
+    unique_ptr<WBStage> m_wbStage;
+};
+`
 
-#### Memory System
-- 4KB addressable memory space
-- Word-aligned memory access
-- Support for load and store operations
+#### 指令類別層次結構 (Instruction.h)
+`cpp
+class Instruction {           // 基礎指令類別
+    virtual void execute(Cpu& cpu) = 0;
+    virtual string getName() const = 0;
+};
 
-#### Register File
-- 32 general-purpose registers
-- Program counter management
-- Support for register read/write operations
+class RTypeInstruction : public Instruction {  // R型指令 (3個暫存器)
+    int m_rd, m_rs, m_rt;  // 目的、來源1、來源2
+};
 
-## Supported Instructions
+class ITypeInstruction : public Instruction {  // I型指令 (2個暫存器+立即數)
+    int m_rt, m_rs, m_immediate;
+};
 
-### Arithmetic Instructions (14)
-- `add rd, rs, rt` - Addition
-- `addu rd, rs, rt` - Addition (unsigned)
-- `addi rt, rs, immediate` - Add immediate
-- `addiu rt, rs, immediate` - Add immediate (unsigned)
-- `sub rd, rs, rt` - Subtraction
-- `subu rd, rs, rt` - Subtraction (unsigned)
-- `mult rs, rt` - Multiplication
-- `multu rs, rt` - Multiplication (unsigned)
-- `div rs, rt` - Division
-- `divu rs, rt` - Division (unsigned)
-- `mfhi rd` - Move from HI register
-- `mflo rd` - Move from LO register
-- `mthi rs` - Move to HI register
-- `mtlo rs` - Move to LO register
+class JTypeInstruction : public Instruction {  // J型指令 (跳躍)
+    int m_address;
+};
+`
 
-### Logical Instructions (7)
-- `and rd, rs, rt` - Bitwise AND
-- `or rd, rs, rt` - Bitwise OR
-- `xor rd, rs, rt` - Bitwise XOR
-- `nor rd, rs, rt` - Bitwise NOR
-- `andi rt, rs, immediate` - AND immediate
-- `ori rt, rs, immediate` - OR immediate
-- `xori rt, rs, immediate` - XOR immediate
+### 3. 支援的 MIPS 指令
 
-### Memory Instructions (8)
-- `lw rt, offset(rs)` - Load word
-- `sw rt, offset(rs)` - Store word
-- `lb rt, offset(rs)` - Load byte
-- `lbu rt, offset(rs)` - Load byte unsigned
-- `lh rt, offset(rs)` - Load halfword
-- `lhu rt, offset(rs)` - Load halfword unsigned
-- `sb rt, offset(rs)` - Store byte
-- `sh rt, offset(rs)` - Store halfword
+#### 算術指令 (14個)
+- dd/sub/addu/subu rd, rs, rt - 加減法
+- ddi/addiu rt, rs, immediate - 加立即數
+- mult/multu/div/divu rs, rt - 乘除法
+- mfhi/mflo rd - 讀取 HI/LO 暫存器
 
-### Jump Instructions (4)
-- `j label` - Jump
-- `jal label` - Jump and link
-- `jr rs` - Jump register
-- `jalr rd, rs` - Jump and link register
+#### 邏輯指令 (7個)
+- nd/or/xor/nor rd, rs, rt - 位元運算
+- ndi/ori/xori rt, rs, immediate - 位元運算立即數
 
-### Branch Instructions (6)
-- `beq rs, rt, label` - Branch if equal
-- `bne rs, rt, label` - Branch if not equal
-- `blez rs, label` - Branch if less than or equal to zero
-- `bgtz rs, label` - Branch if greater than zero
-- `bltz rs, label` - Branch if less than zero
-- `bgez rs, label` - Branch if greater than or equal to zero
+#### 記憶體指令 (8個)
+- lw/sw rt, offset(rs) - 載入/儲存字組
+- lb/lbu rt, offset(rs) - 載入位元組 (有/無符號)
+- lh/lhu rt, offset(rs) - 載入半字組 (有/無符號)
+- sb/sh rt, offset(rs) - 儲存位元組/半字組
 
-### Shift Instructions (6)
-- `sll rd, rt, shamt` - Shift left logical
-- `srl rd, rt, shamt` - Shift right logical
-- `sra rd, rt, shamt` - Shift right arithmetic
-- `sllv rd, rt, rs` - Shift left logical variable
-- `srlv rd, rt, rs` - Shift right logical variable
-- `srav rd, rt, rs` - Shift right arithmetic variable
+#### 跳躍指令 (4個)
+- j label - 跳躍
+- jal label - 跳躍並連結
+- jr rs - 跳躍暫存器
+- jalr rd, rs - 跳躍並連結暫存器
 
-### Comparison Instructions (3)
-- `slt rd, rs, rt` - Set if less than
-- `sltu rd, rs, rt` - Set if less than unsigned
-- `slti rt, rs, immediate` - Set if less than immediate
-- `sltiu rt, rs, immediate` - Set if less than immediate unsigned
+#### 分支指令 (6個)
+- eq/bne rs, rt, label - 分支相等/不相等
+- lez/bgtz rs, label - 分支小於等於/大於零
+- ltz/bgez rs, label - 分支小於/大於等於零
 
-### System Instructions (8)
-- `syscall` - System call (supports 8 different operations)
-  - print_int (syscall 1)
-  - print_string (syscall 4)
-  - read_int (syscall 5)
-  - read_string (syscall 8)
-  - print_char (syscall 11)
-  - read_char (syscall 12)
-  - exit (syscall 10)
-  - print_float (syscall 2)
+#### 移位指令 (6個)
+- sll/srl/sra rd, rt, shamt - 邏輯/算術移位
+- sllv/srlv/srav rd, rt, rs - 可變移位
 
-### Load Upper Instructions (2)
-- `lui rt, immediate` - Load upper immediate
-- `llo rt, immediate` - Load lower immediate
+#### 比較指令 (3個)
+- slt/sltu rd, rs, rt - 設定小於 (有/無符號)
+- slti/sltiu rt, rs, immediate - 設定小於立即數
 
-## Project Architecture
+#### 載入立即數 (2個)
+- lui rt, immediate - 載入上半部
+- llo rt, immediate - 載入下半部
 
-### Directory Structure
-```
-project/
-├── src/                    # Core simulator source code
-│   ├── Assembler.*         # Two-pass assembler implementation
-│   ├── Cpu.*              # CPU pipeline and execution logic
-│   ├── Memory.*           # Memory management system
-│   ├── RegisterFile.*     # Register file implementation
-│   ├── Instruction.*      # Instruction decoding and execution
-│   ├── *.cpp/.h           # Other core components
-│   └── tools/             # Utility tools
-│       ├── clean_runner.cpp    # Clean output runner
-│       ├── cli_trace_runner.cpp # Debug trace runner
-│       └── dump_labels.cpp     # Label dumping utility
-├── tests/                 # Test suite (60+ test files)
-│   ├── test_*.cpp         # Individual test files
-│   └── CMakeLists.txt     # Test build configuration
-├── assignment/            # Final project deliverables
-│   ├── test/              # Final test cases
-│   │   ├── instructions.asm   # Comprehensive test suite
-│   │   └── instructions.out   # Expected output
-│   └── report.md          # This report
-├── build/                 # Build directories
-│   ├── build/             # Standard build
-│   ├── build-full/        # Full test build
-│   ├── build-cli/         # CLI-only build
-│   └── build-*            # Other configurations
-├── scripts/               # Build and test scripts
-├── docs/                  # Documentation
-└── CMakeLists.txt         # Main build configuration
-```
+#### 系統呼叫 (8個)
+- syscall 支援：
+  - 1: print_int
+  - 4: print_string  
+  - 5: read_int
+  - 8: read_string
+  - 10: exit
+  - 11: print_char
+  - 12: read_char
+  - 2: print_float
 
-### Core Modules
+## 程式設計
 
-#### Assembler Module (`Assembler.cpp/h`)
-- Two-pass assembler with label resolution
-- Converts MIPS assembly to machine code
-- Supports all MIPS instruction formats
-- Error handling and validation
+### 1. 組譯器設計
+專案使用雙階段組譯器：
+- 第一階段：建立符號表，解析標籤
+- 第二階段：產生機器碼
 
-#### CPU Module (`Cpu.cpp/h`)
-- 5-stage pipeline implementation
-- Single-cycle and pipelined execution modes
-- Instruction execution and hazard handling
-- Program counter management
+### 2. 管線實現
+每個管線階段都實現為獨立的類別：
+- IFStage: 從記憶體取指令
+- IDStage: 解碼指令，讀取暫存器
+- EXStage: 執行算術邏輯運算
+- MEMStage: 處理記憶體存取
+- WBStage: 寫回結果到暫存器
 
-#### Memory Module (`Memory.cpp/h`)
-- 4KB word-aligned memory space
-- Load/store operations
-- Memory-mapped I/O support
-- Byte, halfword, and word access
+### 3. 記憶體系統
+- 4KB 位址空間
+- 字組對齊存取
+- 支援位元組、半字組、字組操作
 
-#### Instruction Module (`Instruction.cpp/h`)
-- Instruction decoding and encoding
-- Execution logic for all supported instructions
-- System call handling
-- Pipeline stage management
+### 4. 暫存器檔案
+- 32個通用暫存器 (0-31)
+- 特殊用途暫存器 (ra, sp, 等)
+- HI/LO 暫存器用於乘除法
 
-#### Register File (`RegisterFile.cpp/h`)
-- 32 general-purpose registers ($0-$31)
-- Special registers ($ra, $sp, etc.)
-- HI/LO registers for multiplication/division
-- Register read/write operations
+## Windows 系統使用指南
 
-## Build System
+### 1. 環境需求
+- 編譯器: Visual Studio 2022 (MSVC) 或 MinGW
+- 建構工具: CMake 3.20+
+- 測試框架: Google Test
 
-### CMake Configuration
-The project uses CMake with the following configurations:
+### 2. 建構專案
 
-#### Main CMakeLists.txt
-```cmake
-cmake_minimum_required(VERSION 3.20)
-project(MipsSim LANGUAGES CXX)
-
-# Core library
-add_subdirectory(src)
-
-# Optional components
-option(BUILD_TESTING "Build tests" ON)
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()
-
-# Optional Qt GUI (currently disabled)
-option(ENABLE_QT "Build Qt GUI" OFF)
-```
-
-#### Source Directory CMakeLists.txt
-```cmake
-# Core library
-add_library(mips_core ${SRC_ALL})
-target_include_directories(mips_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-# CLI executable
-add_executable(mips_cli main.cpp)
-target_link_libraries(mips_cli PRIVATE mips_core)
-
-# Utility tools
-add_executable(clean_runner tools/clean_runner.cpp)
-add_executable(cli_trace_runner tools/cli_trace_runner.cpp)
-add_executable(dump_labels tools/dump_labels.cpp)
-```
-
-#### Test Directory CMakeLists.txt
-```cmake
-# GoogleTest integration
-include(FetchContent)
-FetchContent_Declare(googletest GIT_REPOSITORY https://github.com/google/googletest.git)
-FetchContent_MakeAvailable(googletest)
-
-# Test modes
-option(FULL_TESTS "Enable full test suite" OFF)
-
-# Test executable
-add_executable(mips_tests ${EXISTING_TEST_SOURCES})
-target_link_libraries(mips_tests PRIVATE gtest_main gtest mips_core)
-```
-
-### Build Configurations
-
-#### Standard Build (`build/`)
-- Core functionality only
-- Fast compilation
-- Essential tests only
-- Used for development
-
-#### Full Build (`build-full/`)
-- Complete test suite
-- All 60+ test files
-- Comprehensive validation
-- Slower compilation
-
-#### CLI Build (`build-cli/`)
-- Command-line interface only
-- Minimal dependencies
-- Fastest compilation
-
-## Testing Framework
-
-### GoogleTest Integration
-- **Framework**: Google Test v1.14.0 (fetched automatically)
-- **Test Discovery**: Automatic test registration
-- **Test Execution**: `ctest` integration
-- **Test Filtering**: Support for test categories
-
-### Test Categories
-
-#### Core Instruction Tests
-- Arithmetic operations (add, sub, mult, div)
-- Logical operations (and, or, xor, nor)
-- Memory operations (lw, sw, lb, sb)
-- Jump and branch instructions
-- Shift operations
-- System calls
-
-#### Integration Tests
-- Pipeline execution
-- Memory consistency
-- Register file operations
-- Assembler functionality
-
-#### System Tests
-- CLI argument parsing
-- File I/O operations
-- Error handling
-- Performance validation
-
-### Test Execution Scripts
-
-#### Core Tests (`run_core_tests.ps1`)
-```powershell
-# Quick testing mode
-cmake -DFULL_TESTS=OFF -DCMAKE_BUILD_TYPE=Release ..
-cmake --build . --config Release
-.\tests\mips_tests.exe
-```
-
-#### Full Tests (`run_full_tests.ps1`)
-```powershell
-# Comprehensive testing mode
-cmake -DFULL_TESTS=ON -DCMAKE_BUILD_TYPE=Release ..
-cmake --build . --config Release
-.\tests\mips_tests.exe
-```
-
-## How to Build and Run
-
-### Prerequisites
-- **C++ Compiler**: MSVC 2022, GCC 11+, or Clang 14+
-- **CMake**: Version 3.20 or higher
-- **Git**: For dependency management
-- **Windows PowerShell**: For build scripts
-
-### Quick Start
-
-#### 1. Clone and Setup
-```bash
-git clone <repository-url>
-cd mips-simulator
-```
-
-#### 2. Standard Build (Recommended)
-```bash
-# Create build directory
+#### 基本建構
+`ash
 cmake -B build -DCMAKE_BUILD_TYPE=Release
-
-# Build the project
 cmake --build build --config Release
+`
 
-# Run core tests
-.\build\tests\mips_tests.exe
-```
-
-#### 3. CLI Execution
-```bash
-# Run MIPS program
-.\build\src\mips_cli.exe run assignment\test\instructions.asm
-
-# Use clean runner for output comparison
-.\build\src\clean_runner.exe assignment\test\instructions.asm
-```
-
-#### 4. Full Test Suite
-```bash
-# Run comprehensive tests
-.\run_full_tests.ps1
-
-# Or manually
+#### 完整測試建構
+`ash
 cmake -B build-full -DFULL_TESTS=ON -DCMAKE_BUILD_TYPE=Release
 cmake --build build-full --config Release
-.\build-full\tests\mips_tests.exe
-```
+`
 
-### Build Targets
+### 3. 執行測試
 
-#### Executables
-- `mips_cli` - Command-line MIPS simulator
-- `clean_runner` - Clean output runner (no debug info)
-- `cli_trace_runner` - Debug trace runner
-- `dump_labels` - Label analysis tool
-- `mips_tests` - Test suite executable
+#### 運行所有測試
+`ash
+./build/tests/mips_tests.exe
+`
 
-#### Libraries
-- `mips_core` - Core simulator library
-- `gtest` - GoogleTest framework (auto-downloaded)
+#### 運行特定測試類別
+`ash
+# 運行算術指令測試
+./build/tests/mips_tests.exe --gtest_filter="*Arithmetic*"
 
-## Test Results and Validation
+# 運行記憶體指令測試
+./build/tests/mips_tests.exe --gtest_filter="*Memory*"
 
-### Current Test Status
-✅ **100% Pass Rate Achieved**
+# 運行跳躍指令測試
+./build/tests/mips_tests.exe --gtest_filter="*Jump*"
+`
 
-**Final Test Results** (August 28, 2025):
-- **Total Tests**: 60 test cases
-- **Passed**: 60 tests
-- **Failed**: 0 tests
-- **Pass Rate**: 100.0%
+#### 運行單一測試
+`ash
+# 運行特定測試案例
+./build/tests/mips_tests.exe --gtest_filter="ArithmeticTest.AddInstruction"
+`
 
-### Critical Bug Fixes
+### 4. 執行 MIPS 程式
 
-#### 1. SB Instruction Parsing Bug (Fixed)
-**Problem**: Store byte instruction (`sb rt, offset(rs)`) was not executing correctly due to incorrect parsing of the offset format.
+#### 使用 CLI 執行器
+`ash
+# 執行完整測試套件
+./build/src/clean_runner.exe assignment/test/instructions.asm
 
-**Root Cause**: Assembler was not properly handling the `offset($rs)` format for store instructions.
+# 執行自訂程式
+./build/src/clean_runner.exe your_program.asm
+`
 
-**Solution**: Updated `Assembler.cpp` parsing logic to correctly extract offset and register components.
+#### 使用主程式
+`ash
+# 載入並執行程式
+./build/src/mips_cli.exe run assignment/test/instructions.asm
+`
 
-**Impact**: Fixed all memory store operations for byte-sized data.
+### 5. 測試輸出驗證
 
-#### 2. JAL Return Address Calculation Bug (Fixed)
-**Problem**: Jump and link instruction (`jal`) was calculating incorrect return address.
+#### 比較實際輸出與預期輸出
+`ash
+# 產生實際輸出
+./build/src/clean_runner.exe assignment/test/instructions.asm > actual_output.txt
 
-**Root Cause**: Return address was using `PC + 8` instead of the correct `PC + 4`.
+# 使用 PowerShell 比較檔案
+Compare-Object (Get-Content actual_output.txt) (Get-Content assignment/test/instructions.out)
+`
 
-**Solution**: Updated `Instruction.cpp` to use `PC + 4` for return address calculation.
+### 6. 除錯功能
 
-**Impact**: Fixed all function call and return operations.
+#### 使用追蹤執行器
+`ash
+# 顯示詳細執行追蹤
+./build/src/cli_trace_runner.exe assignment/test/instructions.asm
+`
 
-### Test Validation Process
+#### 分析標籤
+`ash
+# 顯示程式中的所有標籤
+./build/src/dump_labels.exe assignment/test/instructions.asm
+`
 
-#### Automated Testing
+## CLI 指令說明
+
+### 1. 主要 CLI 工具
+
+專案提供了兩套 CLI 工具系統來支援不同的使用情境：
+
+#### A. 舊版簡單工具 (src/tools/)
+
+##### clean_runner.exe - 清除輸出執行器
+**用途**: 執行 MIPS 程式並產生詳細的執行追蹤和輸出
+
+**語法**:
 ```bash
-# Run complete test suite
-.\build\tests\mips_tests.exe
-
-# Run specific test categories
-ctest --test-dir build -R "Arithmetic"
-ctest --test-dir build -R "Memory"
-ctest --test-dir build -R "Jump"
+./build/src/clean_runner.exe <asm-file>
 ```
 
-#### Output Comparison
+**功能特點**:
+- 載入並執行指定的 MIPS 組譯程式
+- 顯示詳細的執行追蹤資訊 (DEBUG/TRACE)
+- 輸出程式執行的結果到控制台
+- 將程式輸出寫入 `tmp_clean_utf8.out` 檔案
+- 顯示每個指令的執行細節和暫存器變化
+
+**實際輸出範例**:
+```
+DEBUG: Exec pc=0 instr='lhi'
+TRACE: RegisterFile::write reg=4 value=65536
+DEBUG: Exec pc=1 instr='llo'
+TRACE: RegisterFile::write reg=4 value=65536
+DEBUG: Exec pc=2 instr='trap'
+TRACE: Cpu::printInt pc=2 value=65536
+...
+65536
+131072
+32768
+```
+
+##### cli_trace_runner.exe - 追蹤執行器
+**用途**: 逐步執行程式並顯示程式計數器和返回地址
+
+**語法**:
 ```bash
-# Generate actual output
-.\build\src\clean_runner.exe assignment\test\instructions.asm > actual_output.txt
-
-# Compare with expected output
-Compare-Object (Get-Content actual_output.txt) (Get-Content assignment\test\instructions.out)
+./build/src/cli_trace_runner.exe <asm-file> <maxSteps>
 ```
 
-#### Performance Validation
+**功能特點**:
+- 逐步執行程式，最多執行指定的步數
+- 顯示每個步驟的程式計數器 (PC) 和返回地址暫存器 ($ra)
+- 當程式終止或達到步數限制時自動停止
+- 適合用於除錯和程式流程分析
+
+**輸出格式**:
+```
+step=0 pc=0 $ra=0
+step=1 pc=4 $ra=0
+step=2 pc=8 $ra=16
+```
+
+##### dump_labels.exe - 標籤分析器
+**用途**: 分析程式中的標籤、指令和資料結構
+
+**語法**:
 ```bash
-# Measure test execution time
-Measure-Command { .\build\tests\mips_tests.exe }
-
-# Expected: < 30ms for all tests
+./build/src/dump_labels.exe <asm-file>
 ```
 
-### Test Coverage
+**功能特點**:
+- 顯示程式中的所有標籤及其地址
+- 列出所有指令及其原始碼
+- 分析資料區段的結構
+- 提供程式組譯的詳細統計資訊
 
-#### Instruction Coverage
-- ✅ **Arithmetic**: 14/14 instructions tested
-- ✅ **Logical**: 7/7 instructions tested
-- ✅ **Memory**: 8/8 instructions tested
-- ✅ **Jump**: 4/4 instructions tested
-- ✅ **Branch**: 6/6 instructions tested
-- ✅ **Shift**: 6/6 instructions tested
-- ✅ **Comparison**: 4/4 instructions tested
-- ✅ **System**: 8/8 syscall operations tested
+**輸出資訊**:
+- 指令數量和資料指示符統計
+- 標籤映射表 (label -> address)
+- 指令列表 (索引、指令名稱、原始碼)
+- 資料區段分析
 
-#### Functional Coverage
-- ✅ Pipeline execution
-- ✅ Memory consistency
-- ✅ Register file operations
-- ✅ Assembler functionality
-- ✅ Error handling
-- ✅ Performance validation
+##### jal_debug_runner.exe - JAL 除錯器
+**用途**: 專門用於除錯函數呼叫 (jal/jr) 的工具
 
-## Educational Value
-
-This MIPS simulator serves as an educational tool for learning:
-
-- **MIPS Assembly Language**: Complete instruction set coverage
-- **Computer Architecture**: 5-stage pipeline implementation
-- **Memory Management**: Load/store operations and addressing
-- **Control Flow**: Branches, jumps, and function calls
-- **System Programming**: System calls and I/O operations
-- **Testing and Validation**: Comprehensive test suite development
-
-### Sample Usage Scenarios
-
-#### Basic Arithmetic
-```mips
-addi $t0, $zero, 15    # $t0 = 15
-addi $t1, $zero, 25    # $t1 = 25
-add $t2, $t0, $t1      # $t2 = 40
-syscall                # Print result
+**語法**:
+```bash
+./build/src/jal_debug_runner.exe <asm-file> [maxSteps]
 ```
 
-#### Memory Operations
-```mips
-addi $t0, $zero, 42    # $t0 = 42
-sw $t0, 0($zero)       # Store to memory
-lw $t1, 0($zero)       # Load from memory
-syscall                # Print loaded value
+**功能特點**:
+- 專注於函數呼叫的除錯
+- 顯示程式計數器和返回地址暫存器的變化
+- 預設最大步數為1000，可自訂
+- 提供函數呼叫流程的可視化
+
+##### mips_cli.exe - 主程式
+**用途**: 基本的 MIPS 程式載入和執行工具
+
+**語法**:
+```bash
+./build/src/mips_cli.exe <assembly_file>
 ```
 
-#### Function Calls
-```mips
-jal my_function        # Call function
-# ... continue execution
+**功能特點**:
+- 載入指定的組譯程式
+- 預設執行10個週期
+- 顯示執行週期數
+- 簡單的程式測試工具
+
+#### B. 新版完整CLI工具 (cli/)
+
+##### mipsim.exe - 完整CLI工具
+**用途**: 功能完整的MIPS模擬器CLI工具
+
+**語法**:
+```bash
+./build/cli/mipsim.exe <command> [options]
+```
+
+**支援的命令**:
+- `run` - 執行程式
+- `assemble` - 組譯程式
+- `disasm` - 反組譯程式
+- `repl` - 互動式shell
+- `dump` - 顯示狀態
+- `help` - 顯示幫助
+- `version` - 顯示版本
+
+**主要功能**:
+```bash
+# 執行程式
+./build/cli/mipsim.exe run program.asm --limit 1000 --trace regs
+
+# 組譯程式
+./build/cli/mipsim.exe assemble src.asm -o out.bin --map symbols.map
+
+# 顯示版本
+./build/cli/mipsim.exe --version
+```
+
+### 2. CLI 工具使用情境
+
+#### 開發和測試階段
+```bash
+# 1. 分析程式結構
+./build/src/dump_labels.exe program.asm
+
+# 2. 逐步除錯
+./build/src/cli_trace_runner.exe program.asm 50
+
+# 3. 產生測試輸出
+./build/src/clean_runner.exe program.asm > output.txt
+```
+
+#### 生產環境使用
+```bash
+# 快速執行程式
+./build/src/clean_runner.exe program.asm
+
+# 批次處理多個檔案
+for %f in (*.asm) do ./build/src/clean_runner.exe "%f"
+```
+
+#### 除錯複雜程式
+```bash
+# 分析函數呼叫
+./build/src/jal_debug_runner.exe complex_program.asm 200
+
+# 詳細追蹤執行流程
+./build/src/cli_trace_runner.exe complex_program.asm 1000
+```
+
+#### 使用新版CLI工具
+```bash
+# 設定執行限制
+./build/cli/mipsim.exe run program.asm --limit 1000 --timeout 30
+
+# 啟用追蹤
+./build/cli/mipsim.exe run program.asm --trace regs
+```
+
+### 3. 錯誤處理
+
+所有 CLI 工具都提供基本的錯誤處理：
+
+- **檔案不存在**: 顯示 "file open failed" 錯誤
+- **組譯失敗**: 顯示具體的組譯錯誤訊息
+- **參數錯誤**: 顯示正確的使用語法
+- **執行錯誤**: 顯示相關的錯誤資訊
+
+### 4. 輸出格式說明
+
+#### 控制台輸出
+- 程式執行結果直接輸出到控制台
+- 錯誤訊息輸出到 stderr
+- 除錯資訊以結構化格式顯示
+
+#### 檔案輸出
+- `tmp_clean_utf8.out`: 程式輸出的 UTF-8 檔案
+- 避免 PowerShell 的 UTF-16 重新導向問題
+- 適合用於檔案比較和測試驗證
+
+#### 追蹤輸出
+- 顯示每個指令的執行細節
+- 暫存器讀寫操作的追蹤
+- 程式計數器的變化
+- 記憶體存取操作的記錄
+
+## 程式設計範例
+
+### 基本算術操作
+`mips
+# 載入數字到暫存器
+addi , , 15    #  = 15
+addi , , 25    #  = 25
+
+# 執行算術運算
+add , ,       #  = 40 (15+25)
+sub , ,       #  = 10 (25-15)
+
+# 輸出結果
+trap print_int         # 輸出 40
+add , ,     # 設定輸出值
+trap print_int         # 輸出 10
+`
+
+### 記憶體操作
+`mips
+# 載入資料地址
+la , data
+
+# 載入不同大小的資料
+lb , 0()         # 載入位元組 (有符號)
+trap print_int
+lbu , 0()        # 載入位元組 (無符號)
+trap print_int
+lh , 0()         # 載入半字組
+trap print_int
+lw , 0()         # 載入字組
+trap print_int
+
+# 資料區段
+data:
+.word 255              # 字組資料
+.word 65535            # 另一個字組
+.byte 123              # 位元組資料
+.byte 111              # 另一個位元組
+`
+
+### 控制流程
+`mips
+# 條件分支
+addi , , 5
+addi , , 5
+beq , , equal    # 如果相等就跳轉
+addi , , 99    # 這行不會執行
+equal:
+addi , , 42    #  = 42
+
+# 函數呼叫
+jal my_function        # 呼叫函數
+trap exit              # 結束程式
 
 my_function:
-addi $v0, $zero, 100   # Return value
-jr $ra                 # Return to caller
-```
+addi , , 100   # 設定回傳值
+jr                  # 返回呼叫點
+`
 
-## Performance Characteristics
+### 系統呼叫
+`mips
+# 輸出整數
+addi , , 1     # 系統呼叫編號 1 (print_int)
+addi , , 42    # 要輸出的數字
+syscall                # 輸出 42
 
-### Build Performance
-- **Standard Build**: ~2-3 minutes
-- **Full Test Build**: ~10-30 minutes
-- **CLI Build**: ~1-2 minutes
+# 輸出字串
+addi , , 4     # 系統呼叫編號 4 (print_string)
+la , message        # 字串地址
+syscall                # 輸出字串
 
-### Runtime Performance
-- **Test Execution**: <30ms for all tests
-- **Program Execution**: Real-time for typical programs
-- **Memory Usage**: Minimal (< 10MB for most programs)
+# 結束程式
+addi , , 10    # 系統呼叫編號 10 (exit)
+syscall
 
-### Scalability
-- Supports programs up to 4KB memory space
-- Handles complex instruction sequences
-- Efficient pipeline implementation
+message:
+.asciiz "Hello, World!"
+`
 
-## Challenges and Solutions
-
-### Technical Challenges
-
-#### 1. Instruction Parsing Complexity
-**Challenge**: Complex MIPS instruction formats with varying operand structures.
-
-**Solution**: Implemented comprehensive parsing logic with format detection and validation.
-
-#### 2. Pipeline Hazard Management
-**Challenge**: Managing data hazards and control hazards in 5-stage pipeline.
-
-**Solution**: Implemented hazard detection and forwarding mechanisms.
-
-#### 3. Memory Alignment
-**Challenge**: Ensuring proper byte, halfword, and word alignment.
-
-**Solution**: Implemented alignment checking and byte-order handling.
-
-#### 4. System Call Integration
-**Challenge**: Supporting multiple system call types with proper I/O.
-
-**Solution**: Comprehensive syscall handler with input/output redirection.
-
-### Design Decisions
-
-#### Modular Architecture
-- Separated concerns between assembler, CPU, memory, and I/O
-- Enabled independent testing and development
-- Facilitated code reuse and maintenance
-
-#### Comprehensive Testing
-- Early test implementation alongside development
-- Automated test execution with detailed reporting
-- Enabled rapid bug detection and fixing
-
-#### Cross-Platform Compatibility
-- CMake-based build system for multiple platforms
-- Standard C++17 features for portability
-- Platform-specific optimizations where beneficial
-
-## Conclusion
-
-This MIPS simulator successfully demonstrates:
-
-- ✅ **Complete MIPS Implementation**: 67+ instructions with full functionality
-- ✅ **Robust Testing**: 100% pass rate with comprehensive validation
-- ✅ **Educational Value**: Complete learning platform for MIPS assembly
-- ✅ **Production Quality**: Well-documented, tested, and maintainable code
-- ✅ **Modern Development**: CMake, GoogleTest, and professional practices
-
-The project provides an excellent platform for learning computer architecture concepts through hands-on experimentation with MIPS assembly programming.
-
-## Build Instructions
-
-### Quick Setup
-```bash
-# Standard build (recommended)
-cmake -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release
-
-# Run tests
-.\build\tests\mips_tests.exe
-
-# Run simulator
-.\build\src\mips_cli.exe run assignment\test\instructions.asm
-```
-
-### Advanced Options
-```bash
-# Full test suite
-.\run_full_tests.ps1
-
-# CLI-only build
-cmake -B build-cli -DENABLE_QT=OFF
-cmake --build build-cli
-
-# Debug build
-cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build build-debug
-```
-
-### Troubleshooting
-- Ensure CMake 3.20+ is installed
-- Use Visual Studio 2022 for Windows development
-- Check that all dependencies are available
-- Run tests to validate installation
+這個專案實現了一個完整的 MIPS 模擬器，支援從基本算術到複雜控制流程的所有核心指令，並提供完整的測試框架和除錯工具。
