@@ -1,10 +1,11 @@
 #pragma once
 
-#include "cli.hpp"
 #include "../src/MipsSimulatorAPI.h"
+#include "cli.hpp"
 #include <string>
 
-namespace cli {
+namespace cli
+{
 
 /**
  * @brief Execute a MIPS program using the run command

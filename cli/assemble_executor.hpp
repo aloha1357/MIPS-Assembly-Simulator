@@ -2,7 +2,8 @@
 
 #include "cli.hpp"
 
-namespace cli {
+namespace cli
+{
 
 /**
  * @brief Execute the assemble command with the given configuration
