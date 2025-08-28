@@ -24,3 +24,8 @@ if (EXISTS "${MAIN_CANDIDATE}")
   target_link_libraries(mips_cli PRIVATE mips_core)
   target_compile_features(mips_cli PRIVATE cxx_std_20)
 endif()
+
+# Small debug runner to step CPU and print PC/$ra for debugging JAL/JR
+add_executable(jal_debug_runner "${CMAKE_CURRENT_SOURCE_DIR}/tools/jal_debug_runner.cpp")
+target_link_libraries(jal_debug_runner PRIVATE mips_core)
+target_compile_features(jal_debug_runner PRIVATE cxx_std_20)

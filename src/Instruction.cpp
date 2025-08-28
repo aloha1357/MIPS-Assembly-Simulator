@@ -963,6 +963,8 @@ void JRInstruction::execute(Cpu& cpu)
 
     // Convert byte address to instruction index and set PC
     uint32_t targetInstructionIndex = targetByteAddress / 4;
+    std::cerr << "DEBUG: JR execute - reg(" << m_rs << ") byteAddr=" << targetByteAddress
+              << " -> idx=" << targetInstructionIndex << " currentPC=" << cpu.getProgramCounter() << std::endl;
     cpu.setProgramCounter(targetInstructionIndex);
 }
 
@@ -978,10 +980,14 @@ JALInstruction::JALInstruction(uint32_t target) : m_target(target) {}
 void JALInstruction::execute(Cpu& cpu)
 {
     // Save return address in $ra (register 31)
-    uint32_t returnAddress = cpu.getProgramCounter() + 1;  // Next instruction index
-    cpu.getRegisterFile().write(31, returnAddress);
+    // Save return address in $ra (register 31) as a byte address so JR/JALR (which expect byte addresses)
+    // will work correctly. Program counter inside CPU is instruction index, so convert.
+    uint32_t returnInstructionIndex = cpu.getProgramCounter() + 1;  // Next instruction index
+    uint32_t returnByteAddress = returnInstructionIndex * 4;
+    cpu.getRegisterFile().write(31, returnByteAddress);
+    std::cerr << "DEBUG: JAL execute - save $ra=" << returnByteAddress << " (instrIdx=" << returnInstructionIndex << ") jumpToIdx=" << m_target << " currentPC=" << cpu.getProgramCounter() << std::endl;
 
-    // Jump to target address
+    // Jump to target address (m_target is expected to be an instruction index)
     cpu.setProgramCounter(m_target);
 }
 
@@ -996,13 +1002,13 @@ JALLabelInstruction::JALLabelInstruction(const std::string& label) : m_label(lab
 
 void JALLabelInstruction::execute(Cpu& cpu)
 {
-    // Save return address in $ra (register 31)
-    uint32_t returnAddress = cpu.getProgramCounter() + 1;  // Next instruction index
-    cpu.getRegisterFile().write(31, returnAddress);
-
-    // Jump to label address (convert byte address to instruction index)
+    // Save return address in $ra (register 31) as byte address for consistency with LA/JR
+    uint32_t returnInstructionIndex = cpu.getProgramCounter() + 1;  // Next instruction index
+    uint32_t returnByteAddress = returnInstructionIndex * 4;
+    cpu.getRegisterFile().write(31, returnByteAddress);
     uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
     uint32_t targetInstructionIndex = targetByteAddress / 4;
+    std::cerr << "DEBUG: JAL label execute - save $ra=" << returnByteAddress << " jumpToLabel='" << m_label << "' byteAddr=" << targetByteAddress << " -> idx=" << targetInstructionIndex << " currentPC=" << cpu.getProgramCounter() << std::endl;
     cpu.setProgramCounter(targetInstructionIndex);
 }
 
@@ -1023,8 +1029,11 @@ void JALRInstruction::execute(Cpu& cpu)
     uint32_t targetByteAddress = cpu.getRegisterFile().read(m_rs);
 
     // Save return address in destination register
-    uint32_t returnAddress = cpu.getProgramCounter() + 1;  // Next instruction index
-    cpu.getRegisterFile().write(m_rd, returnAddress);
+    // Save return address as byte address so that JR/JALR semantics are consistent
+    uint32_t returnInstructionIndex = cpu.getProgramCounter() + 1;  // Next instruction index
+    uint32_t returnByteAddress = returnInstructionIndex * 4;
+    cpu.getRegisterFile().write(m_rd, returnByteAddress);
+    std::cerr << "DEBUG: JALR execute - save reg(" << m_rd << ")=$ra=" << returnByteAddress << " targetByteAddr=" << targetByteAddress << " currentPC=" << cpu.getProgramCounter() << std::endl;
 
     // Convert byte address to instruction index and jump
     uint32_t targetInstructionIndex = targetByteAddress / 4;
