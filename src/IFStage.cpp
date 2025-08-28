@@ -58,6 +58,11 @@ void IFStage::execute()
         return;
     }
 
+    if (pc >= 30 && pc <= 140)
+    {
+        std::cerr << "DEBUG: IFStage fetch PC=" << pc << " instr='" << instruction->getName() << "'" << std::endl;
+    }
+
     // Create pipeline data
     PipelineData data;
     data.instruction = instruction.get();  // Get raw pointer from unique_ptr

@@ -43,12 +43,32 @@ void WBStage::execute()
         // Execute the instruction directly
         data.instruction->execute(*m_cpu);
 
-        // For non-control flow instructions, restore PC (pipeline manages PC updates)
-        // Control flow instructions (branch, jump) are allowed to update PC
-        const std::string& name = data.instruction->getName();
-        if (name != "beq" && name != "j" && name != "syscall")
+        // For pipeline mode we only want to keep instruction-updated PC when
+        // the instruction performed a control-flow change. Most instructions
+        // will simply increment PC by 1; in that case restore the saved PC so
+        // the pipeline can manage the PC updates. If the instruction set PC
+        // to something else (e.g., jr/jal/jalr/branches), leave it.
+        uint32_t afterPC = m_cpu->getProgramCounter();
+
+        // Targeted logging for the loop region to help debug unexpected jumps
+        if (savedPC >= 30 && savedPC <= 140)
         {
+            std::cerr << "DEBUG: WBStage exec - instr='" 
+                      << (data.instruction ? data.instruction->getName() : "<null>")
+                      << "' savedPC=" << savedPC << " afterPC=" << afterPC << std::endl;
+        }
+
+        if (afterPC == savedPC + 1)
+        {
+            // Non-control-flow: restore saved PC so the IF stage increments it
             m_cpu->setProgramCounter(savedPC);
+        }
+        else
+        {
+            // Control-flow change detected - log for debugging
+            std::cerr << "DEBUG: WBStage control-flow - instr='" 
+                      << (data.instruction ? data.instruction->getName() : "<null>")
+                      << "' savedPC=" << savedPC << " afterPC=" << afterPC << std::endl;
         }
     }
 

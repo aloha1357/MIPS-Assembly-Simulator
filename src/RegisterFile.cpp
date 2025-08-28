@@ -1,4 +1,5 @@
 #include "RegisterFile.h"
+#include <iostream>
 
 namespace mips
 {
@@ -24,6 +25,11 @@ void RegisterFile::write(int regNum, uint32_t value)
         return;  // $zero (reg 0) is hardwired to 0, invalid regs ignored
     }
     m_registers[regNum] = value;
+    // Targeted tracing for debugging: log writes to $a0 (reg 4) and $ra (reg 31)
+    if (regNum == 4 || regNum == 31)
+    {
+        std::cerr << "TRACE: RegisterFile::write reg=" << regNum << " value=" << value << std::endl;
+    }
 }
 
 void RegisterFile::reset()

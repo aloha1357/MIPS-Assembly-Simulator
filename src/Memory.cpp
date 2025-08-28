@@ -1,5 +1,7 @@
 #include "Memory.h"
 #include <cstring>
+#include <iostream>
+#include <iomanip>
 
 namespace mips
 {
@@ -25,6 +27,12 @@ void Memory::writeWord(uint32_t address, uint32_t value)
         return;  // Invalid access ignored
     }
 
+    // Targeted debug: watch writes near the string/data area used in tests
+    if (address >= 760 && address <= 780)
+    {
+        std::cerr << "DEBUG: writeWord addr=" << address << " value=0x" << std::hex << value << std::dec << std::endl;
+    }
+
     std::memcpy(&m_data[address], &value, sizeof(uint32_t));
 }
 
@@ -43,6 +51,11 @@ void Memory::writeByte(uint32_t address, uint8_t value)
     if (address >= MEMORY_SIZE)
     {
         return;  // Invalid access ignored
+    }
+
+    if (address >= 760 && address <= 780)
+    {
+        std::cerr << "DEBUG: writeByte addr=" << address << " byte=" << static_cast<uint32_t>(value) << std::endl;
     }
 
     m_data[address] = value;

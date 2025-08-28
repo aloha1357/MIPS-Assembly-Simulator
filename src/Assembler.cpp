@@ -209,6 +209,69 @@ Assembler::assembleWithLabels(const std::string&               assembly,
         }
     }
 
+    // Recompute instruction label indices to ensure labels map to the
+    // actual instruction indices produced above. The first-pass used a
+    // simple counter which may diverge from the final parsed instruction
+    // vector if some lines failed to parse. Walk the original allLines and
+    // recompute indices for instruction labels.
+    {
+        std::map<std::string, uint32_t> recomputedLabels;
+        uint32_t                        instrIndex = 0;
+        bool inDataSection2 = false;
+
+        for (size_t lineIndex = 0; lineIndex < allLines.size(); ++lineIndex)
+        {
+            std::string cur = allLines[lineIndex];
+            size_t      colonPos = cur.find(':');
+            if (colonPos != std::string::npos)
+            {
+                std::string labelName = cur.substr(0, colonPos);
+                labelName = trim(labelName);
+
+                // Look ahead to determine if this is a data label
+                bool nextLineIsData = false;
+                if (lineIndex + 1 < allLines.size())
+                {
+                    std::string nextLine = allLines[lineIndex + 1];
+                    nextLineIsData = (nextLine.find(".word") == 0 || nextLine.find(".byte") == 0 || nextLine.find(".asciiz") == 0);
+                }
+
+                if (nextLineIsData || inDataSection2)
+                {
+                    // data label - leave it for data handling
+                }
+                else
+                {
+                    // instruction label - map to current instruction index
+                    recomputedLabels[labelName] = instrIndex;
+                }
+                continue;
+            }
+
+            if (cur.find(".word") == 0 || cur.find(".byte") == 0 || cur.find(".asciiz") == 0)
+            {
+                inDataSection2 = true;
+                continue;
+            }
+
+            if (!inDataSection2)
+            {
+                // This is an instruction line; only increment if it parses
+                auto instr = parseInstruction(cur);
+                if (instr)
+                {
+                    instrIndex++;
+                }
+            }
+        }
+
+        // Overwrite any instruction-label entries in the labelMap with the recomputed values
+        for (const auto& p : recomputedLabels)
+        {
+            labelMap[p.first] = p.second;
+        }
+    }
+
     return instructions;
 }
 

@@ -219,6 +219,11 @@ void Cpu::reset()
 
 void Cpu::setProgramCounter(uint32_t pc)
 {
+    // Targeted debug logging for suspicious loop region
+    if (pc >= 30 && pc <= 140)
+    {
+        std::cerr << "DEBUG: Cpu::setProgramCounter old=" << m_pc << " new=" << pc << std::endl;
+    }
     m_pc = pc;
 }
 
@@ -243,12 +248,17 @@ uint32_t Cpu::getLabelAddress(const std::string& label) const
         
         // Better heuristic: data addresses are typically after all instructions
         // Instructions are indexed 0, 1, 2, ... and data starts at (instructionCount * 4)
+        // Debug: print raw stored value and heuristic decision
+        std::cerr << "DEBUG: getLabelAddress - label='" << label << "' rawValue=" << address
+                  << " instructions.size=" << m_instructions.size();
         if (address < m_instructions.size())  // Definitely instruction index
         {
+            std::cerr << " (treat as instr idx -> byteAddr=" << (address * 4) << ")" << std::endl;
             return address * 4;  // Convert to byte address
         }
         else  // Likely data address (already byte address)
         {
+            std::cerr << " (treat as data byteAddr)" << std::endl;
             return address;
         }
     }
@@ -284,16 +294,27 @@ bool Cpu::isPipelineMode() const
 
 void Cpu::printInt(uint32_t value)
 {
+    // Trace which PC emitted this integer (covers both syscall and trap paths)
+    std::cerr << "TRACE: Cpu::printInt pc=" << m_pc << " value=" << value << std::endl;
+
+    // Append a newline to make each printed integer appear on its own line
     m_consoleOutput += std::to_string(value);
+    m_consoleOutput += '\n';
 }
 
 void Cpu::printString(const std::string& str)
 {
+    // Trace which PC emitted this string (covers both syscall and trap paths)
+    std::cerr << "TRACE: Cpu::printString pc=" << m_pc << " str='" << str << "'" << std::endl;
+
     m_consoleOutput += str;
 }
 
 void Cpu::printChar(char character)
 {
+    unsigned char uc = static_cast<unsigned char>(character);
+    std::cerr << "TRACE: Cpu::printChar pc=" << m_pc << " ch='" << character
+              << "' (code=" << static_cast<int>(uc) << ")" << std::endl;
     m_consoleOutput += character;
 }
 

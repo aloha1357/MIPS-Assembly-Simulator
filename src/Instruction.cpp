@@ -550,6 +550,9 @@ void LBUInstruction::execute(Cpu& cpu)
     uint8_t  byteValue         = cpu.getMemory().readByte(address);
     uint32_t zeroExtendedValue = static_cast<uint32_t>(byteValue);  // Automatic zero extension
 
+    std::cerr << "TRACE: LBU pc=" << cpu.getProgramCounter() << " addr=" << address
+              << " byte=" << static_cast<uint32_t>(byteValue) << std::endl;
+
     cpu.getRegisterFile().write(m_rt, zeroExtendedValue);
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
@@ -671,9 +674,11 @@ void BeqInstruction::execute(Cpu& cpu)
     if (rsValue == rtValue)
     {
         // Branch taken - jump to label
-        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
-        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
-        cpu.setProgramCounter(targetInstructionIndex);
+    uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+    uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+    std::cerr << "DEBUG: BEQ taken - label='" << m_label << "' byteAddr=" << targetByteAddress
+          << " -> idx=" << targetInstructionIndex << " currentPC=" << cpu.getProgramCounter() << std::endl;
+    cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -700,9 +705,11 @@ void BneInstruction::execute(Cpu& cpu)
     if (rsValue != rtValue)
     {
         // Branch taken - jump to label
-        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
-        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
-        cpu.setProgramCounter(targetInstructionIndex);
+    uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+    uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+    std::cerr << "DEBUG: BNE taken - label='" << m_label << "' byteAddr=" << targetByteAddress
+          << " -> idx=" << targetInstructionIndex << " currentPC=" << cpu.getProgramCounter() << std::endl;
+    cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -732,9 +739,11 @@ void BLEZInstruction::execute(Cpu& cpu)
     {
         // 分支條件成立：rs <= 0
         // Jump to label
-        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
-        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
-        cpu.setProgramCounter(targetInstructionIndex);
+    uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+    uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+    std::cerr << "DEBUG: BLEZ taken - label='" << m_label << "' byteAddr=" << targetByteAddress
+          << " -> idx=" << targetInstructionIndex << " currentPC=" << cpu.getProgramCounter() << std::endl;
+    cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -765,9 +774,11 @@ void BGTZInstruction::execute(Cpu& cpu)
     {
         // 分支條件成立：rs > 0
         // Jump to label
-        uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
-        uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
-        cpu.setProgramCounter(targetInstructionIndex);
+    uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
+    uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+    std::cerr << "DEBUG: BGTZ taken - label='" << m_label << "' byteAddr=" << targetByteAddress
+          << " -> idx=" << targetInstructionIndex << " currentPC=" << cpu.getProgramCounter() << std::endl;
+    cpu.setProgramCounter(targetInstructionIndex);
     }
     else
     {
@@ -789,6 +800,8 @@ void JInstruction::execute(Cpu& cpu)
     // Unconditional jump to label
     uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
     uint32_t targetInstructionIndex = targetByteAddress / 4;  // Convert byte address to instruction index
+    std::cerr << "DEBUG: J execute - label='" << m_label << "' byteAddr=" << targetByteAddress
+              << " -> idx=" << targetInstructionIndex << " currentPC=" << cpu.getProgramCounter() << std::endl;
     cpu.setProgramCounter(targetInstructionIndex);
 }
 
@@ -1177,10 +1190,10 @@ void SyscallInstruction::handlePrintString(Cpu& cpu)
 {
     // String address is in $a0 (register 4)
     uint32_t stringAddress = cpu.getRegisterFile().read(4);  // $a0
-
     // Read string from memory character by character until null terminator
     std::string str;
     uint32_t    currentAddr = stringAddress;
+    std::vector<uint8_t> rawBytes;
 
     try
     {
@@ -1191,20 +1204,46 @@ void SyscallInstruction::handlePrintString(Cpu& cpu)
             // Extract bytes from word (little-endian)
             for (int i = 0; i < 4; i++)
             {
-                char c = (word >> (i * 8)) & 0xFF;
-                if (c == '\0')
+                uint8_t byte = static_cast<uint8_t>((word >> (i * 8)) & 0xFF);
+                rawBytes.push_back(byte);
+                if (byte == 0)
                 {
+                    // Build a simple decimal-bytes string for tracing
+                    std::string bytesStr;
+                    for (size_t j = 0; j < rawBytes.size(); ++j)
+                    {
+                        if (!bytesStr.empty())
+                            bytesStr += ' ';
+                        bytesStr += std::to_string(rawBytes[j]);
+                    }
+
+                    std::cerr << "TRACE: Syscall printString pc=" << cpu.getProgramCounter()
+                              << " addr=" << stringAddress << " str='" << str
+                              << "' bytes=" << bytesStr << std::endl;
+
                     cpu.printString(str);
                     return;
                 }
-                str += c;
+                str += static_cast<char>(byte);
             }
             currentAddr += 4;
         }
     }
     catch (...)
     {
-        // Memory access failed, just print what we have
+        // Memory access failed, log partial bytes and print what we have
+        std::string bytesStr;
+        for (size_t j = 0; j < rawBytes.size(); ++j)
+        {
+            if (!bytesStr.empty())
+                bytesStr += ' ';
+            bytesStr += std::to_string(rawBytes[j]);
+        }
+
+        std::cerr << "TRACE: Syscall printString pc=" << cpu.getProgramCounter()
+                  << " addr=" << stringAddress << " partial_str='" << str
+                  << "' bytes=" << bytesStr << std::endl;
+
         cpu.printString(str);
     }
 }
@@ -1302,23 +1341,37 @@ void TrapInstruction::execute(Cpu& cpu)
             uint32_t stringAddress = cpu.getRegisterFile().read(4);  // $a0
             std::string str;
             uint32_t currentAddr = stringAddress;
-            
+            std::vector<uint8_t> rawBytes;
+
             try
             {
                 while (true)
                 {
                     uint32_t word = cpu.getMemory().readWord(currentAddr);
-                    
+
                     // Extract bytes from word (little-endian)
                     for (int i = 0; i < 4; i++)
                     {
-                        char c = (word >> (i * 8)) & 0xFF;
-                        if (c == '\0')
+                        uint8_t byte = static_cast<uint8_t>((word >> (i * 8)) & 0xFF);
+                        rawBytes.push_back(byte);
+                        if (byte == 0)
                         {
+                            std::string bytesStr;
+                            for (size_t j = 0; j < rawBytes.size(); ++j)
+                            {
+                                if (!bytesStr.empty())
+                                    bytesStr += ' ';
+                                bytesStr += std::to_string(rawBytes[j]);
+                            }
+
+                            std::cerr << "TRACE: Trap printString pc=" << cpu.getProgramCounter()
+                                      << " addr=" << stringAddress << " str='" << str
+                                      << "' bytes=" << bytesStr << std::endl;
+
                             cpu.printString(str);
                             goto string_done;
                         }
-                        str += c;
+                        str += static_cast<char>(byte);
                     }
                     currentAddr += 4;
                 }
@@ -1326,7 +1379,19 @@ void TrapInstruction::execute(Cpu& cpu)
             }
             catch (...)
             {
-                // Memory access failed, just print what we have
+                // Memory access failed, log partial bytes and print what we have
+                std::string bytesStr;
+                for (size_t j = 0; j < rawBytes.size(); ++j)
+                {
+                    if (!bytesStr.empty())
+                        bytesStr += ' ';
+                    bytesStr += std::to_string(rawBytes[j]);
+                }
+
+                std::cerr << "TRACE: Trap printString pc=" << cpu.getProgramCounter()
+                          << " addr=" << stringAddress << " partial_str='" << str
+                          << "' bytes=" << bytesStr << std::endl;
+
                 cpu.printString(str);
             }
         }
@@ -1364,6 +1429,8 @@ void LAInstruction::execute(Cpu& cpu)
     // Load the address of the label into the target register
     uint32_t labelAddress = cpu.getLabelAddress(m_label);
     cpu.getRegisterFile().write(m_rt, labelAddress);
+    std::cerr << "TRACE: LA rt=" << m_rt << " label='" << m_label << "' addr=" << labelAddress
+              << " pc=" << cpu.getProgramCounter() << std::endl;
     cpu.setProgramCounter(cpu.getProgramCounter() + 1);
 }
 

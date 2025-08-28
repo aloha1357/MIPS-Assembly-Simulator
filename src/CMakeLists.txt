@@ -26,6 +26,15 @@ if (EXISTS "${MAIN_CANDIDATE}")
 endif()
 
 # Small debug runner to step CPU and print PC/$ra for debugging JAL/JR
-add_executable(jal_debug_runner "${CMAKE_CURRENT_SOURCE_DIR}/tools/jal_debug_runner.cpp")
-target_link_libraries(jal_debug_runner PRIVATE mips_core)
-target_compile_features(jal_debug_runner PRIVATE cxx_std_20)
+add_executable(cli_trace_runner "${CMAKE_CURRENT_SOURCE_DIR}/tools/cli_trace_runner.cpp")
+target_link_libraries(cli_trace_runner PRIVATE mips_core)
+target_compile_features(cli_trace_runner PRIVATE cxx_std_20)
+
+add_executable(dump_labels "${CMAKE_CURRENT_SOURCE_DIR}/tools/dump_labels.cpp")
+target_link_libraries(dump_labels PRIVATE mips_core)
+target_compile_features(dump_labels PRIVATE cxx_std_20)
+
+# Clean runner: produce clean console output (no debug) for automated diffs
+add_executable(clean_runner "${CMAKE_CURRENT_SOURCE_DIR}/tools/clean_runner.cpp")
+target_link_libraries(clean_runner PRIVATE mips_core)
+target_compile_features(clean_runner PRIVATE cxx_std_20)
