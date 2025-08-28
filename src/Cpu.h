@@ -84,6 +84,11 @@ class Cpu
      */
     uint32_t getProgramCounter() const;
 
+  /**
+   * @brief Get number of assembled instructions
+   */
+  uint32_t getInstructionCount() const;
+
     /**
      * @brief Get label address by name
      */

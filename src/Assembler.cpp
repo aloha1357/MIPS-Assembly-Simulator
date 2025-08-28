@@ -531,6 +531,30 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             return std::make_unique<SltuInstruction>(rd, rs, rt);
         }
     }
+    else if (opcode == "slt" && tokens.size() >= 4)
+    {
+        // Parse: slt $rd, $rs, $rt
+        std::string rdStr = tokens[1];
+        std::string rsStr = tokens[2];
+        std::string rtStr = tokens[3];
+
+        // Remove commas
+        if (rdStr.back() == ',')
+            rdStr.pop_back();
+        if (rsStr.back() == ',')
+            rsStr.pop_back();
+        if (rtStr.back() == ',')
+            rtStr.pop_back();
+
+        int rd = getRegisterNumber(rdStr);
+        int rs = getRegisterNumber(rsStr);
+        int rt = getRegisterNumber(rtStr);
+
+        if (rd >= 0 && rs >= 0 && rt >= 0)
+        {
+            return std::make_unique<SltInstruction>(rd, rs, rt);
+        }
+    }
     else if (opcode == "addi" && tokens.size() >= 4)
     {
         // Parse: addi $rt, $rs, imm
@@ -779,12 +803,23 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     }
     else if (opcode == "lb" && tokens.size() >= 3)
     {
-        // Parse: lb $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        // Parse: lb $rt, offset($rs)  -- accept both "0($a1)" and "0 ($a1)"
+        std::string rtStr = tokens[1];
+        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and (reg)
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            // Remove any stray commas
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
-        if (rtStr.back() == ',')
+        if (!rtStr.empty() && rtStr.back() == ',')
             rtStr.pop_back();
 
         int rt = getRegisterNumber(rtStr);
@@ -796,7 +831,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 std::string offsetStr = offsetRegStr.substr(0, parenPos);
                 std::string rsStr     = offsetRegStr.substr(parenPos + 1);
-                if (rsStr.back() == ')')
+                if (!rsStr.empty() && rsStr.back() == ')')
                     rsStr.pop_back();
 
                 int rs = getRegisterNumber(rsStr);
@@ -877,12 +912,21 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     }
     else if (opcode == "lbu" && tokens.size() >= 3)
     {
-        // Parse: lbu $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        // Parse: lbu $rt, offset($rs) -- accept both "0($a1)" and "0 ($a1)"
+        std::string rtStr = tokens[1];
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
-        if (rtStr.back() == ',')
+        if (!rtStr.empty() && rtStr.back() == ',')
             rtStr.pop_back();
 
         int rt = getRegisterNumber(rtStr);
@@ -894,7 +938,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 std::string offsetStr = offsetRegStr.substr(0, parenPos);
                 std::string rsStr     = offsetRegStr.substr(parenPos + 1);
-                if (rsStr.back() == ')')
+                if (!rsStr.empty() && rsStr.back() == ')')
                     rsStr.pop_back();
 
                 int rs = getRegisterNumber(rsStr);

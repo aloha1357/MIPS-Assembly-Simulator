@@ -64,6 +64,9 @@ else()
     "${CMAKE_CURRENT_SOURCE_DIR}/test_jal_jr_integration.cpp"
     )
 
+    # Add small targeted tests useful during iterative debugging
+    list(APPEND CORE_TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/test_slt_and_lbu.cpp")
+
     # 檢查檔案是否存在並過濾
     set(EXISTING_TEST_SOURCES)
     foreach(test_file ${CORE_TEST_SOURCES})

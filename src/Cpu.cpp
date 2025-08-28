@@ -58,6 +58,14 @@ void Cpu::tickSingleCycle()
     if (m_pc < m_instructions.size())
     {
         uint32_t oldPc = m_pc;
+        // Debug: log which instruction is about to execute to help trace
+        try
+        {
+            std::string instrName = m_instructions[m_pc]->getName();
+            std::cerr << "DEBUG: Exec pc=" << m_pc << " instr='" << instrName << "'" << std::endl;
+        }
+        catch (...) {}
+
         m_instructions[m_pc]->execute(*this);
 
         // Only increment PC if instruction didn't change it (for non-branch instructions)
@@ -230,6 +238,11 @@ void Cpu::setProgramCounter(uint32_t pc)
 uint32_t Cpu::getProgramCounter() const
 {
     return m_pc;
+}
+
+uint32_t Cpu::getInstructionCount() const
+{
+    return static_cast<uint32_t>(m_instructions.size());
 }
 
 uint32_t Cpu::getLabelAddress(const std::string& label) const
