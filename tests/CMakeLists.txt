@@ -1,6 +1,6 @@
 enable_testing()
 
-# 使用 FetchContent 自動下載 GoogleTest
+# Use FetchContent to automatically download GoogleTest
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -11,28 +11,28 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# 測試模式選擇 - 可以通過 cmake -DFULL_TESTS=ON 啟用全面測試
+# Test mode selection - can be enabled with cmake -DFULL_TESTS=ON for full test suite
 option(FULL_TESTS "Enable full test suite (all test files)" OFF)
 
 if(FULL_TESTS)
-    message(STATUS "🚀 全面測試模式啟用 - 編譯可編譯的測試檔案")
+    message(STATUS "Full test mode enabled - compiling available test files")
     
-    # 全面測試：包含所有測試檔案，但排除有問題的檔案
+    # Full test: include all test files but exclude problematic ones
     file(GLOB ALL_TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cpp")
     
-    # 排除有編譯問題的測試檔案
+    # Exclude test files with compilation issues
     set(PROBLEMATIC_FILES
-        # GUI 相關檔案 (缺少依賴)
+        # GUI related files (missing dependencies)
         "test_gui_interface.cpp"
         "test_gui_console_output.cpp" 
         "test_enhanced_gui_console.cpp"
-        "test_mips_core_console.cpp"  # 依賴 MipsSimulatorGUI
-        # 缺少標頭檔案的檔案
-        "test_jalr_instruction_bdd_minimal_fixed.cpp"  # 缺少 MemorySubsystem.h
-        # 語法錯誤的檔案
-        "test_blez_instruction_bdd_minimal_clean.cpp"  # DISABLED_TEST_F 語法錯誤
-        "test_jalr_instruction_bdd_minimal_v2.cpp"     # DISABLED_TEST_F 語法錯誤
-        "test_jalr_instruction_bdd_minimal.cpp"        # 可能有類似問題
+        "test_mips_core_console.cpp"  # Depends on MipsSimulatorGUI
+        # Files missing header files
+        "test_jalr_instruction_bdd_minimal_fixed.cpp"  # Missing MemorySubsystem.h
+        # Files with syntax errors
+        "test_blez_instruction_bdd_minimal_clean.cpp"  # DISABLED_TEST_F syntax error
+        "test_jalr_instruction_bdd_minimal_v2.cpp"     # DISABLED_TEST_F syntax error
+        "test_jalr_instruction_bdd_minimal.cpp"        # May have similar issues
     )
     
     set(EXISTING_TEST_SOURCES)
@@ -44,9 +44,9 @@ if(FULL_TESTS)
     endforeach()
     
 else()
-    message(STATUS "⚡ 精簡測試模式 - 只編譯核心測試檔案")
+    message(STATUS "Minimal test mode - compiling only core test files")
     
-    # 精簡測試：只選擇核心的測試檔案，避免編譯超時
+    # Minimal test: select only core test files to avoid compilation timeout
     set(CORE_TEST_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/test_cpu.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/test_instruction_decoder.cpp"
@@ -69,7 +69,7 @@ else()
     list(APPEND CORE_TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/test_mismatch_cases.cpp")
     list(APPEND CORE_TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/test_failing_segments.cpp")
 
-    # 檢查檔案是否存在並過濾
+    # Check if files exist and filter
     set(EXISTING_TEST_SOURCES)
     foreach(test_file ${CORE_TEST_SOURCES})
         if(EXISTS ${test_file})
@@ -77,7 +77,7 @@ else()
         endif()
     endforeach()
 
-    # 如果沒有核心測試檔案，就選擇前 10 個測試檔案
+    # If no core test files exist, select first 10 test files
     if(NOT EXISTING_TEST_SOURCES)
         file(GLOB TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cpp")
         list(LENGTH TEST_FILES TOTAL_COUNT)
@@ -96,7 +96,7 @@ add_executable(mips_tests ${EXISTING_TEST_SOURCES})
 target_link_libraries(mips_tests PRIVATE gtest_main gtest mips_core mips_cli_lib)
 target_compile_features(mips_tests PRIVATE cxx_std_20)
 
-# 簡化的測試配置
+# Simplified test configuration
 add_test(NAME all_tests COMMAND mips_tests)
 
 # Register test with CTest

@@ -2,9 +2,9 @@
  * @file test_xor_instruction.cpp
  * @brief XOR instruction integration tests
  *
- * 按照BDD方法論實作的XOR指令整合測試，確保：
- * 1. InstructionDecoder 正確解碼 XOR 指令
- * 2. Assembler 正確解析 "xor" 語法
+ * XOR instruction integration tests implemented following BDD methodology, ensuring:
+ * 1. InstructionDecoder correctly decodes XOR instructions
+ * 2. Assembler correctly parses "xor" syntax
  */
 
 #include "../src/Assembler.h"

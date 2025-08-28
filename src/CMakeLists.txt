@@ -1,9 +1,9 @@
-# 把 src/ 下面所有 .cpp 都抓進來
+# Include all .cpp files in src/
 file(GLOB_RECURSE SRC_ALL CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-# 排除 main.cpp 和 GUI 相關檔案，只留核心檔變成 library
+# Exclude main.cpp and GUI related files, keep only core files as library
 set(MAIN_CANDIDATE "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
 list(FILTER SRC_ALL EXCLUDE REGEX ".*/main\\.cpp$")
 list(FILTER SRC_ALL EXCLUDE REGEX ".*/imgui_main\\.cpp$")
@@ -11,14 +11,14 @@ list(FILTER SRC_ALL EXCLUDE REGEX ".*/gui_main\\.cpp$")
 list(FILTER SRC_ALL EXCLUDE REGEX ".*/gui/.*\\.cpp$")
 
 add_library(mips_core ${SRC_ALL})
-# 如果你的 public header 在 src/include/，請改成該路徑
+# If your public headers are in src/include/, change to that path
 target_include_directories(mips_core
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 target_compile_features(mips_core PUBLIC cxx_std_20)
 
-# CLI：只編 main.cpp，連上 core
+# CLI: only compile main.cpp, link with core
 if (EXISTS "${MAIN_CANDIDATE}")
   add_executable(mips_cli "${MAIN_CANDIDATE}")
   target_link_libraries(mips_cli PRIVATE mips_core)
