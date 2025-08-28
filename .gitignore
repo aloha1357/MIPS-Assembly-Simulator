@@ -11,3 +11,4 @@ docs/
 debug/
 *.bin
 *.map
+*.py

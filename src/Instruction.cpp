@@ -995,6 +995,7 @@ void JALInstruction::execute(Cpu& cpu)
     // Save return address in $ra (register 31)
     // Save return address in $ra (register 31) as a byte address so JR/JALR (which expect byte addresses)
     // will work correctly. Program counter inside CPU is instruction index, so convert.
+    // Use PC + 1 to match the expected behavior in test fixtures
     uint32_t returnInstructionIndex = cpu.getProgramCounter() + 1;  // Next instruction index
     uint32_t returnByteAddress = returnInstructionIndex * 4;
     cpu.getRegisterFile().write(31, returnByteAddress);
@@ -1017,8 +1018,7 @@ void JALLabelInstruction::execute(Cpu& cpu)
 {
     // Save return address in $ra (register 31) as byte address for consistency with LA/JR
     // Use the address of the next instruction (current PC + 1) converted to a
-    // byte address. This matches the behavior of numeric-target JAL and the
-    // expectations in the test fixtures.
+    // byte address. This matches the expected behavior in the test fixtures.
     uint32_t returnInstructionIndex = cpu.getProgramCounter() + 1;
     uint32_t returnByteAddress = returnInstructionIndex * 4;
     cpu.getRegisterFile().write(31, returnByteAddress);
@@ -1046,6 +1046,7 @@ void JALRInstruction::execute(Cpu& cpu)
 
     // Save return address in destination register
     // Save return address as byte address so that JR/JALR semantics are consistent
+    // Use PC + 1 to match the expected behavior in test fixtures
     uint32_t returnInstructionIndex = cpu.getProgramCounter() + 1;  // Next instruction index
     uint32_t returnByteAddress = returnInstructionIndex * 4;
     cpu.getRegisterFile().write(m_rd, returnByteAddress);

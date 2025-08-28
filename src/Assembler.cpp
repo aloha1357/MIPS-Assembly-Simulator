@@ -866,8 +866,19 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     else if (opcode == "sb" && tokens.size() >= 3)
     {
         // Parse: sb $rt, offset($rs)
-        std::string rtStr        = tokens[1];
-        std::string offsetRegStr = tokens[2];
+        std::string rtStr = tokens[1];
+        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and (reg)
+        std::string offsetRegStr;
+        if (tokens.size() >= 3)
+        {
+            offsetRegStr.clear();
+            for (size_t i = 2; i < tokens.size(); ++i)
+            {
+                offsetRegStr += tokens[i];
+            }
+            // Remove any stray commas
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+        }
 
         // Remove comma from rt
         if (rtStr.back() == ',')
