@@ -63,7 +63,55 @@ The project provides two sets of CLI tools for different use cases:
 
 ## Testing Framework
 
-The project uses Google Test framework for comprehensive testing:
+The project implements a comprehensive testing framework using Google Test (gtest) with 88+ individual test files covering all aspects of the MIPS simulator. The tests follow Behavior-Driven Development (BDD) principles and are organized by functionality.
+
+### Test Categories and Coverage
+
+#### 1. **Arithmetic Instructions (14 tests)**
+- **Basic Operations:** `test_addiu_instruction_bdd_minimal.cpp`, `test_addu_instruction_bdd_minimal.cpp`
+- **Multiplication/Division:** `test_mult_instruction_bdd_minimal.cpp`, `test_multu_instruction_bdd_minimal.cpp`, `test_div_instruction_bdd_minimal.cpp`, `test_divu_instruction_bdd_minimal.cpp`
+- **Register Access:** `test_mfhi_instruction_bdd_minimal.cpp`, `test_mflo_instruction_bdd_minimal.cpp`, `test_mthi_instruction_bdd_minimal.cpp`, `test_mtlo_instruction_bdd_minimal.cpp`
+
+#### 2. **Logical Instructions (12 tests)**
+- **Bitwise Operations:** `test_and_instruction.cpp`, `test_andi_instruction.cpp`, `test_andi_instruction_integration.cpp`
+- **Logical Operations:** `test_logical_and_bdd_minimal.cpp`, `test_logical_andi_bdd_minimal.cpp`, `test_logical_or_bdd_minimal.cpp`, `test_logical_ori_bdd_minimal.cpp`
+- **Advanced Logic:** `test_logical_nor_bdd_minimal.cpp`, `test_logical_xor_bdd_minimal.cpp`, `test_logical_xori_bdd_minimal.cpp`
+- **Shift Operations:** `test_logical_sll_bdd_minimal.cpp`, `test_logical_sra_bdd_minimal.cpp`, `test_logical_srl_bdd_minimal.cpp`, `test_sll_instruction.cpp`, `test_sra_instruction.cpp`, `test_srl_instruction.cpp`
+
+#### 3. **Memory Instructions (8 tests)**
+- **Load Operations:** `test_lb_instruction_bdd_minimal.cpp`, `test_lbu_instruction_bdd_minimal.cpp`, `test_lh_instruction_bdd_minimal.cpp`, `test_lhu_instruction_bdd_minimal.cpp`
+- **Store Operations:** `test_sb_instruction_bdd_minimal.cpp`, `test_sh_instruction_bdd_minimal.cpp`
+- **Load Immediate:** `test_lhi_instruction.cpp`, `test_llo_instruction.cpp`
+
+#### 4. **Jump and Branch Instructions (12 tests)**
+- **Jump Instructions:** `test_jal_instruction_bdd_minimal.cpp`, `test_jr_instruction_bdd_minimal.cpp`, `test_jalr_instruction_bdd_minimal.cpp`, `test_jalr_instruction_bdd_minimal_fixed.cpp`, `test_jalr_instruction_bdd_minimal_v2.cpp`
+- **Branch Instructions:** `test_bgtz_instruction_bdd_minimal.cpp`, `test_bgtz_instruction_integration.cpp`, `test_blez_instruction_bdd_minimal.cpp`, `test_blez_instruction_bdd_minimal_clean.cpp`, `test_bne_instruction.cpp`
+- **Integration Tests:** `test_jal_jr_integration.cpp`, `test_jalr_instruction_integration.cpp`, `test_jr_instruction_integration.cpp`
+
+#### 5. **System Calls and I/O (4 tests)**
+- **Character Operations:** `test_character_syscalls.cpp`
+- **System Integration:** `test_syscalls.cpp`, `test_syscall_debug.cpp`
+- **Console Output:** `test_mips_core_console.cpp`
+
+#### 6. **Core Components (8 tests)**
+- **CPU Core:** `test_cpu.cpp`, `test_bdd_core_instructions.cpp`
+- **Instruction Decoder:** `test_instruction_decoder.cpp`
+- **Assembler:** `test_assembler_debug.cpp`
+- **Pipeline:** `test_pipeline.cpp`, `test_pipeline_execution.cpp`, `test_pipeline_integration.cpp`
+- **Register File:** `test_register_file_hilo_bdd.cpp`
+
+#### 7. **CLI and Interface (5 tests)**
+- **CLI Arguments:** `test_cli_argument_parsing.cpp`
+- **CLI Commands:** `test_cli_assemble_command.cpp`, `test_cli_run_command.cpp`
+- **GUI Interface:** `test_gui_interface.cpp`, `test_enhanced_gui_console.cpp`, `test_gui_console_output.cpp`
+
+#### 8. **Integration and Special Cases (11 tests)**
+- **Extended Instructions:** `test_extended_instructions_atomic.cpp`
+- **Logical Instructions:** `test_logical_instructions_atomic.cpp`
+- **Missing Instructions:** `test_missing_instructions_integration.cpp`
+- **Mismatch Cases:** `test_mismatch_cases.cpp`
+- **Failing Segments:** `test_failing_segments.cpp`
+- **Hello World:** `test_hello_mips.cpp`
 
 ### Build and Run Tests
 
@@ -79,10 +127,28 @@ cmake --build build-full --config Release
 ./build/tests/mips_tests.exe --gtest_filter="*Arithmetic*"
 ./build/tests/mips_tests.exe --gtest_filter="*Memory*"
 ./build/tests/mips_tests.exe --gtest_filter="*Jump*"
+./build/tests/mips_tests.exe --gtest_filter="*Logical*"
+./build/tests/mips_tests.exe --gtest_filter="*Branch*"
 
 # Run single test
 ./build/tests/mips_tests.exe --gtest_filter="ArithmeticTest.AddInstruction"
+./build/tests/mips_tests.exe --gtest_filter="MemoryTest.LoadByte"
+./build/tests/mips_tests.exe --gtest_filter="JumpTest.JalInstruction"
 ```
+
+### Test Methodology
+
+#### BDD (Behavior-Driven Development) Approach
+- **Minimal Tests:** Focus on single instruction behavior
+- **Integration Tests:** Test instruction combinations and interactions
+- **Atomic Tests:** Test fundamental operations in isolation
+- **Debug Tests:** Specialized tests for debugging scenarios
+
+#### Test Naming Convention
+- `test_<instruction>_bdd_minimal.cpp` - Basic BDD tests for individual instructions
+- `test_<instruction>_integration.cpp` - Integration tests combining multiple instructions
+- `test_<category>_atomic.cpp` - Atomic tests for fundamental operations
+- `test_<component>_debug.cpp` - Debug and diagnostic tests
 
 ### Test Output Validation
 
@@ -92,7 +158,21 @@ cmake --build build-full --config Release
 
 # Compare with expected output
 Compare-Object (Get-Content actual_output.txt) (Get-Content assignment/test/instructions.out)
+
+# Run specific test suites
+./build/tests/mips_tests.exe --gtest_filter="*BDD*"      # All BDD tests
+./build/tests/mips_tests.exe --gtest_filter="*Integration*"  # All integration tests
+./build/tests/mips_tests.exe --gtest_filter="*Atomic*"   # All atomic tests
 ```
+
+### Test Statistics
+
+- **Total Test Files:** 88+
+- **Test Categories:** 8 major categories
+- **Coverage Areas:** Arithmetic, Logical, Memory, Jump, Branch, System Calls, Core Components, CLI/Interface
+- **Test Methods:** BDD, Integration, Atomic, Debug
+- **Framework:** Google Test (gtest)
+- **Build System:** CMake with test configuration
 
 ## Results
 
