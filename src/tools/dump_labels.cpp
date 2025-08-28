@@ -99,7 +99,22 @@ int main(int argc, char** argv) {
         std::cout << "label: '" << p.first << "' -> " << p.second << "\n";
     }
     for (const auto &d : dataDirs) {
-        std::cout << "data at " << d.address << " type=" << d.type << " words=" << d.words.size() << " bytes=" << d.bytes.size() << "\n";
+        std::cout << "data at " << d.address << " type=" << d.type << " words=" << d.words.size() << " bytes=" << d.bytes.size();
+        if (!d.words.empty()) {
+            std::cout << " values=";
+            for (size_t wi = 0; wi < d.words.size(); ++wi) {
+                if (wi) std::cout << ',';
+                std::cout << d.words[wi];
+            }
+        }
+        if (!d.bytes.empty()) {
+            std::cout << " raw_bytes=";
+            for (size_t bi = 0; bi < d.bytes.size(); ++bi) {
+                if (bi) std::cout << ',';
+                std::cout << static_cast<uint32_t>(d.bytes[bi]);
+            }
+        }
+        std::cout << "\n";
     }
     return 0;
 }

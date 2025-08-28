@@ -266,9 +266,11 @@ Assembler::assembleWithLabels(const std::string&               assembly,
         }
 
         // Overwrite any instruction-label entries in the labelMap with the recomputed values
+        // Store instruction labels as byte addresses (instrIndex * 4) so callers don't
+        // need a runtime heuristic to distinguish instruction indices from data addresses.
         for (const auto& p : recomputedLabels)
         {
-            labelMap[p.first] = p.second;
+            labelMap[p.first] = p.second * 4;
         }
     }
 

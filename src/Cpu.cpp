@@ -250,47 +250,16 @@ uint32_t Cpu::getLabelAddress(const std::string& label) const
     auto it = m_labelMap.find(label);
     if (it != m_labelMap.end())
     {
+        // The assembler now stores labelMap values as byte addresses for both
+        // instruction labels and data labels. Return the stored byte address
+        // directly to avoid any runtime heuristics.
         uint32_t address = it->second;
-        
-        // Debug output for problematic labels (disabled for now)
-        // if (label == "label3" || label == "label4" || label == "label5" || label == "target")
-        // {
-        //     std::cerr << "LABEL DEBUG: " << label << " maps to " << address 
-        //               << " (instructions.size=" << m_instructions.size() << ")" << std::endl;
-        // }
-        
-        // Better heuristic: data addresses are typically after all instructions
-        // Instructions are indexed 0, 1, 2, ... and data starts at (instructionCount * 4)
-        // Debug: print raw stored value and heuristic decision
-        std::cerr << "DEBUG: getLabelAddress - label='" << label << "' rawValue=" << address
-                  << " instructions.size=" << m_instructions.size();
-        if (address < m_instructions.size())  // Definitely instruction index
-        {
-            std::cerr << " (treat as instr idx -> byteAddr=" << (address * 4) << ")" << std::endl;
-            return address * 4;  // Convert to byte address
-        }
-        else  // Likely data address (already byte address)
-        {
-            std::cerr << " (treat as data byteAddr)" << std::endl;
-            return address;
-        }
+        std::cerr << "DEBUG: getLabelAddress - label='" << label << "' byteAddr=" << address << std::endl;
+        return address;
     }
-    
-    // FALLBACK: hardcoded values for known test cases
-    if (label == "data")
-    {
-        return 12;  // For debug_simple_memory.asm: 3 instructions = data at 12
-    }
-    if (label == "test_data")
-    {
-        return 12;  
-    }
-    if (label == "strings")
-    {
-        return 200;  // Put it well after data section
-    }
-    
-    return 0;  // Default to address 0 if label not found
+    // Label not found
+    std::cerr << "DEBUG: getLabelAddress - label='" << label << "' not found, returning 0" << std::endl;
+    return 0;
 }
 
 void Cpu::setPipelineMode(bool enabled)

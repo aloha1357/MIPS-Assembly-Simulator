@@ -1016,10 +1016,11 @@ JALLabelInstruction::JALLabelInstruction(const std::string& label) : m_label(lab
 void JALLabelInstruction::execute(Cpu& cpu)
 {
     // Save return address in $ra (register 31) as byte address for consistency with LA/JR
-    // For JAL using a label, historically this test expects $ra to be set to
-    // one-past-the-last-instruction (instructionCount * 4). Use that value
-    // to preserve compatibility with the test fixture.
-    uint32_t returnByteAddress = cpu.getInstructionCount() * 4;
+    // Use the address of the next instruction (current PC + 1) converted to a
+    // byte address. This matches the behavior of numeric-target JAL and the
+    // expectations in the test fixtures.
+    uint32_t returnInstructionIndex = cpu.getProgramCounter() + 1;
+    uint32_t returnByteAddress = returnInstructionIndex * 4;
     cpu.getRegisterFile().write(31, returnByteAddress);
     uint32_t targetByteAddress = cpu.getLabelAddress(m_label);
     uint32_t targetInstructionIndex = targetByteAddress / 4;

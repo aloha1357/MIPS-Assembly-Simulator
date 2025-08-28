@@ -63,24 +63,29 @@ void Memory::writeByte(uint32_t address, uint8_t value)
 
 uint16_t Memory::readHalfword(uint32_t address) const
 {
-    if (address + sizeof(uint16_t) > MEMORY_SIZE || address % sizeof(uint16_t) != 0)
+    // Allow unaligned halfword accesses (assemble from bytes, little-endian)
+    if (address + sizeof(uint16_t) > MEMORY_SIZE)
     {
         return 0;  // Invalid access returns 0
     }
 
-    uint16_t value;
-    std::memcpy(&value, &m_data[address], sizeof(uint16_t));
-    return value;
+    uint16_t low = static_cast<uint16_t>(m_data[address]);
+    uint16_t high = static_cast<uint16_t>(m_data[address + 1]);
+    return static_cast<uint16_t>((high << 8) | low);
 }
 
 void Memory::writeHalfword(uint32_t address, uint16_t value)
 {
-    if (address + sizeof(uint16_t) > MEMORY_SIZE || address % sizeof(uint16_t) != 0)
+    // Allow unaligned halfword writes by splitting into two bytes (little-endian)
+    if (address + sizeof(uint16_t) > MEMORY_SIZE)
     {
         return;  // Invalid access ignored
     }
 
-    std::memcpy(&m_data[address], &value, sizeof(uint16_t));
+    uint8_t low = static_cast<uint8_t>(value & 0xFF);
+    uint8_t high = static_cast<uint8_t>((value >> 8) & 0xFF);
+    m_data[address] = low;
+    m_data[address + 1] = high;
 }
 
 void Memory::reset()
