@@ -83,12 +83,12 @@ Assembler::assembleWithLabels(const std::string&               assembly,
     std::string                               line;
 
     // First pass: collect all lines and identify labels and data directives
-    uint32_t instructionAddress = 0;
-    bool inDataSection = false;
-    std::vector<std::string> dataLines; // Store data section lines for second pass
-    std::map<std::string, size_t> dataLabelToLine; // Map labels to data line indices
-    std::vector<std::string> allLines; // Store all non-comment, non-empty lines
-    
+    uint32_t                      instructionAddress = 0;
+    bool                          inDataSection      = false;
+    std::vector<std::string>      dataLines;        // Store data section lines for second pass
+    std::map<std::string, size_t> dataLabelToLine;  // Map labels to data line indices
+    std::vector<std::string>      allLines;         // Store all non-comment, non-empty lines
+
     // First, collect all lines
     while (std::getline(stream, line))
     {
@@ -97,29 +97,28 @@ Assembler::assembleWithLabels(const std::string&               assembly,
             continue;
         allLines.push_back(line);
     }
-    
+
     // Process lines with look-ahead capability
     for (size_t lineIndex = 0; lineIndex < allLines.size(); ++lineIndex)
     {
         line = allLines[lineIndex];
-        
+
         // Check if this line is a label (contains ':')
         size_t colonPos = line.find(':');
         if (colonPos != std::string::npos)
         {
             std::string labelName = line.substr(0, colonPos);
-            labelName = trim(labelName); // Remove any whitespace around label name
-            
+            labelName             = trim(labelName);  // Remove any whitespace around label name
+
             // Look ahead to see if next line is a data directive
             bool nextLineIsData = false;
             if (lineIndex + 1 < allLines.size())
             {
                 std::string nextLine = allLines[lineIndex + 1];
-                nextLineIsData = (nextLine.find(".word") == 0 || 
-                                 nextLine.find(".byte") == 0 || 
-                                 nextLine.find(".asciiz") == 0);
+                nextLineIsData = (nextLine.find(".word") == 0 || nextLine.find(".byte") == 0 ||
+                                  nextLine.find(".asciiz") == 0);
             }
-            
+
             if (nextLineIsData || inDataSection)
             {
                 // This label is for data
@@ -148,11 +147,11 @@ Assembler::assembleWithLabels(const std::string&               assembly,
             instructionAddress++;
         }
     }
-    
+
     // Second pass: process data directives with correct addresses
     uint32_t actualDataStart = instructionAddress * 4;
     uint32_t currentDataAddr = actualDataStart;
-    
+
     for (size_t i = 0; i < dataLines.size(); ++i)
     {
         DataDirective directive(DataDirective::WORD, currentDataAddr);
@@ -160,7 +159,7 @@ Assembler::assembleWithLabels(const std::string&               assembly,
         {
             directive.address = currentDataAddr;
             dataDirectives.push_back(directive);
-            
+
             // Check if any labels point to this data line
             for (const auto& labelPair : dataLabelToLine)
             {
@@ -169,7 +168,7 @@ Assembler::assembleWithLabels(const std::string&               assembly,
                     labelMap[labelPair.first] = currentDataAddr;
                 }
             }
-            
+
             // TEMPORARY FIX: Force data labels to correct addresses
             // Look for common data label patterns and fix them
             std::vector<std::string> commonDataLabels = {"data", "test_data", "mydata", "strings"};
@@ -181,7 +180,7 @@ Assembler::assembleWithLabels(const std::string&               assembly,
                     it->second = currentDataAddr;
                 }
             }
-            
+
             // Update address for next directive
             if (directive.type == DataDirective::WORD)
             {
@@ -216,24 +215,25 @@ Assembler::assembleWithLabels(const std::string&               assembly,
     // recompute indices for instruction labels.
     {
         std::map<std::string, uint32_t> recomputedLabels;
-        uint32_t                        instrIndex = 0;
-        bool inDataSection2 = false;
+        uint32_t                        instrIndex     = 0;
+        bool                            inDataSection2 = false;
 
         for (size_t lineIndex = 0; lineIndex < allLines.size(); ++lineIndex)
         {
-            std::string cur = allLines[lineIndex];
+            std::string cur      = allLines[lineIndex];
             size_t      colonPos = cur.find(':');
             if (colonPos != std::string::npos)
             {
                 std::string labelName = cur.substr(0, colonPos);
-                labelName = trim(labelName);
+                labelName             = trim(labelName);
 
                 // Look ahead to determine if this is a data label
                 bool nextLineIsData = false;
                 if (lineIndex + 1 < allLines.size())
                 {
                     std::string nextLine = allLines[lineIndex + 1];
-                    nextLineIsData = (nextLine.find(".word") == 0 || nextLine.find(".byte") == 0 || nextLine.find(".asciiz") == 0);
+                    nextLineIsData = (nextLine.find(".word") == 0 || nextLine.find(".byte") == 0 ||
+                                      nextLine.find(".asciiz") == 0);
                 }
 
                 if (nextLineIsData || inDataSection2)
@@ -281,7 +281,7 @@ std::vector<std::unique_ptr<Instruction>>
 Assembler::assembleWithLabels(const std::string&               assembly,
                               std::map<std::string, uint32_t>& labelMap)
 {
-    std::vector<DataDirective> dataDirectives; // Ignored for backward compatibility
+    std::vector<DataDirective> dataDirectives;  // Ignored for backward compatibility
     return assembleWithLabels(assembly, labelMap, dataDirectives);
 }
 
@@ -807,7 +807,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     {
         // Parse: lb $rt, offset($rs)  -- accept both "0($a1)" and "0 ($a1)"
         std::string rtStr = tokens[1];
-        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and (reg)
+        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and
+        // (reg)
         std::string offsetRegStr;
         if (tokens.size() >= 3)
         {
@@ -817,7 +818,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                 offsetRegStr += tokens[i];
             }
             // Remove any stray commas
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -867,7 +869,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     {
         // Parse: sb $rt, offset($rs)
         std::string rtStr = tokens[1];
-        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and (reg)
+        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and
+        // (reg)
         std::string offsetRegStr;
         if (tokens.size() >= 3)
         {
@@ -877,7 +880,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                 offsetRegStr += tokens[i];
             }
             // Remove any stray commas
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -935,7 +939,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 offsetRegStr += tokens[i];
             }
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -982,7 +987,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     {
         // Parse: sh $rt, offset($rs)
         std::string rtStr = tokens[1];
-        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and (reg)
+        // Reconstruct offset($rs) from remaining tokens to tolerate a space between offset and
+        // (reg)
         std::string offsetRegStr;
         if (tokens.size() >= 3)
         {
@@ -992,7 +998,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
                 offsetRegStr += tokens[i];
             }
             // Remove any stray commas
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -1050,7 +1057,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 offsetRegStr += tokens[i];
             }
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -1105,7 +1113,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 offsetRegStr += tokens[i];
             }
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -1160,7 +1169,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 offsetRegStr += tokens[i];
             }
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -1218,7 +1228,8 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             {
                 offsetRegStr += tokens[i];
             }
-            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','), offsetRegStr.end());
+            offsetRegStr.erase(std::remove(offsetRegStr.begin(), offsetRegStr.end(), ','),
+                               offsetRegStr.end());
         }
 
         // Remove comma from rt
@@ -1313,7 +1324,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     else if (opcode == "blez" && tokens.size() >= 3)
     {
         // Parse: blez $rs, label
-        std::string rsStr     = tokens[1];
+        std::string rsStr    = tokens[1];
         std::string labelStr = tokens[2];
 
         // Remove commas
@@ -1332,7 +1343,7 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     else if (opcode == "bgtz" && tokens.size() >= 3)
     {
         // Parse: bgtz $rs, label
-        std::string rsStr     = tokens[1];
+        std::string rsStr    = tokens[1];
         std::string labelStr = tokens[2];
 
         // Remove commas
@@ -1783,14 +1794,14 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
     }
     else if (opcode == "syscall")
     {
-        // Parse: syscall (no arguments) 
+        // Parse: syscall (no arguments)
         return std::make_unique<SyscallInstruction>();
     }
     else if (opcode == "trap" && tokens.size() >= 2)
     {
         // Parse: trap <traptype>
         std::string trapType = tokens[1];
-        
+
         // Map trap types to trap codes
         uint32_t trapCode = 0;
         if (trapType == "print_int")
@@ -1803,11 +1814,11 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         }
         else if (trapType == "exit")
         {
-            trapCode = 10; // Same as syscall 10
+            trapCode = 10;  // Same as syscall 10
         }
         else if (trapType == "print_character")
         {
-            trapCode = 11; // Same as syscall 11
+            trapCode = 11;  // Same as syscall 11
         }
         else
         {
@@ -1818,10 +1829,10 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
             }
             catch (const std::exception&)
             {
-                return nullptr; // Invalid trap type
+                return nullptr;  // Invalid trap type
             }
         }
-        
+
         return std::make_unique<TrapInstruction>(trapCode);
     }
     else if (opcode == "llo" && tokens.size() >= 3)
@@ -1829,13 +1840,13 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         // Parse: llo $rt, immediate
         std::string rtStr  = tokens[1];
         std::string immStr = tokens[2];
-        
+
         // Remove commas
         if (rtStr.back() == ',')
             rtStr.pop_back();
         if (immStr.back() == ',')
             immStr.pop_back();
-            
+
         int rt = getRegisterNumber(rtStr);
         if (rt >= 0)
         {
@@ -1863,13 +1874,13 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         // Parse: lhi $rt, immediate
         std::string rtStr  = tokens[1];
         std::string immStr = tokens[2];
-        
+
         // Remove commas
         if (rtStr.back() == ',')
             rtStr.pop_back();
         if (immStr.back() == ',')
             immStr.pop_back();
-            
+
         int rt = getRegisterNumber(rtStr);
         if (rt >= 0)
         {
@@ -1897,13 +1908,13 @@ std::unique_ptr<Instruction> Assembler::parseInstruction(const std::string& line
         // Parse: la $rt, label
         std::string rtStr    = tokens[1];
         std::string labelStr = tokens[2];
-        
+
         // Remove commas
         if (rtStr.back() == ',')
             rtStr.pop_back();
         if (labelStr.back() == ',')
             labelStr.pop_back();
-            
+
         int rt = getRegisterNumber(rtStr);
         if (rt >= 0)
         {
@@ -1951,7 +1962,8 @@ std::vector<std::string> Assembler::split(const std::string& str, char delimiter
     return tokens;
 }
 
-bool Assembler::parseDataDirective(const std::string& line, uint32_t address, DataDirective& directive)
+bool Assembler::parseDataDirective(const std::string& line, uint32_t address,
+                                   DataDirective& directive)
 {
     std::vector<std::string> tokens;
     std::istringstream       tokenStream(line);
@@ -1968,19 +1980,19 @@ bool Assembler::parseDataDirective(const std::string& line, uint32_t address, Da
 
     if (tokens[0] == ".word" && tokens.size() >= 2)
     {
-        directive.type = DataDirective::WORD;
+        directive.type    = DataDirective::WORD;
         directive.address = address;
-        
+
         for (size_t i = 1; i < tokens.size(); ++i)
         {
             std::string valueStr = tokens[i];
             // Remove commas
             if (!valueStr.empty() && valueStr.back() == ',')
                 valueStr.pop_back();
-                
+
             try
             {
-                uint32_t value = std::stoul(valueStr, nullptr, 0); // Support hex/decimal
+                uint32_t value = std::stoul(valueStr, nullptr, 0);  // Support hex/decimal
                 directive.words.push_back(value);
             }
             catch (const std::exception&)
@@ -1992,21 +2004,21 @@ bool Assembler::parseDataDirective(const std::string& line, uint32_t address, Da
     }
     else if (tokens[0] == ".byte" && tokens.size() >= 2)
     {
-        directive.type = DataDirective::BYTE;
+        directive.type    = DataDirective::BYTE;
         directive.address = address;
-        
+
         for (size_t i = 1; i < tokens.size(); ++i)
         {
             std::string valueStr = tokens[i];
             // Remove commas
             if (!valueStr.empty() && valueStr.back() == ',')
                 valueStr.pop_back();
-                
+
             try
             {
                 uint32_t value = std::stoul(valueStr, nullptr, 0);
                 if (value > 255)
-                    return false; // Invalid byte value
+                    return false;  // Invalid byte value
                 directive.bytes.push_back(static_cast<uint8_t>(value));
             }
             catch (const std::exception&)
@@ -2018,18 +2030,19 @@ bool Assembler::parseDataDirective(const std::string& line, uint32_t address, Da
     }
     else if (tokens[0] == ".asciiz" && tokens.size() >= 2)
     {
-        directive.type = DataDirective::ASCIIZ;
+        directive.type    = DataDirective::ASCIIZ;
         directive.address = address;
-        
+
         // Reconstruct the string (handle quoted strings)
-        std::string fullLine = line;
-        size_t firstQuote = fullLine.find('"');
-        size_t lastQuote = fullLine.rfind('"');
-        
-        if (firstQuote != std::string::npos && lastQuote != std::string::npos && firstQuote != lastQuote)
+        std::string fullLine   = line;
+        size_t      firstQuote = fullLine.find('"');
+        size_t      lastQuote  = fullLine.rfind('"');
+
+        if (firstQuote != std::string::npos && lastQuote != std::string::npos &&
+            firstQuote != lastQuote)
         {
             std::string str = fullLine.substr(firstQuote + 1, lastQuote - firstQuote - 1);
-            
+
             // Convert string to bytes
             for (char c : str)
             {
@@ -2040,7 +2053,7 @@ bool Assembler::parseDataDirective(const std::string& line, uint32_t address, Da
             return true;
         }
     }
-    
+
     return false;
 }
 

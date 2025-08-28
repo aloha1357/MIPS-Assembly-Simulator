@@ -1,6 +1,6 @@
 #include "Stage.h"
-#include <iostream>
 #include "Instruction.h"
+#include <iostream>
 
 namespace mips
 {
@@ -46,8 +46,9 @@ void PipelineRegister::clockUpdate()
     if (m_currentData.pc >= 30 && m_currentData.pc <= 140)
     {
         // Log when pipeline register transfers PC in loop region
-        std::cerr << "DEBUG: PipelineRegister::clockUpdate pc=" << m_currentData.pc
-                  << " instr='" << (m_currentData.instruction ? m_currentData.instruction->getName() : "<bubble>") << "'" << std::endl;
+        std::cerr << "DEBUG: PipelineRegister::clockUpdate pc=" << m_currentData.pc << " instr='"
+                  << (m_currentData.instruction ? m_currentData.instruction->getName() : "<bubble>")
+                  << "'" << std::endl;
     }
     if (m_nextData.instruction == nullptr)
     {

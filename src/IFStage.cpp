@@ -60,7 +60,8 @@ void IFStage::execute()
 
     if (pc >= 30 && pc <= 140)
     {
-        std::cerr << "DEBUG: IFStage fetch PC=" << pc << " instr='" << instruction->getName() << "'" << std::endl;
+        std::cerr << "DEBUG: IFStage fetch PC=" << pc << " instr='" << instruction->getName() << "'"
+                  << std::endl;
     }
 
     // Create pipeline data

@@ -15,13 +15,18 @@ class Instruction;
  */
 struct DataDirective
 {
-    enum Type { WORD, BYTE, ASCIIZ };
-    
-    Type type;
-    uint32_t address;
+    enum Type
+    {
+        WORD,
+        BYTE,
+        ASCIIZ
+    };
+
+    Type                  type;
+    uint32_t              address;
     std::vector<uint32_t> words;  // For .word directives
-    std::vector<uint8_t> bytes;   // For .byte and .asciiz directives
-    
+    std::vector<uint8_t>  bytes;  // For .byte and .asciiz directives
+
     DataDirective(Type t, uint32_t addr) : type(t), address(addr) {}
 };
 

@@ -2,10 +2,10 @@
 // run. Each test runs a small snippet similar to the original assembly and
 // asserts the expected printed value from assignment/test/instructions.out.
 
-#include "gtest/gtest.h"
-#include "Cpu.h"
 #include "Assembler.h"
+#include "Cpu.h"
 #include "Memory.h"
+#include "gtest/gtest.h"
 
 using namespace mips;
 
@@ -24,7 +24,8 @@ TEST(FailingSegments, ExpectOne_SltRegion)
         trap exit
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     // expected '1' per fixture
     EXPECT_NE(out.find("1\n"), std::string::npos) << "output=" << out;
@@ -45,7 +46,8 @@ TEST(FailingSegments, ExpectZero_SltRegion)
         trap exit
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     EXPECT_NE(out.find("0\n"), std::string::npos) << "output=" << out;
 }
@@ -56,7 +58,8 @@ TEST(FailingSegments, Expect4294967295_LBvsLBU)
     Cpu cpu;
     // Prepare data at address 300
     uint32_t addr = 300;
-    cpu.getMemory().writeByte(addr + 0, 0xFF); // -1 signed (should produce 4294967295 when sign-extended)
+    cpu.getMemory().writeByte(addr + 0,
+                              0xFF);  // -1 signed (should produce 4294967295 when sign-extended)
     std::string prog = R"(
         llo $a1, 300
         lbu $a0, 0 ($a1)
@@ -66,7 +69,8 @@ TEST(FailingSegments, Expect4294967295_LBvsLBU)
         trap exit
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     // check that signed load printed 4294967295
     EXPECT_NE(out.find("4294967295\n"), std::string::npos) << "output=" << out;
@@ -104,7 +108,8 @@ TEST(FailingSegments, ExpectThree_AfterShSb)
         .byte 111
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     // Expect to see '3' somewhere per integration fixture
     EXPECT_NE(out.find("3\n"), std::string::npos) << "output=" << out;
@@ -113,7 +118,7 @@ TEST(FailingSegments, ExpectThree_AfterShSb)
 // 5) Expected 1 but saw 65537 (llo/lhi composition or jal-$ra area)
 TEST(FailingSegments, ExpectOne_LloLhiOrRa)
 {
-    Cpu cpu;
+    Cpu         cpu;
     std::string prog = R"(
         llo $a0, 1
         lhi $a0, 0
@@ -124,7 +129,8 @@ TEST(FailingSegments, ExpectOne_LloLhiOrRa)
         trap exit
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     // Expect first print to be 1 (from low half only), second may be 65537 if composition happens
     EXPECT_NE(out.find("1\n"), std::string::npos) << "output=" << out;

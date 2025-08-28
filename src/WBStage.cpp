@@ -53,7 +53,7 @@ void WBStage::execute()
         // Targeted logging for the loop region to help debug unexpected jumps
         if (savedPC >= 30 && savedPC <= 140)
         {
-            std::cerr << "DEBUG: WBStage exec - instr='" 
+            std::cerr << "DEBUG: WBStage exec - instr='"
                       << (data.instruction ? data.instruction->getName() : "<null>")
                       << "' savedPC=" << savedPC << " afterPC=" << afterPC << std::endl;
         }
@@ -66,7 +66,7 @@ void WBStage::execute()
         else
         {
             // Control-flow change detected - log for debugging
-            std::cerr << "DEBUG: WBStage control-flow - instr='" 
+            std::cerr << "DEBUG: WBStage control-flow - instr='"
                       << (data.instruction ? data.instruction->getName() : "<null>")
                       << "' savedPC=" << savedPC << " afterPC=" << afterPC << std::endl;
         }

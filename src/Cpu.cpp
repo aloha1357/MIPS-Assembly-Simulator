@@ -9,9 +9,9 @@
 #include "RegisterFile.h"
 #include "Stage.h"
 #include "WBStage.h"
-#include <iostream>
-#include <cstdio>
 #include <cctype>
+#include <cstdio>
+#include <iostream>
 #include <string>
 
 namespace mips
@@ -64,7 +64,9 @@ void Cpu::tickSingleCycle()
             std::string instrName = m_instructions[m_pc]->getName();
             std::cerr << "DEBUG: Exec pc=" << m_pc << " instr='" << instrName << "'" << std::endl;
         }
-        catch (...) {}
+        catch (...)
+        {
+        }
 
         m_instructions[m_pc]->execute(*this);
 
@@ -111,13 +113,13 @@ void Cpu::tickPipeline()
 
 void Cpu::loadProgramFromString(const std::string& assembly)
 {
-    Assembler assembler;
+    Assembler                  assembler;
     std::vector<DataDirective> dataDirectives;
     m_instructions = assembler.assembleWithLabels(assembly, m_labelMap, dataDirectives);
-    
+
     // Debug: Print data directives count
     // std::cerr << "DEBUG: Found " << dataDirectives.size() << " data directives" << std::endl;
-    
+
     // Initialize memory with data directives
     for (const auto& directive : dataDirectives)
     {
@@ -138,9 +140,9 @@ void Cpu::loadProgramFromString(const std::string& assembly)
             }
         }
     }
-    
-    m_pc           = 0;
-    m_terminated   = false;  // Reset termination flag
+
+    m_pc         = 0;
+    m_terminated = false;  // Reset termination flag
 
     // Reset pipeline state when loading new program
     if (m_ifidRegister)
@@ -254,11 +256,13 @@ uint32_t Cpu::getLabelAddress(const std::string& label) const
         // instruction labels and data labels. Return the stored byte address
         // directly to avoid any runtime heuristics.
         uint32_t address = it->second;
-        std::cerr << "DEBUG: getLabelAddress - label='" << label << "' byteAddr=" << address << std::endl;
+        std::cerr << "DEBUG: getLabelAddress - label='" << label << "' byteAddr=" << address
+                  << std::endl;
         return address;
     }
     // Label not found
-    std::cerr << "DEBUG: getLabelAddress - label='" << label << "' not found, returning 0" << std::endl;
+    std::cerr << "DEBUG: getLabelAddress - label='" << label << "' not found, returning 0"
+              << std::endl;
     return 0;
 }
 

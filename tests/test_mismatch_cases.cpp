@@ -1,15 +1,15 @@
 // Focused integration-like unit tests to reproduce previously observed mismatches
-#include "gtest/gtest.h"
-#include "Cpu.h"
 #include "Assembler.h"
+#include "Cpu.h"
 #include "Memory.h"
+#include "gtest/gtest.h"
 
 using namespace mips;
 
 // Reproduce SLT area mismatch (around idx ~114-116)
 TEST(MismatchCases, SltRegionPrints)
 {
-    Cpu cpu;
+    Cpu         cpu;
     std::string asmCode = R"(
         lhi $a1, 65535
         trap slt $a0, $a1, $a2
@@ -29,7 +29,8 @@ TEST(MismatchCases, SltRegionPrints)
         trap exit
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     // Expect either 0 or 1 depending on signed compare; check it prints a number
     EXPECT_FALSE(out.empty());
@@ -40,8 +41,8 @@ TEST(MismatchCases, LoadByteUnsignedVsSigned)
 {
     Cpu cpu;
     // Prepare memory like the integration test: place bytes at some address
-    uint32_t addr = 200; // choose a mid address
-    cpu.getMemory().writeByte(addr + 0, 0xFF); // 255 / -1
+    uint32_t addr = 200;                        // choose a mid address
+    cpu.getMemory().writeByte(addr + 0, 0xFF);  // 255 / -1
     // Program: load address into $a1 then do lbu/lb prints
     std::string prog = R"(
         llo $a1, 200
@@ -52,7 +53,8 @@ TEST(MismatchCases, LoadByteUnsignedVsSigned)
         trap exit
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     // first should include 255, second should include 4294967295 (for signed -1)
     EXPECT_NE(out.find("255"), std::string::npos);
@@ -75,7 +77,8 @@ TEST(MismatchCases, JalAndReturnAddress)
         trap exit
     )";
     cpu.loadProgramFromString(prog);
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
     std::string out = cpu.getConsoleOutput();
     // Expect some non-empty return address printed
     EXPECT_FALSE(out.empty());

@@ -1,7 +1,7 @@
 #include "Memory.h"
 #include <cstring>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 namespace mips
 {
@@ -30,7 +30,8 @@ void Memory::writeWord(uint32_t address, uint32_t value)
     // Targeted debug: watch writes near the string/data area used in tests
     if (address >= 760 && address <= 780)
     {
-        std::cerr << "DEBUG: writeWord addr=" << address << " value=0x" << std::hex << value << std::dec << std::endl;
+        std::cerr << "DEBUG: writeWord addr=" << address << " value=0x" << std::hex << value
+                  << std::dec << std::endl;
     }
 
     std::memcpy(&m_data[address], &value, sizeof(uint32_t));
@@ -55,7 +56,8 @@ void Memory::writeByte(uint32_t address, uint8_t value)
 
     if (address >= 760 && address <= 780)
     {
-        std::cerr << "DEBUG: writeByte addr=" << address << " byte=" << static_cast<uint32_t>(value) << std::endl;
+        std::cerr << "DEBUG: writeByte addr=" << address << " byte=" << static_cast<uint32_t>(value)
+                  << std::endl;
     }
 
     m_data[address] = value;
@@ -69,7 +71,7 @@ uint16_t Memory::readHalfword(uint32_t address) const
         return 0;  // Invalid access returns 0
     }
 
-    uint16_t low = static_cast<uint16_t>(m_data[address]);
+    uint16_t low  = static_cast<uint16_t>(m_data[address]);
     uint16_t high = static_cast<uint16_t>(m_data[address + 1]);
     return static_cast<uint16_t>((high << 8) | low);
 }
@@ -82,9 +84,9 @@ void Memory::writeHalfword(uint32_t address, uint16_t value)
         return;  // Invalid access ignored
     }
 
-    uint8_t low = static_cast<uint8_t>(value & 0xFF);
-    uint8_t high = static_cast<uint8_t>((value >> 8) & 0xFF);
-    m_data[address] = low;
+    uint8_t low         = static_cast<uint8_t>(value & 0xFF);
+    uint8_t high        = static_cast<uint8_t>((value >> 8) & 0xFF);
+    m_data[address]     = low;
     m_data[address + 1] = high;
 }
 

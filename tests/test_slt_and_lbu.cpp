@@ -1,8 +1,8 @@
 // Minimal gtest cases for SLT and LBU/LB semantics
-#include "gtest/gtest.h"
-#include "Cpu.h"
 #include "Assembler.h"
+#include "Cpu.h"
 #include "Memory.h"
+#include "gtest/gtest.h"
 
 using namespace mips;
 
@@ -18,10 +18,10 @@ TEST(SltInstructionTest, BasicSignedComparison)
         trap exit
     )";
     cpu.loadProgramFromString(asmCode);
-    cpu.tick(); // execute llo
-    cpu.tick(); // execute llo
-    cpu.tick(); // slt
-    cpu.tick(); // trap print_int
+    cpu.tick();  // execute llo
+    cpu.tick();  // execute llo
+    cpu.tick();  // slt
+    cpu.tick();  // trap print_int
 
     auto out = cpu.getConsoleOutput();
     // printed value should be 1 (5 < 10)
@@ -38,7 +38,7 @@ TEST(LbuInstructionTest, ZeroAndSignExtension)
         trap exit
     )";
     // We'll manually write bytes and then test via instructions
-    cpu.getMemory().writeByte(100, 0xFF); // -1 as signed, 255 as unsigned
+    cpu.getMemory().writeByte(100, 0xFF);  // -1 as signed, 255 as unsigned
     // Program: load address into $a1, then lb/lbu
     std::string prog = R"(
         llo $a1, 100
@@ -50,7 +50,8 @@ TEST(LbuInstructionTest, ZeroAndSignExtension)
     )";
     cpu.loadProgramFromString(prog);
     // Execute until exit
-    while (!cpu.shouldTerminate()) cpu.tick();
+    while (!cpu.shouldTerminate())
+        cpu.tick();
 
     auto out = cpu.getConsoleOutput();
     // Expect first printed value to be 255 (zero-extended)
